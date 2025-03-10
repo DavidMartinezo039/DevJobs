@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Vacancies extends Model
+class Vacancy extends Model
 {
     //
 }

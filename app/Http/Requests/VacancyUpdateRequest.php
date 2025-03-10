@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VacancyRequest extends FormRequest
+class VacancyUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,13 +22,13 @@ class VacancyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'salary' => 'required|exists:salaries,id',
-            'category' => 'required|exists:categories,id',
-            'company' => 'required|string',
-            'last_day' => 'required|date',
-            'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'title' => 'nullable|string',
+            'salary' => 'nullable|exists:salaries,id',
+            'category' => 'nullable|exists:categories,id',
+            'company' => 'nullable|string',
+            'last_day' => 'nullable|date',
+            'description' => 'nullable|string',
+            'new_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

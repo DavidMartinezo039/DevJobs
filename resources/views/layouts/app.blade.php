@@ -36,5 +36,6 @@
         </div>
 
         @livewireScripts
+        @yield('additional-js')
     </body>
 </html>

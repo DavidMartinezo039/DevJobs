@@ -7,6 +7,17 @@ use Livewire\Component;
 
 class ShowVacancies extends Component
 {
+    protected $listeners = ['deleteVacancy'];
+
+    public function confirmDelete($vacancy)
+    {
+        $this->dispatch('DeleteAlert', $vacancy);
+    }
+
+    public function deleteVacancy(Vacancy $vacancy)
+    {
+        $vacancy->delete();
+    }
     public function render()
     {
         $vacancies = Vacancy::where('user_id', auth()->id())->paginate(10);

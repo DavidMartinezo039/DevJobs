@@ -28,8 +28,6 @@ class RoleSeeder extends Seeder
         $admin = Role::create(['name' => 'admin']);
         $god = Role::create(['name' => 'god']);
 
-        $developer->givePermissionTo('view vacancies');
-
         $recruiter->givePermissionTo([
             'view vacancies',
             'create vacancies',

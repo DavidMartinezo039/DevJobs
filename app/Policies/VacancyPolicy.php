@@ -13,7 +13,7 @@ class VacancyPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('view vacancies');
     }
 
     /**
@@ -29,7 +29,7 @@ class VacancyPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('create vacancies');
     }
 
     /**

@@ -13,6 +13,7 @@ class VacancyController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Vacancy::class);
         return view('vacancies.index');
     }
 
@@ -21,6 +22,7 @@ class VacancyController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Vacancy::class);
         return view('vacancies.create');
     }
 

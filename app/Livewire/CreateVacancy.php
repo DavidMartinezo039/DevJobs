@@ -30,8 +30,6 @@ class CreateVacancy extends Component
     {
         $validateDatta = $this->validate();
 
-        dd($this->image);
-
         $image = $this->image->store('vacancies', 'public');
         $image_name = str_replace('vacancies/', '', $image);
 

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Vacancy;
+use App\Notifications\NewCandidate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -29,6 +30,8 @@ class ApplyVacancy extends Component
         $data['cv'] = str_replace('cv/', '', $cv);
 
         $this->vacancy->users()->attach(auth()->id(), ['cv' => $data['cv']]);
+
+        $this->vacancy->recruiter->notify(new NewCandidate($this->vacancy->id, $this->vacancy->title, auth()->id()));
 
         session()->flash('message', __('Vacancy applied successfully'));
 

@@ -42,4 +42,8 @@ class Vacancy extends Model
         return $this->belongsToMany(User::class, 'candidates')->withTimestamps();
     }
 
+    public function recruiter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

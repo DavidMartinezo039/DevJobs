@@ -1,17 +1,20 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [VacancyController::class, 'index'])->name('vacancies.index');
+    Route::get('/dashboard', [VacancyController::class, 'index'])->middleware('rol.recruiter')->name('vacancies.index');
     Route::get('/vacancies/create', [VacancyController::class, 'create'])->name('vacancies.create');
     Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit'])->name('vacancies.edit');
+
+    Route::get('/notifications', [NotificationController::class, '__invoke'])->middleware('rol.recruiter')->name('notifications.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

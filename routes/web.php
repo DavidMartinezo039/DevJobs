@@ -1,14 +1,13 @@
 <?php
 
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [VacancyController::class, 'index'])->middleware('rol.recruiter')->name('vacancies.index');
@@ -17,7 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/candidates/{vacancy}', [CandidateController::class, 'index'])->name('candidates.index');
 
-    Route::get('/notifications', [NotificationController::class, '__invoke'])->middleware('rol.recruiter')->name('notifications.index');
+    Route::get('/notifications', NotificationController::class)->middleware('rol.recruiter')->name('notifications.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

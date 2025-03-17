@@ -50,6 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function vacancies(): BelongsToMany
     {
-        return $this->belongsToMany(Vacancy::class, 'candidates')->withTimestamps();
+        return $this->belongsToMany(Vacancy::class, 'candidates')->withPivot('cv')->withTimestamps();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
+use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
 class CandidateController extends Controller
@@ -10,9 +11,9 @@ class CandidateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Vacancy $vacancy)
     {
-        //
+        return view('candidates.index', ['vacancy' => $vacancy]);
     }
 
     /**

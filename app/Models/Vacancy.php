@@ -39,7 +39,7 @@ class Vacancy extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'candidates')->withTimestamps();
+        return $this->belongsToMany(User::class, 'candidates')->withPivot('cv')->withTimestamps()->orderByPivot('created_at', 'DESC');
     }
 
     public function recruiter(): BelongsTo

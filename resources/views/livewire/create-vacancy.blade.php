@@ -7,31 +7,23 @@
 
     <div>
         <x-input-label for="salary" :value="__('Monthly Salary')" />
-        <select
+        <x-forms.select-input
             id="salary"
-            wire:model="salary"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full"
-        >
-            <option>-- {{ __('Select') }} --</option>
-            @foreach($salaries as $salary)
-                <option value="{{ $salary->id }}">{{$salary->salary}}</option>
-            @endforeach
-        </select>
+            name="salary"
+            :options="$salaries"
+            selectedValue="salary"
+        />
         <x-input-error :messages="$errors->get('salary')" class="mt-2" />
     </div>
 
     <div>
         <x-input-label for="category" :value="__('Category')" />
-        <select
+        <x-forms.select-input
             id="category"
-            wire:model="category"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full"
-        >
-            <option>-- {{ __('Select') }} --</option>
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{$category->category}}</option>
-            @endforeach
-        </select>
+            name="category"
+            :options="$categories"
+            selectedValue="category"
+        />
         <x-input-error :messages="$errors->get('category')" class="mt-2" />
     </div>
 
@@ -41,11 +33,7 @@
         <x-input-error :messages="$errors->get('company')" class="mt-2" />
     </div>
 
-    <div>
-        <x-input-label for="last_day" :value="__('last Day to Apply')" />
-        <x-text-input id="last_day" class="block mt-1 w-full" type="date" wire:model="last_day" :value="old('last_day')"/>
-        <x-input-error :messages="$errors->get('last_day')" class="mt-2" />
-    </div>
+    <x-forms.date-picker id="last_day" label="{{ __('Last Day to Apply') }}" wireModel="last_day" />
 
     <div>
         <x-input-label for="description" :value="__('Job Description')" />

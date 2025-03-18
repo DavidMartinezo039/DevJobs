@@ -22,12 +22,12 @@ class VacancyUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string',
-            'salary' => 'nullable|exists:salaries,id',
-            'category' => 'nullable|exists:categories,id',
-            'company' => 'nullable|string',
-            'last_day' => 'nullable|date',
-            'description' => 'nullable|string',
+            'title' => 'required|string',
+            'salary' => 'required|exists:salaries,id',
+            'category' => 'required|exists:categories,id',
+            'company' => 'required|string',
+            'last_day' => 'required|date',
+            'description' => 'required|string',
             'new_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }

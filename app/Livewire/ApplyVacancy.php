@@ -40,6 +40,8 @@ class ApplyVacancy extends Component
 
     public function render()
     {
-        return view('livewire.apply-vacancy');
+        $userCv = auth()->user()->vacancies()->where('vacancy_id', $this->vacancy->id)->value('cv');
+
+        return view('livewire.apply-vacancy', compact('userCv'));
     }
 }

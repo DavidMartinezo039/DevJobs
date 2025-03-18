@@ -9,7 +9,6 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
-    Artisan::call('db:seed', ['--class' => 'RoleSeeder']);
 
     $response = $this->post('/register', [
         'name' => 'Test User',
@@ -26,5 +25,5 @@ test('new users can register', function () {
     $this->actingAs($user);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('vacancies.index', absolute: false));
 });

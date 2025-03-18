@@ -8,13 +8,19 @@ use Illuminate\View\Component;
 
 class DatePicker extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()
+    public $id;
+    public $name;
+    public $label;
+    public $wireModel;
+
+    public function __construct($id, $name, $label, $wireModel = null)
     {
-        //
+        $this->id = $id;
+        $this->name = $name;
+        $this->label = $label;
+        $this->wireModel = $wireModel;
     }
+
 
     /**
      * Get the view / contents that represent the component.

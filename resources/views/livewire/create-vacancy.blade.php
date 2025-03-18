@@ -33,7 +33,7 @@
         <x-input-error :messages="$errors->get('company')" class="mt-2" />
     </div>
 
-    <x-forms.date-picker id="last_day" label="{{ __('Last Day to Apply') }}" wireModel="last_day" />
+    <x-forms.date-picker id="last_day" name="last_day" label="{{ __('Last Day to Apply') }}" wireModel="last_day" />
 
     <div>
         <x-input-label for="description" :value="__('Job Description')" />

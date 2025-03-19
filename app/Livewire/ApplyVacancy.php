@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Vacancy;
 use App\Notifications\NewCandidate;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -36,6 +37,22 @@ class ApplyVacancy extends Component
         session()->flash('message', __('Vacancy applied successfully'));
 
         return redirect()->back();
+    }
+
+    public function removeCv()
+    {
+        $user = auth()->user();
+        $userCv = $user->vacancies()->where('vacancy_id', $this->vacancy->id)->value('cv');
+
+        if ($userCv) {
+            Storage::disk('public')->delete('cv/' . $userCv);
+
+            $this->vacancy->users()->detach($user->id);
+
+            session()->flash('message', __('Your CV has been removed successfully.'));
+        } else {
+            session()->flash('error', __('No CV found to remove.'));
+        }
     }
 
     public function render()

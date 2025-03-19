@@ -1,6 +1,6 @@
 <div>
 
-    <livewire:filter-vacancies />
+    <livewire:filter-vacancies/>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto">
@@ -12,7 +12,8 @@
                 @forelse($vacancies as $vacancy)
                     <div class="md:flex md:justify-between md:items-center py-5">
                         <div class="md:flex-1">
-                            <a class="text-3xl font-extrabold text-gray-600" href="{{ route('vacancies.show', $vacancy) }}">
+                            <a class="text-3xl font-extrabold text-gray-600"
+                               href="{{ route('vacancies.show', $vacancy) }}">
                                 {{ $vacancy->title }}
                             </a>
                             <p class="text-base text-gray-600 mb-1">
@@ -24,13 +25,20 @@
                             <p class="text-base text-gray-600 mb-1">
                                 {{ $vacancy->salary->salary }}
                             </p>
-                            <p class="font-bold text-xs text-gray-600">
-                                {{ __('last day to apply') }}: <span class="font-normal">{{ $vacancy->last_day->format('d/m/Y') }}</span>
+                            <p @class([
+                                    'font-bold text-xs',
+                                    'text-red-600' => $vacancy->last_day->eq(today()),
+                                    'text-gray-600' => $vacancy->last_day->eq(today())
+                                ])>
+                                {{ __('last day to apply') }}: <span class="font-normal">
+                                    {{ $vacancy->last_day->format('d/m/Y') }}
+                                </span>
                             </p>
                         </div>
 
                         <div class="mt-5 md:mt-0">
-                            <a class="bg-indigo-500 p-3 text-sm uppercase font-bold text-white rounded-lg block text-center" href="{{ route('vacancies.show', $vacancy) }}">
+                            <a class="bg-indigo-500 p-3 text-sm uppercase font-bold text-white rounded-lg block text-center"
+                               href="{{ route('vacancies.show', $vacancy) }}">
                                 {{ __('See Vacancy') }}
                             </a>
                         </div>

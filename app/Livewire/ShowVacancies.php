@@ -16,6 +16,7 @@ class ShowVacancies extends Component
 
     public function deleteVacancy(Vacancy $vacancy)
     {
+
         $vacancy->delete();
     }
     public function render()

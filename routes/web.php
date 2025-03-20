@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [VacancyController::class, 'index'])->middleware('rol.recruiter')->name('vacancies.index');
+    Route::get('/vacancies', [VacancyController::class, 'index'])->name('vacancies.index');
     Route::get('/vacancies/create', [VacancyController::class, 'create'])->name('vacancies.create');
     Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit'])->name('vacancies.edit');
 

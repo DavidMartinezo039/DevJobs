@@ -1,37 +1,24 @@
 <form class="md:w-1/2 space-y-5" wire:submit.prevent="createVacancy">
-    <div>
-        <x-input-label for="title" :value="__('Title Vacancy')" />
-        <x-text-input id="title" class="block mt-1 w-full" type="text" wire:model="title" :value="old('title')" placeholder="{{  __('Title Vacancy') }}"/>
-        <x-input-error :messages="$errors->get('title')" class="mt-2" />
-    </div>
 
-    <div>
-        <x-input-label for="salary" :value="__('Monthly Salary')" />
+    <x-forms.input id="title" name="title" label="Title Vacancy" wireModel="title" />
+
         <x-forms.select-input
             id="salary"
             name="salary"
+            label="Monthly Salary"
             :options="$salaries"
             selectedValue="salary"
         />
-        <x-input-error :messages="$errors->get('salary')" class="mt-2" />
-    </div>
 
-    <div>
-        <x-input-label for="category" :value="__('Category')" />
         <x-forms.select-input
             id="category"
             name="category"
+            label="Category"
             :options="$categories"
             selectedValue="category"
         />
-        <x-input-error :messages="$errors->get('category')" class="mt-2" />
-    </div>
 
-    <div>
-        <x-input-label for="company" :value="__('Company')" />
-        <x-text-input id="company" class="block mt-1 w-full" type="text" wire:model="company" :value="old('company')" placeholder="{{  __('Company: example.') }} Netflix, Uber, Shopify"/>
-        <x-input-error :messages="$errors->get('company')" class="mt-2" />
-    </div>
+    <x-forms.input id="company" name="company" label="Company" wireModel="company" />
 
     <x-forms.date-picker id="last_day" name="last_day" label="{{ __('Last Day to Apply') }}" wireModel="last_day" />
 

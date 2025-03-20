@@ -3,24 +3,22 @@
 namespace App\View\Components\Forms;
 
 use Closure;
-use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
 
-class SelectInput extends Component
+class Input extends Component
 {
     public $id;
     public $name;
-    public $options;
     public $label;
-    public $selectedValue;
+    public $wireModel;
 
-    public function __construct($id, $name, $label, $options, $selectedValue = null)
+    public function __construct($id, $name, $label, $wireModel = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->label = $label;
-        $this->options = $options;
-        $this->selectedValue = $selectedValue;
+        $this->wireModel = $wireModel;
     }
 
     /**
@@ -28,6 +26,6 @@ class SelectInput extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forms.select-input');
+        return view('components.forms.input');
     }
 }

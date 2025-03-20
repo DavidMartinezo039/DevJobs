@@ -25,12 +25,7 @@
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <x-forms.checkbox-input id="remember_me" name="remember" />
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+        <x-forms.checkbox-input id="remember_me" name="remember_me" label="Remember me" />
 
         <div class="flex justify-between my-5">
             <x-link

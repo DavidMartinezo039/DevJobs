@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\PersonalData;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\CV;
@@ -40,7 +41,13 @@ class CvManager extends Component
             'description' => 'required',
         ]);
 
-        CV::create(['title' => $this->title, 'description' => $this->description]);
+        $cv = CV::create(['title' => $this->title, 'user_id' => auth()->id()]);
+
+
+        PersonalData::create([
+            'cvs_id' => $cv->id,
+            'about_me' => $this->description,
+        ]);
 
         $this->reset(['title', 'description']);
         $this->mount();

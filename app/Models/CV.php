@@ -8,6 +8,11 @@ class CV extends Model
 {
     protected $table = 'cvs';
 
-    protected $fillable = ['title', 'description', 'file_path'];
+    protected $fillable = ['title', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

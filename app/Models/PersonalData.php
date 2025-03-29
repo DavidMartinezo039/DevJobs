@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PersonalData extends Model
 {
@@ -12,18 +14,9 @@ class PersonalData extends Model
     protected $table = 'personal_data';
 
     protected $fillable = [
-        'cvs_id',
-        'first_name',
-        'last_name',
-        'image',
-        'about_me',
-        'work_permits',
-        'birth_date',
-        'city',
-        'country',
-        'nationality',
-        'email',
-        'address',
+        'cvs_id', 'first_name', 'last_name', 'image', 'about_me',
+        'work_permits', 'birth_date', 'city', 'country', 'nationality',
+        'email', 'address', 'gender_id'
     ];
 
     protected $casts = [
@@ -33,8 +26,31 @@ class PersonalData extends Model
         'address' => 'array',
     ];
 
-    public function cv()
+    public function cv(): BelongsTo
     {
-        return $this->belongsTo(CV::class, 'cvs_id');
+        return $this->belongsTo(Cv::class, 'cvs_id');
+    }
+
+    public function gender(): BelongsTo
+    {
+        return $this->belongsTo(Gender::class);
+    }
+
+    public function identities(): BelongsToMany
+    {
+        return $this->belongsToMany(Identity::class, 'identity_personal_data')
+            ->withPivot('identity_number');
+    }
+
+    public function phones(): BelongsToMany
+    {
+        return $this->belongsToMany(Phone::class, 'personal_data_phones')
+            ->withPivot('number');
+    }
+
+    public function socialMedia(): BelongsToMany
+    {
+        return $this->belongsToMany(SocialMedia::class, 'personal_data_social_media')
+            ->withPivot('user_name', 'url');
     }
 }

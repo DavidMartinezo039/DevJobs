@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\SocialMedia;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 class SocialMediaFactory extends Factory
 {
@@ -12,7 +13,7 @@ class SocialMediaFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'type' => Arr::random(['LinkedIn', 'GitHub', 'Twitter']),
         ];
     }
 }

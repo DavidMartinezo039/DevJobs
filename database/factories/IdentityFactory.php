@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Identity;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 class IdentityFactory extends Factory
 {
@@ -12,7 +13,7 @@ class IdentityFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'type' => Arr::random(['DNI', 'Pasaporte', 'Permiso de residencia']),
         ];
     }
 }

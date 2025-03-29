@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Gender;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 class GenderFactory extends Factory
 {
@@ -12,7 +13,7 @@ class GenderFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'type' => Arr::random(['Masculino', 'Femenino', 'Otro']),
         ];
     }
 }

@@ -15,6 +15,6 @@ class SocialMedia extends Model
     public function personalData(): BelongsToMany
     {
         return $this->belongsToMany(PersonalData::class, 'personal_data_social_media')
-            ->withPivot('user_name', 'url');
+            ->withPivot('user_name', 'url')->withTimestamps();
     }
 }

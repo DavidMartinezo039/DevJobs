@@ -15,6 +15,6 @@ class Phone extends Model
     public function personalData(): BelongsToMany
     {
         return $this->belongsToMany(PersonalData::class, 'personal_data_phones')
-            ->withPivot('number');
+            ->withPivot('number')->withTimestamps();
     }
 }

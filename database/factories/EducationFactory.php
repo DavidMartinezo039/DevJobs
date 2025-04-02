@@ -15,9 +15,11 @@ class EducationFactory extends Factory
         return [
             'cv_id' => CV::factory(),
             'institution' => $this->faker->company,
-            'degree' => $this->faker->word,
-            'start_date' => $this->faker->date,
-            'end_date' => $this->faker->optional()->date,
+            'city' => $this->faker->city,
+            'country' => $this->faker->country,
+            'title' => $this->faker->word,
+            'start_date' => $this->faker->date(),
+            'end_date' => $this->faker->date(),
         ];
     }
 }

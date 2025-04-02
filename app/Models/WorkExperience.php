@@ -12,6 +12,6 @@ class WorkExperience extends Model {
 
     public function cv(): BelongsTo
     {
-        return $this->belongsTo(CV::class);
+        return $this->belongsTo(CV::class)->withTimestamps();
     }
 }

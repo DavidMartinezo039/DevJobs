@@ -14,7 +14,7 @@ class PersonalDataFactory extends Factory
     public function definition(): array
     {
         return [
-            'cvs_id' => Cv::factory(),
+            'cv_id' => Cv::factory(),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'image' => $this->faker->imageUrl(),

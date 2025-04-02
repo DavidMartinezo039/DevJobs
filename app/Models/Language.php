@@ -14,6 +14,6 @@ class Language extends Model
 
     public function cvs(): BelongsToMany
     {
-        return $this->belongsToMany(CV::class, 'cvs_languages')->withPivot('level');
+        return $this->belongsToMany(CV::class, 'cvs_languages', 'language_id', 'cv_id')->withPivot('level')->withTimestamps();
     }
 }

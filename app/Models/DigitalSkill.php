@@ -14,6 +14,6 @@ class DigitalSkill extends Model
 
     public function cvs(): BelongsToMany
     {
-        return $this->belongsToMany(CV::class, 'cvs_digital_skills');
+        return $this->belongsToMany(CV::class, 'cvs_digital_skills', 'digital_skill_id', 'cv_id')->withTimestamps();
     }
 }

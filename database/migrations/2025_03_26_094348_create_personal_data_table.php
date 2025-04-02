@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('personal_data', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cvs_id')->constrained('cvs')->cascadeOnDelete();
+            $table->foreignId('cv_id')->constrained('cvs')->cascadeOnDelete();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('image')->nullable();

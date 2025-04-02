@@ -19,36 +19,36 @@ class CV extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTimestamps();
     }
 
     public function personalData(): HasOne
     {
-        return $this->hasOne(PersonalData::class);
+        return $this->hasOne(PersonalData::class)->withTimestamps();
     }
 
     public function workExperiences(): HasMany
     {
-        return $this->hasMany(WorkExperience::class);
+        return $this->hasMany(WorkExperience::class)->withTimestamps();
     }
 
     public function languages(): BelongsToMany
     {
-        return $this->belongsToMany(Language::class, 'cvs_languages')->withPivot('level');
+        return $this->belongsToMany(Language::class, 'cvs_languages', 'cv_id', 'language_id')->withPivot('level')->withTimestamps();
     }
 
     public function digitalSkills(): BelongsToMany
     {
-        return $this->belongsToMany(DigitalSkill::class, 'cvs_digital_skills');
+        return $this->belongsToMany(DigitalSkill::class, 'cvs_digital_skills', 'cv_id', 'digital_skill_id')->withTimestamps();
     }
 
     public function education(): HasMany
     {
-        return $this->hasMany(Education::class);
+        return $this->hasMany(Education::class)->withTimestamps();
     }
 
     public function drivingLicenses(): BelongsToMany
     {
-        return $this->belongsToMany(DrivingLicense::class, 'cvs_driving_licenses');
+        return $this->belongsToMany(DrivingLicense::class, 'cvs_driving_licenses', 'cv_id', 'driving_license_id')->withTimestamps();
     }
 }

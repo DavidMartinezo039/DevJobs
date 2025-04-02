@@ -10,10 +10,20 @@ class DrivingLicense extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type'];
+    protected $fillable = [
+        'image',
+        'category',
+        'vehicle_type',
+        'max_speed',
+        'max_power',
+        'power_to_weight',
+        'max_weight',
+        'max_passengers',
+        'min_age',
+    ];
 
     public function cvs(): BelongsToMany
     {
-        return $this->belongsToMany(CV::class, 'cvs_driving_licenses');
+        return $this->belongsToMany(CV::class, 'cvs_driving_licenses', 'driving_license_id', 'cv_id')->withTimestamps();
     }
 }

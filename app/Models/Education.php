@@ -10,10 +10,18 @@ class Education extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cv_id', 'institution', 'degree', 'start_date', 'end_date'];
+    protected $fillable = [
+        'cv_id',
+        'institution',
+        'city',
+        'country',
+        'title',
+        'start_date',
+        'end_date',
+    ];
 
     public function cv(): BelongsTo
     {
-        return $this->belongsTo(CV::class);
+        return $this->belongsTo(CV::class)->withTimestamps();
     }
 }

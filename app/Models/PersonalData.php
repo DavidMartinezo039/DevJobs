@@ -28,29 +28,29 @@ class PersonalData extends Model
 
     public function cv(): BelongsTo
     {
-        return $this->belongsTo(Cv::class, 'cvs_id');
+        return $this->belongsTo(Cv::class, 'cv_id')->withTimestamps();
     }
 
     public function gender(): BelongsTo
     {
-        return $this->belongsTo(Gender::class);
+        return $this->belongsTo(Gender::class)->withTimestamps();
     }
 
     public function identities(): BelongsToMany
     {
         return $this->belongsToMany(Identity::class, 'identity_personal_data')
-            ->withPivot('identity_number');
+            ->withPivot('identity_number')->withTimestamps();
     }
 
     public function phones(): BelongsToMany
     {
         return $this->belongsToMany(Phone::class, 'personal_data_phones')
-            ->withPivot('number');
+            ->withPivot('number')->withTimestamps();
     }
 
     public function socialMedia(): BelongsToMany
     {
         return $this->belongsToMany(SocialMedia::class, 'personal_data_social_media')
-            ->withPivot('user_name', 'url');
+            ->withPivot('user_name', 'url')->withTimestamps();
     }
 }

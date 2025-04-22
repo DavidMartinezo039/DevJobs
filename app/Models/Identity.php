@@ -15,6 +15,6 @@ class Identity extends Model
     public function personalData(): BelongsToMany
     {
         return $this->belongsToMany(PersonalData::class, 'identity_personal_data')
-            ->withPivot('identity_number')->withTimestamps();
+            ->withPivot('number')->withTimestamps();
     }
 }

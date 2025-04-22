@@ -13,7 +13,7 @@ class PhoneFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => Arr::random(['Móvil', 'Trabajo', 'Domicilio']),
+            'type' => $this->faker->unique()->word,
         ];
     }
 }

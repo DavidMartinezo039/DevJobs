@@ -13,7 +13,7 @@ class IdentityFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => Arr::random(['DNI', 'Pasaporte', 'Permiso de residencia']),
+            'type' => $this->faker->unique()->word,
         ];
     }
 }

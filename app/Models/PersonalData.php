@@ -14,13 +14,13 @@ class PersonalData extends Model
     protected $table = 'personal_data';
 
     protected $fillable = [
-        'cvs_id', 'first_name', 'last_name', 'image', 'about_me',
-        'work_permits', 'birth_date', 'city', 'country', 'nationality',
+        'cv_id', 'first_name', 'last_name', 'image', 'about_me',
+        'workPermits', 'birth_date', 'city', 'country', 'nationality',
         'email', 'address', 'gender_id'
     ];
 
     protected $casts = [
-        'work_permits' => 'array',
+        'workPermits' => 'array',
         'nationality' => 'array',
         'email' => 'array',
         'address' => 'array',
@@ -28,18 +28,18 @@ class PersonalData extends Model
 
     public function cv(): BelongsTo
     {
-        return $this->belongsTo(Cv::class, 'cv_id')->withTimestamps();
+        return $this->belongsTo(Cv::class, 'cv_id');
     }
 
     public function gender(): BelongsTo
     {
-        return $this->belongsTo(Gender::class)->withTimestamps();
+        return $this->belongsTo(Gender::class);
     }
 
     public function identities(): BelongsToMany
     {
         return $this->belongsToMany(Identity::class, 'identity_personal_data')
-            ->withPivot('identity_number')->withTimestamps();
+            ->withPivot('number')->withTimestamps();
     }
 
     public function phones(): BelongsToMany

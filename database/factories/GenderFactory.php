@@ -13,7 +13,7 @@ class GenderFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => Arr::random(['Masculino', 'Femenino', 'Otro']),
+            'type' => $this->faker->unique()->word,
         ];
     }
 }

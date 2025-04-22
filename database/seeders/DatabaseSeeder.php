@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             SalarySeeder::class,
             CategorySeeder::class,
+            GenderSeeder::class,
+            IdentitySeeder::class,
+            PhoneSeeder::class,
+            SocialMediaSeeder::class,
             CVSeeder::class,
         ]);
     }

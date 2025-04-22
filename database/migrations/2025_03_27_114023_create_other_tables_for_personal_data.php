@@ -21,7 +21,7 @@ return new class extends Migration
         // Tabla pivote entre personal_data e identities
         Schema::create('identity_personal_data', function (Blueprint $table) {
             $table->id();
-            $table->string('identity_number');
+            $table->string('number');
             $table->foreignId('personal_data_id')->constrained('personal_data')->cascadeOnDelete();
             $table->foreignId('identity_id')->constrained('identities')->cascadeOnDelete();
             $table->timestamps();

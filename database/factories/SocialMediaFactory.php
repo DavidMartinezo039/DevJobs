@@ -13,7 +13,7 @@ class SocialMediaFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => Arr::random(['LinkedIn', 'GitHub', 'Twitter']),
+            'type' => $this->faker->unique()->word,
         ];
     }
 }

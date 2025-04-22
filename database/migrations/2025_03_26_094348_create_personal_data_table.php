@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('image')->nullable();
             $table->string('about_me')->nullable();
-            $table->json('work_permits')->nullable();
+            $table->json('workPermits')->nullable();
             $table->date('birth_date')->nullable();
             //lugar de nacimiento
             $table->string('city')->nullable();

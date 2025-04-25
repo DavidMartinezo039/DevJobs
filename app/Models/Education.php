@@ -22,6 +22,6 @@ class Education extends Model
 
     public function cv(): BelongsTo
     {
-        return $this->belongsTo(CV::class)->withTimestamps();
+        return $this->belongsTo(CV::class, 'cv_id');
     }
 }

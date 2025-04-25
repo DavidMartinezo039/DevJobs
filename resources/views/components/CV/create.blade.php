@@ -5,7 +5,7 @@
                 <h1 class="text-2xl font-bold text-center my-10">{{ __('Create CV') }}</h1>
                 <div class="md:flex md:justify-center p-5">
                     <div class="md:w-1/2 space-y-5">
-                        <x-forms.input id="title" name="title" label="Title" wire:model="title"/>
+                        <x-forms.input id="title" name="title" label="Title" wireModel="title"/>
                     </div>
                 </div>
 
@@ -13,9 +13,9 @@
                 <div class="md:flex md:justify-center p-5">
                     <div class="md:w-1/2 space-y-5">
                         <x-forms.input id="first_name" name="first_name" label="First Name"
-                                       wire:model="first_name"/>
+                                       wireModel="first_name"/>
                         <x-forms.input id="last_name" name="last_name" label="Last Name"
-                                       wire:model="last_name"/>
+                                       wireModel="last_name"/>
                         <div>
                             <x-input-label for="image" :value="__('Profile Picture')"/>
                             <input type="file" id="image" wire:model="image"
@@ -40,10 +40,10 @@
                             <x-input-error :messages="$errors->get('about_me')" class="mt-2"/>
                         </div>
 
-                        <x-forms.input id="birth_date" type="date" name="birth_date" label="Birth Date"
-                                       wire:model="birth_date"/>
-                        <x-forms.input id="city" name="city" label="City" wire:model="city"/>
-                        <x-forms.input id="country" name="country" label="Country" wire:model="country"/>
+                        <x-forms.date-picker id="birth_date" type="date" name="birth_date" label="Birth Date"
+                                             wireModel="birth_date"/>
+                        <x-forms.input id="city" name="city" label="City" wireModel="city"/>
+                        <x-forms.input id="country" name="country" label="Country" wireModel="country"/>
 
                         <div>
                             <x-input-label :value="__('Nationalities')"/>
@@ -152,6 +152,8 @@
                                             class="bg-red-500 text-white px-3 py-1 rounded">X
                                     </button>
                                 </div>
+                                <x-input-error :messages="$errors->get('identity_documents.' . $index . '.number')"
+                                               class="mt-2"/>
                             @endforeach
                             <button type="button" wire:click="addIdentity"
                                     class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">
@@ -177,6 +179,7 @@
                                             class="bg-red-500 text-white px-3 py-1 rounded">X
                                     </button>
                                 </div>
+                                <x-input-error :messages="$errors->get('phones.' . $index . '.number')" class="mt-2"/>
                             @endforeach
                             <button type="button" wire:click="addPhone"
                                     class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">
@@ -200,11 +203,14 @@
                                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full">
                                     <input type="url" wire:model="socialMedia.{{ $index }}.url"
                                            placeholder="URL"
-                                           class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full mt-1">
+                                           class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full">
                                     <button type="button" wire:click="removeSocialMedia({{ $index }})"
-                                            class="bg-red-500 text-white px-3 py-1 rounded mt-1">X
+                                            class="bg-red-500 text-white px-3 py-1 rounded">X
                                     </button>
                                 </div>
+                                <x-input-error :messages="$errors->get('socialMedia.' . $index . '.user_name')"
+                                               class="mt-2"/>
+                                <x-input-error :messages="$errors->get('socialMedia.' . $index . '.url')" class="mt-2"/>
                             @endforeach
                             <button type="button" wire:click="addSocialMedia"
                                     class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">
@@ -212,11 +218,180 @@
                         </div>
 
                         <div class="space-y-6">
+
+                            {{-- Experiencia Laboral --}}
+                            @if (in_array('work_experience', $activeSections))
+                                <div class="border border-gray-200 shadow-md p-6 rounded-2xl bg-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-xl flex items-center gap-2">
+                                            {{ __('Work Experience') }}
+                                        </h3>
+                                        <button wire:click="removeSection('work_experience')"
+                                                class="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded mt-4 hover:bg-red-200">
+                                            {{ __('Delete Section') }}
+                                        </button>
+
+                                    </div>
+                                    @foreach ($workExperiences as $index => $item)
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                                            <x-forms.input id="company" name="company" label="{{ __('Company') }}"
+                                                           wireModel="workExperiences.{{ $index }}.company"/>
+                                            <x-forms.input id="workstation" name="workstation"
+                                                           label="{{ __('Workstation') }}"
+                                                           wireModel="workExperiences.{{ $index }}.position"/>
+
+                                            <x-forms.date-picker id="start-{{ $index }}-experience"
+                                                                 name="start-{{ $index }}-experience"
+                                                                 label="{{ __('Start Day') }}"
+                                                                 wireModel="workExperiences.{{ $index }}.start"/>
+                                            <x-forms.date-picker id="end-{{ $index }}-experience"
+                                                                 name="end-{{ $index }}-experience"
+                                                                 label="{{ __('End Day') }}"
+                                                                 wireModel="workExperiences.{{ $index }}.end"/>
+
+                                            <textarea wire:model="workExperiences.{{ $index }}.description"
+                                                      placeholder="Descripción"
+                                                      class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm md:col-span-2"></textarea>
+                                        </div>
+                                        <button wire:click="removeEntry('work_experience', {{ $index }})"
+                                                class="bg-red-500 text-white px-3 py-1 rounded mt-5 mb-5">{{ __('Delete Experience') }}
+                                        </button>
+                                    @endforeach
+                                    <button wire:click="addEntry('work_experience')"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        + {{ __('Add Experience') }}
+                                    </button>
+                                </div>
+                            @endif
+
+                            {{-- Educación --}}
+                            @if (in_array('education', $activeSections))
+                                <div class="border border-gray-200 shadow-md p-6 rounded-2xl bg-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-xl flex items-center gap-2">
+                                            {{ __('Education') }}
+                                        </h3>
+                                        <button wire:click="removeSection('education')"
+                                                class="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded mt-4 hover:bg-red-200">
+                                            {{ __('Delete Section') }}
+                                        </button>
+
+                                    </div>
+                                    @foreach ($educations as $index => $item)
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+                                            <x-forms.input id="educational_center" name="educational_center"
+                                                           label="{{ __('Educational Center') }}"
+                                                           wireModel="educations.{{ $index }}.school"/>
+                                            <x-forms.input id="course" name="course"
+                                                           label="{{ __('Course') }}"
+                                                           wireModel="educations.{{ $index }}.degree"/>
+                                            <x-forms.date-picker id="start-{{ $index }}-education"
+                                                                 name="start-{{ $index }}-education"
+                                                                 label="{{ __('Start Day') }}"
+                                                                 wireModel="educations.{{ $index }}.start"/>
+                                            <x-forms.date-picker id="end-{{ $index }}-education"
+                                                                 name="end-{{ $index }}-education"
+                                                                 label="{{ __('End Day') }}"
+                                                                 wireModel="educations.{{ $index }}.end"/>
+                                            <x-forms.input id="educational_center_city" name="educational_center_city"
+                                                           label="{{ __('City') }}"
+                                                           wireModel="educations.{{ $index }}.city"/>
+                                            <x-forms.input id="educational_center_country" name="educational_center_country"
+                                                           label="{{ __('Country') }}"
+                                                           wireModel="educations.{{ $index }}.country"/>
+                                        </div>
+                                        <button wire:click="removeEntry('education', {{ $index }})"
+                                                class="bg-red-500 text-white px-3 py-1 rounded mt-5 mb-5">{{ __('Delete Education') }}
+                                        </button>
+                                    @endforeach
+                                    <button wire:click="addEntry('education')"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        + {{ __('Add Education') }}
+                                    </button>
+                                </div>
+                            @endif
+
+                            {{-- Idiomas --}}
+                            @if (in_array('languages', $activeSections))
+                                <div class="border border-gray-200 shadow-md p-6 rounded-2xl bg-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-xl flex items-center gap-2">
+                                            {{ __('Languages') }}
+                                        </h3>
+                                        <button wire:click="removeSection('languages')"
+                                                class="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded mt-4 hover:bg-red-200">
+                                            {{ __('Delete Section') }}
+                                        </button>
+                                    </div>
+                                    @foreach ($languages as $index => $item)
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <x-forms.select-input
+                                                id="language"
+                                                name="name"
+                                                label="Language"
+                                                :options="$languages_options"
+                                                selectedValue="languages.{{ $index }}.language_id"
+                                            />
+
+                                            <x-forms.input id="language_level" name="language_level"
+                                                           label="{{ __('Level') }}"
+                                                           wireModel="languages.{{ $index }}.level"/>
+                                        </div>
+                                        <button wire:click="removeEntry('languages', {{ $index }})"
+                                                class="bg-red-500 text-white px-3 py-1 rounded mt-5 mb-5">
+                                            {{ __('Delete Language') }}
+                                        </button>
+                                    @endforeach
+                                    <button wire:click="addEntry('languages')"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        + {{ __('Add Language') }}
+                                    </button>
+                                </div>
+                            @endif
+
+                            {{-- Habilidades --}}
+                            @if (in_array('skills', $activeSections))
+                                <div class="border border-gray-200 shadow-md p-6 rounded-2xl bg-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-xl flex items-center gap-2">
+                                            {{ __('Skills') }}
+                                        </h3>
+                                        <button wire:click="removeSection('skills')"
+                                                class="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded mt-4 hover:bg-red-200">
+                                            {{ __('Delete Section') }}
+                                        </button>
+                                    </div>
+                                    @foreach ($skills as $index => $item)
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <x-forms.select-input
+                                                id="skill"
+                                                name="name"
+                                                label="skill"
+                                                :options="$skills_options"
+                                                selectedValue="skills.{{ $index }}.digital_skill_id"
+                                            />
+                                            <x-forms.input id="skill_level" name="skill_level"
+                                                           label="{{ __('Level') }}"
+                                                           wireModel="skills.{{ $index }}.level"/>
+                                        </div>
+                                        <button wire:click="removeEntry('skills', {{ $index }})"
+                                                class="bg-red-500 text-white px-3 py-1 rounded mt-5 mb-5">
+                                            {{ __('Delete Skill') }}
+                                        </button>
+                                    @endforeach
+                                    <button wire:click="addEntry('skills')"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        + {{ __('Add Skill') }}
+                                    </button>
+                                </div>
+                            @endif
+
                             {{-- Selector de secciones --}}
                             <div>
-                                <label class="font-semibold">Añadir sección:</label>
-                                <select wire:change="addSection($event.target.value)" class="form-select">
-                                    <option value="">-- Selecciona --</option>
+                                <label class="font-semibold">{{ __('Add Section') }}:</label>
+                                <select wire:change="addSection($event.target.value)"
+                                        class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-1/3">
+                                    <option value="">-- {{ __('Choose') }} --</option>
                                     @foreach ($availableSections as $key => $label)
                                         @if (!in_array($key, $activeSections))
                                             <option value="{{ $key }}">{{ $label }}</option>
@@ -224,125 +399,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            {{-- Experiencia Laboral --}}
-                            @if (in_array('work_experience', $activeSections))
-                                <div class="border p-4 rounded bg-gray-50">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <h3 class="font-bold">Experiencia Laboral</h3>
-                                        <button wire:click="removeSection('work_experience')"
-                                                class="text-red-500">Eliminar sección
-                                        </button>
-                                    </div>
-                                    @foreach ($workExperiences as $index => $item)
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                                            <input wire:model="workExperiences.{{ $index }}.company"
-                                                   placeholder="Empresa" class="form-input">
-                                            <input wire:model="workExperiences.{{ $index }}.position"
-                                                   placeholder="Puesto" class="form-input">
-                                            <input wire:model="workExperiences.{{ $index }}.start"
-                                                   placeholder="Inicio" class="form-input">
-                                            <input wire:model="workExperiences.{{ $index }}.end"
-                                                   placeholder="Fin" class="form-input">
-                                            <textarea wire:model="workExperiences.{{ $index }}.description"
-                                                      placeholder="Descripción"
-                                                      class="form-textarea md:col-span-2"></textarea>
-                                        </div>
-                                        <button wire:click="removeEntry('work_experience', {{ $index }})"
-                                                class="text-red-500 text-sm mb-2">Eliminar experiencia
-                                        </button>
-                                    @endforeach
-                                    <button wire:click="addEntry('work_experience')"
-                                            class="bg-blue-500 text-white px-3 py-1 rounded">+ Añadir
-                                        experiencia
-                                    </button>
-                                </div>
-                            @endif
-
-                            {{-- Educación --}}
-                            @if (in_array('education', $activeSections))
-                                <div class="border p-4 rounded bg-gray-50">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <h3 class="font-bold">Educación</h3>
-                                        <button wire:click="removeSection('education')" class="text-red-500">
-                                            Eliminar sección
-                                        </button>
-                                    </div>
-                                    @foreach ($educations as $index => $item)
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                                            <input wire:model="educations.{{ $index }}.school"
-                                                   placeholder="Centro educativo" class="form-input">
-                                            <input wire:model="educations.{{ $index }}.degree"
-                                                   placeholder="Título" class="form-input">
-                                            <input wire:model="educations.{{ $index }}.start"
-                                                   placeholder="Inicio" class="form-input">
-                                            <input wire:model="educations.{{ $index }}.end" placeholder="Fin"
-                                                   class="form-input">
-                                            <textarea wire:model="educations.{{ $index }}.description"
-                                                      placeholder="Descripción"
-                                                      class="form-textarea md:col-span-2"></textarea>
-                                        </div>
-                                        <button wire:click="removeEntry('education', {{ $index }})"
-                                                class="text-red-500 text-sm mb-2">Eliminar educación
-                                        </button>
-                                    @endforeach
-                                    <button wire:click="addEntry('education')"
-                                            class="bg-blue-500 text-white px-3 py-1 rounded">+ Añadir educación
-                                    </button>
-                                </div>
-                            @endif
-
-                            {{-- Idiomas --}}
-                            @if (in_array('languages', $activeSections))
-                                <div class="border p-4 rounded bg-gray-50">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <h3 class="font-bold">Idiomas</h3>
-                                        <button wire:click="removeSection('languages')" class="text-red-500">
-                                            Eliminar sección
-                                        </button>
-                                    </div>
-                                    @foreach ($languages as $index => $item)
-                                        <div class="flex items-center space-x-2 mb-2">
-                                            <input wire:model="languages.{{ $index }}.language"
-                                                   placeholder="Idioma" class="form-input w-1/2">
-                                            <input wire:model="languages.{{ $index }}.level" placeholder="Nivel"
-                                                   class="form-input w-1/2">
-                                            <button wire:click="removeEntry('languages', {{ $index }})"
-                                                    class="text-red-500">✕
-                                            </button>
-                                        </div>
-                                    @endforeach
-                                    <button wire:click="addEntry('languages')"
-                                            class="bg-blue-500 text-white px-3 py-1 rounded">+ Añadir idioma
-                                    </button>
-                                </div>
-                            @endif
-
-                            {{-- Habilidades --}}
-                            @if (in_array('skills', $activeSections))
-                                <div class="border p-4 rounded bg-gray-50">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <h3 class="font-bold">Habilidades</h3>
-                                        <button wire:click="removeSection('skills')" class="text-red-500">
-                                            Eliminar sección
-                                        </button>
-                                    </div>
-                                    @foreach ($skills as $index => $item)
-                                        <div class="flex items-center space-x-2 mb-2">
-                                            <input wire:model="skills.{{ $index }}.name" placeholder="Habilidad"
-                                                   class="form-input w-1/2">
-                                            <input wire:model="skills.{{ $index }}.level" placeholder="Nivel"
-                                                   class="form-input w-1/2">
-                                            <button wire:click="removeEntry('skills', {{ $index }})"
-                                                    class="text-red-500">✕
-                                            </button>
-                                        </div>
-                                    @endforeach
-                                    <button wire:click="addEntry('skills')"
-                                            class="bg-blue-500 text-white px-3 py-1 rounded">+ Añadir habilidad
-                                    </button>
-                                </div>
-                            @endif
                         </div>
 
                         <x-primary-button wire:click="store">{{ __('Create CV') }}</x-primary-button>

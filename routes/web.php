@@ -9,7 +9,6 @@ use App\Livewire\CvManager;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
-Route::get('/cvs', CvManager::class)->name('cv.manager');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/vacancies', [VacancyController::class, 'index'])->name('vacancies.index');
@@ -23,6 +22,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/cvs', CvManager::class)->name('cv.manager');
 });
 
 Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show'])->name('vacancies.show');

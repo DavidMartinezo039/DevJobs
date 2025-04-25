@@ -19,17 +19,17 @@ class CV extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class)->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 
     public function personalData(): HasOne
     {
-        return $this->hasOne(PersonalData::class)->withTimestamps();
+        return $this->hasOne(PersonalData::class);
     }
 
     public function workExperiences(): HasMany
     {
-        return $this->hasMany(WorkExperience::class)->withTimestamps();
+        return $this->hasMany(WorkExperience::class, 'cv_id');
     }
 
     public function languages(): BelongsToMany
@@ -39,12 +39,12 @@ class CV extends Model
 
     public function digitalSkills(): BelongsToMany
     {
-        return $this->belongsToMany(DigitalSkill::class, 'cvs_digital_skills', 'cv_id', 'digital_skill_id')->withTimestamps();
+        return $this->belongsToMany(DigitalSkill::class, 'cvs_digital_skills', 'cv_id', 'digital_skill_id')->withPivot('level')->withTimestamps();
     }
 
     public function education(): HasMany
     {
-        return $this->hasMany(Education::class)->withTimestamps();
+        return $this->hasMany(Education::class, 'cv_id');
     }
 
     public function drivingLicenses(): BelongsToMany

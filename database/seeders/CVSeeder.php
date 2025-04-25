@@ -25,7 +25,9 @@ class CVSeeder extends Seeder
                 });
 
                 $digitalSkills = DigitalSkill::factory(3)->create();
-                $cv->digitalSkills()->attach($digitalSkills->pluck('id'));
+                $digitalSkills->each(function ($skill) use ($cv) {
+                    $cv->digitalSkills()->attach($skill->id, ['level' => 'Intermediate']);
+                });
 
                 $drivingLicense = DrivingLicense::factory()->create();
                 $cv->drivingLicenses()->attach($drivingLicense->id);

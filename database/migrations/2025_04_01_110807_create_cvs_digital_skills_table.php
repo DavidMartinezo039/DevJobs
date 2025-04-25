@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cv_id')->constrained('cvs')->cascadeOnDelete();
             $table->foreignId('digital_skill_id')->constrained('digital_skills')->cascadeOnDelete();
+            $table->string('level')->nullable();
             $table->timestamps();
         });
     }

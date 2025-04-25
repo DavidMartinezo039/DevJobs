@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cv_id')->constrained('cvs')->cascadeOnDelete();
             $table->foreignId('language_id')->constrained('languages')->cascadeOnDelete();
-            $table->string('level');
+            $table->string('level')->nullable();
             $table->timestamps();
         });
     }

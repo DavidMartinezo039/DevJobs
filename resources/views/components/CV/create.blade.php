@@ -250,7 +250,6 @@
                                                                  wireModel="workExperiences.{{ $index }}.end"/>
 
                                             <textarea wire:model="workExperiences.{{ $index }}.description"
-                                                      placeholder="Descripción"
                                                       class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm md:col-span-2"></textarea>
                                         </div>
                                         <button wire:click="removeEntry('work_experience', {{ $index }})"
@@ -382,6 +381,39 @@
                                     <button wire:click="addEntry('skills')"
                                             class="bg-blue-500 text-white px-3 py-1 rounded">
                                         + {{ __('Add Skill') }}
+                                    </button>
+                                </div>
+                            @endif
+
+                            @if (in_array('driving_licenses', $activeSections))
+                                <div class="border border-gray-200 shadow-md p-6 rounded-2xl bg-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-xl flex items-center gap-2">
+                                            {{ __('Driving Licenses') }}
+                                        </h3>
+                                        <button wire:click="removeSection('driving_licenses')"
+                                                class="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded mt-4 hover:bg-red-200">
+                                            {{ __('Delete Section') }}
+                                        </button>
+                                    </div>
+                                    @foreach ($drivingLicenses as $index => $item)
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <x-forms.select-input
+                                                id="driving_license"
+                                                name="category"
+                                                label="Driving License"
+                                                :options="$drivingLicenses_options"
+                                                selectedValue="drivingLicenses.{{ $index }}.driving_license_id"
+                                            />
+                                        </div>
+                                        <button wire:click="removeEntry('driving_licenses', {{ $index }})"
+                                                class="bg-red-500 text-white px-3 py-1 rounded mt-5 mb-5">
+                                            {{ __('Delete Driving License') }}
+                                        </button>
+                                    @endforeach
+                                    <button wire:click="addEntry('driving_licenses')"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        + {{ __('Add Driving License') }}
                                     </button>
                                 </div>
                             @endif

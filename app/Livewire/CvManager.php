@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\DigitalSkill;
+use App\Models\DrivingLicense;
 use App\Models\Education;
 use App\Models\Gender;
 use App\Models\Identity;
@@ -58,6 +59,8 @@ class CvManager extends Component
     // Habilidades
     public $skills = [];
 
+    public $drivingLicenses = [];
+
     public $cvs, $selectedCv;
 
     public $genders = []; // Lista de géneros desde DB
@@ -69,14 +72,17 @@ class CvManager extends Component
 
     public $skills_options = [];
 
+    public $drivingLicenses_options = [];
+
     public $personalData;
 
 
     public $availableSections = [
-        'work_experience' => 'Experiencia Laboral',
-        'education' => 'Educación',
-        'languages' => 'Idiomas',
-        'skills' => 'Habilidades',
+        'work_experience' => 'Work Experience',
+        'education' => 'Education',
+        'languages' => 'Languages',
+        'skills' => 'Skills',
+        'driving_licenses' => 'Driving Licenses',
     ];
 
     public $activeSections = [];
@@ -108,6 +114,9 @@ class CvManager extends Component
             case 'skills':
                 $this->skills = [];
                 break;
+            case 'driving_licenses':
+                $this->drivingLicenses = [];
+                break;
         }
     }
 
@@ -125,6 +134,9 @@ class CvManager extends Component
                 break;
             case 'skills':
                 $this->skills[] = ['digital_skill_id' => '', 'level' => ''];
+                break;
+            case 'driving_licenses':
+                $this->drivingLicenses[] = ['driving_license_id' => ''];
                 break;
         }
     }
@@ -148,6 +160,10 @@ class CvManager extends Component
                 unset($this->skills[$index]);
                 $this->skills = array_values($this->skills);
                 break;
+            case 'driving_licenses':
+                unset($this->drivingLicenses[$index]);
+                $this->drivingLicenses = array_values($this->drivingLicenses);
+                break;
         }
     }
 
@@ -163,6 +179,7 @@ class CvManager extends Component
         $this->socialMediaTypes = SocialMedia::all();
         $this->languages_options = Language::all();
         $this->skills_options = DigitalSkill::all();
+        $this->drivingLicenses_options = DrivingLicense::all();
 
         // Y demás campos...
 
@@ -250,6 +267,10 @@ class CvManager extends Component
             'skills' => 'nullable|array',
             'skills.*.digital_skill_id' => 'nullable|exists:digital_skills,id',
             'skills.*.level' => 'nullable|string|max:50',
+
+            // Permisos de conducir
+            'drivingLicenses' => 'nullable|array',
+            'drivingLicenses.*.driving_license_id' => 'nullable|exists:driving_licenses,id',
         ]);
 
         $cv = CV::create(['title' => $this->title, 'user_id' => auth()->id()]);
@@ -350,6 +371,14 @@ class CvManager extends Component
                     $cv->digitalSkills()->attach($skill['digital_skill_id'], [
                         'level' => $skill['level']
                     ]);
+                }
+            }
+        }
+
+        if (!empty($this->drivingLicenses)) {
+            foreach ($this->drivingLicenses as $drivingLicens) {
+                if (!empty($drivingLicens['driving_license_id'])) {
+                    $cv->drivingLicenses()->attach($drivingLicens['driving_license_id']);
                 }
             }
         }

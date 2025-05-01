@@ -69,6 +69,8 @@ class CvManager extends Component
 
     public $skills_options = [];
 
+    public $personalData;
+
 
     public $availableSections = [
         'work_experience' => 'Experiencia Laboral',
@@ -252,7 +254,7 @@ class CvManager extends Component
 
         $cv = CV::create(['title' => $this->title, 'user_id' => auth()->id()]);
 
-        $imagePath = $this->image ? $this->image->store('images', 'public') : null;
+        $imagePath = $this->image ? basename($this->image->store('images', 'public')) : null;
 
         $personalData = PersonalData::create([
             'cv_id' => $cv->id,
@@ -390,7 +392,6 @@ class CvManager extends Component
     {
         $this->selectedCv = $cv;
         $this->title = $cv->title;
-        $this->description = $cv->description;
 
         $personalData = $cv->personalData;
         $this->emails = $personalData ? json_decode($personalData->email, true) ?? [''] : [''];
@@ -443,6 +444,7 @@ class CvManager extends Component
     function show(CV $cv)
     {
         $this->selectedCv = $cv;
+        $this->personalData = $cv->personalData;
         $this->view = 'show';
     }
 

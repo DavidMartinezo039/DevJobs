@@ -24,7 +24,7 @@ class CV extends Model
 
     public function personalData(): HasOne
     {
-        return $this->hasOne(PersonalData::class);
+        return $this->hasOne(PersonalData::class, 'cv_id');
     }
 
     public function workExperiences(): HasMany

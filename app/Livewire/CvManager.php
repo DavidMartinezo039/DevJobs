@@ -75,6 +75,7 @@ class CvManager extends Component
     public $drivingLicenses_options = [];
 
     public $personalData;
+    public $new_image;
 
 
     public $availableSections = [
@@ -169,9 +170,6 @@ class CvManager extends Component
 
     public function mount()
     {
-        $this->first_name = '';
-        $this->last_name = '';
-        $this->title = '';
         $this->cvs = CV::where('user_id', auth()->id())->get();
         $this->genders = Gender::all();
         $this->identityTypes = Identity::all();
@@ -205,8 +203,7 @@ class CvManager extends Component
 
     public function store()
     {
-
-        $validated = $this->validate([
+        $this->validate([
             'title' => 'required|string|max:255',
 
             'first_name' => 'required|string|max:255',
@@ -288,7 +285,7 @@ class CvManager extends Component
             'email' => json_encode($this->emails),
             'address' => json_encode($this->addresses),
             'workPermits' => json_encode($this->workPermits),
-            'nationalities' => json_encode($this->nationalities),
+            'nationality' => json_encode($this->nationalities),
             'image' => $imagePath,
             'gender_id' => $this->gender_id,
         ]);
@@ -423,11 +420,17 @@ class CvManager extends Component
         $this->title = $cv->title;
 
         $personalData = $cv->personalData;
+        $this->image = $personalData->image ?? null;
+        $this->first_name = $personalData->first_name;
+        $this->last_name = $personalData->last_name;
+        $this->birth_date = $personalData->birth_date;
+        $this->city = $personalData->city;
+        $this->country = $personalData->country;
+        $this->about_me = $personalData->about_me;
         $this->emails = $personalData ? json_decode($personalData->email, true) ?? [''] : [''];
         $this->addresses = $personalData ? json_decode($personalData->address, true) ?? [''] : [''];
         $this->workPermits = $personalData ? json_decode($personalData->workPermits, true) ?? [''] : [''];
-        $this->nationalities = $personalData ? json_decode($personalData->nationalities, true) ?? [''] : [''];
-        $this->image = $personalData->image ?? null;
+        $this->nationalities = $personalData ? json_decode($personalData->nationality, true) ?? [''] : [''];
 
         $this->view = 'edit';
     }

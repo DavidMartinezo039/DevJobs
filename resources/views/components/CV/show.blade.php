@@ -28,13 +28,13 @@
 
                         <x-profile-field label="Country" :value="$personalData->country"/>
 
-                        <x-profile-field-bucle label="Nationalities" :values="$personalData->nationalities"/>
+                        <x-profile-field-bucle label="Nationalities" :values="$personalData->nationality"/>
 
                         <x-profile-field-bucle label="Work Permits" :values="$personalData->workPermits"/>
 
-                        <x-profile-field-bucle label="Emails" :values="$personalData->emails"/>
+                        <x-profile-field-bucle label="Emails" :values="$personalData->email"/>
 
-                        <x-profile-field-bucle label="Addresses" :values="$personalData->addresses"/>
+                        <x-profile-field-bucle label="Addresses" :values="$personalData->address"/>
 
                         <x-profile-field label="Gender" :value="$personalData->gender->type ?? ''"/>
 

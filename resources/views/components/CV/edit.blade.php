@@ -436,7 +436,7 @@
                             </div>
                         </div>
 
-                        <x-primary-button wire:click="store">{{ __('Create CV') }}</x-primary-button>
+                        <x-primary-button wire:click="update">{{ __('Update CV') }}</x-primary-button>
                     </div>
                 </div>
             </div>

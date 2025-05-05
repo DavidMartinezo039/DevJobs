@@ -77,7 +77,6 @@ class CvManager extends Component
     public $personalData;
     public $new_image;
 
-
     public $availableSections = [
         'work_experience' => 'Work Experience',
         'education' => 'Education',
@@ -431,34 +430,261 @@ class CvManager extends Component
         $this->addresses = $personalData ? json_decode($personalData->address, true) ?? [''] : [''];
         $this->workPermits = $personalData ? json_decode($personalData->workPermits, true) ?? [''] : [''];
         $this->nationalities = $personalData ? json_decode($personalData->nationality, true) ?? [''] : [''];
+        $this->gender_id = $personalData->gender_id;
+
+        $this->identity_documents = $personalData->identities->map(function ($identity) {
+            return [
+                'identity_id' => $identity->id,
+                'number' => $identity->pivot->number,
+            ];
+        })->toArray();
+
+        $this->phones = $personalData->phones->map(function ($phone) {
+            return [
+                'phone_id' => $phone->id,
+                'number' => $phone->pivot->number,
+            ];
+        })->toArray();
+
+        $this->socialMedia = $personalData->socialMedia->map(function ($socialmedia) {
+            return [
+                'social_media_id' => $socialmedia->id,
+                'user_name' => $socialmedia->pivot->user_name,
+                'url' => $socialmedia->pivot->url,
+            ];
+        })->toArray();
+
+        $this->workExperiences = $cv->workExperiences->map(function ($experience) {
+            return [
+                'company' => $experience->company_name,
+                'position' => $experience->position,
+                'start' => $experience->start_date,
+                'end' => $experience->end_date,
+                'description' => $experience->description,
+            ];
+        })->toArray();
+
+        if (count($this->workExperiences) > 0 && !in_array("work_experience", $this->activeSections)) {
+            $this->activeSections[] = "work_experience";
+        }
+
+        $this->educations = $cv->education->map(function ($education) {
+            return [
+                'school' => $education->institution,
+                'city' => $education->city,
+                'country' => $education->country,
+                'degree' => $education->title,
+                'start' => $education->start_date,
+                'end' => $education->end_date,
+            ];
+        })->toArray();
+
+        if (count($this->educations) > 0 && !in_array("education", $this->activeSections)) {
+            $this->activeSections[] = "education";
+        }
+
+        $this->languages = $cv->languages->map(function ($language) {
+            return [
+                'language_id' => $language->id,
+                'level' => $language->pivot->level,
+            ];
+        })->toArray();
+
+        if (count($this->languages) > 0 && !in_array("languages", $this->activeSections)) {
+            $this->activeSections[] = "languages";
+        }
+
+        $this->skills = $cv->digitalSkills->map(function ($skill) {
+            return [
+                'digital_skill_id' => $skill->id,
+                'level' => $skill->pivot->level,
+            ];
+        })->toArray();
+
+        if (count($this->languages) > 0 && !in_array("skills", $this->activeSections)) {
+            $this->activeSections[] = "skills";
+        }
+
+        $this->drivingLicenses = $cv->drivingLicenses->map(function ($drivingLicense) {
+            return [
+                'driving_license_id' => $drivingLicense->id,
+            ];
+        })->toArray();
+
+        if (count($this->drivingLicenses) > 0 && !in_array("driving_licenses", $this->activeSections)) {
+            $this->activeSections[] = "driving_licenses";
+        }
 
         $this->view = 'edit';
     }
 
-    public
-    function update()
+    public function update()
     {
         $this->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'title' => 'required|string|max:255',
+
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'new_image' => 'nullable|image|max:2048',
+            'about_me' => 'required|string',
+            'workPermits' => 'nullable|array',
+            'workPermits.*' => 'nullable|string|max:255',
+            'birth_date' => 'nullable|date',
+            'city' => 'nullable|string',
+            'country' => 'nullable|string',
+            'nationalities' => 'nullable|array',
+            'nationalities.*' => 'nullable|string|max:255',
+            'emails' => 'nullable|array',
             'emails.*' => 'nullable|email',
-            'addresses.*' => 'nullable|string',
-            'workPermits.*' => 'nullable|string',
-            'nationalities.*' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'addresses' => 'nullable|array',
+            'addresses.*' => 'nullable|string|max:255',
+
+            'gender_id' => 'nullable|exists:genders,id',
+
+            'identity_documents' => 'nullable|array',
+            'identity_documents.*.identity_id' => 'nullable|exists:identities,id',
+            'identity_documents.*.number' => 'nullable|string|max:100',
+
+            'phones' => 'nullable|array',
+            'phones.*.phone_id' => 'nullable|exists:phones,id',
+            'phones.*.number' => 'nullable|string|max:20',
+
+            'socialMedia' => 'nullable|array',
+            'socialMedia.*.social_media_id' => 'nullable|exists:social_media,id',
+            'socialMedia.*.user_name' => 'nullable|string|min:3|max:255',
+            'socialMedia.*.url' => 'nullable|url|max:255',
+
+            // Experiencia Laboral
+            'workExperiences' => 'nullable|array',
+            'workExperiences.*.company' => 'nullable|string|max:255',
+            'workExperiences.*.position' => 'nullable|string|max:255',
+            'workExperiences.*.start' => 'nullable|date',
+            'workExperiences.*.end' => 'nullable|date|after_or_equal:workExperiences.*.start',
+            'workExperiences.*.description' => 'nullable|string',
+
+            // Educación
+            'educations' => 'nullable|array',
+            'educations.*.school' => 'nullable|string|max:255',
+            'educations.*.degree' => 'nullable|string|max:255',
+            'educations.*.city' => 'nullable|string|max:255',
+            'educations.*.country' => 'nullable|string|max:255',
+            'educations.*.start' => 'nullable|date',
+            'educations.*.end' => 'nullable|date|after_or_equal:educations.*.start',
+            'educations.*.description' => 'nullable|string',
+
+            // Idiomas
+            'languages' => 'nullable|array',
+            'languages.*.language_id' => 'nullable|exists:languages,id',
+            'languages.*.level' => 'nullable|string|max:50',
+
+            // Habilidades
+            'skills' => 'nullable|array',
+            'skills.*.digital_skill_id' => 'nullable|exists:digital_skills,id',
+            'skills.*.level' => 'nullable|string|max:50',
+
+            // Permisos de conducir
+            'drivingLicenses' => 'nullable|array',
+            'drivingLicenses.*.driving_license_id' => 'nullable|exists:driving_licenses,id',
         ]);
 
-        $this->selectedCv->update(['title' => $this->title, 'description' => $this->description]);
+        $cv = $this->selectedCv;
+        $cv->update(['title' => $this->title]);
 
-        $imagePath = $this->image ? $this->image->store('images', 'public') : $this->selectedCv->personalData->image;
+        $imagePath = $this->new_image ? basename($this->new_image->store('images', 'public')) : $cv->personalData->image;
 
-        $this->selectedCv->personalData->update([
-            'about_me' => $this->description,
+        $personalData = $cv->personalData;
+        $personalData->update([
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'birth_date' => $this->birth_date,
+            'city' => $this->city,
+            'country' => $this->country,
+            'about_me' => $this->about_me,
             'email' => json_encode($this->emails),
             'address' => json_encode($this->addresses),
             'workPermits' => json_encode($this->workPermits),
-            'nationalities' => json_encode($this->nationalities),
+            'nationality' => json_encode($this->nationalities),
             'image' => $imagePath,
+            'gender_id' => $this->gender_id,
+        ]);
+
+        $personalData->identities()->detach();
+        $personalData->phones()->detach();
+        $personalData->socialMedia()->detach();
+        $cv->languages()->detach();
+        $cv->digitalSkills()->detach();
+        $cv->drivingLicenses()->detach();
+        $cv->workExperiences()->delete();
+        $cv->education()->delete();
+
+        foreach ($this->identity_documents ?? [] as $doc) {
+            if (!empty($doc['identity_id']) && !empty($doc['number'])) {
+                $personalData->identities()->attach($doc['identity_id'], ['number' => $doc['number']]);
+            }
+        }
+
+        foreach ($this->phones ?? [] as $phone) {
+            if (!empty($phone['phone_id']) && !empty($phone['number'])) {
+                $personalData->phones()->attach($phone['phone_id'], ['number' => $phone['number']]);
+            }
+        }
+
+        foreach ($this->socialMedia ?? [] as $social) {
+            if (!empty($social['social_media_id']) && !empty($social['user_name'])) {
+                $personalData->socialMedia()->attach($social['social_media_id'], [
+                    'user_name' => $social['user_name'],
+                    'url' => $social['url'] ?? null,
+                ]);
+            }
+        }
+
+        foreach ($this->workExperiences ?? [] as $experience) {
+            $cv->workExperiences()->create([
+                'company_name' => $experience['company'],
+                'position' => $experience['position'],
+                'start_date' => $experience['start'],
+                'end_date' => $experience['end'],
+                'description' => $experience['description'],
+            ]);
+        }
+
+        foreach ($this->educations ?? [] as $education) {
+            $cv->education()->create([
+                'institution' => $education['school'],
+                'title' => $education['degree'],
+                'start_date' => $education['start'],
+                'city' => $education['city'],
+                'country' => $education['country'],
+                'end_date' => $education['end'],
+            ]);
+        }
+
+        foreach ($this->languages ?? [] as $language) {
+            if (!empty($language['language_id']) && !empty($language['level'])) {
+                $cv->languages()->attach($language['language_id'], ['level' => $language['level']]);
+            }
+        }
+
+        foreach ($this->skills ?? [] as $skill) {
+            if (!empty($skill['digital_skill_id']) && !empty($skill['level'])) {
+                $cv->digitalSkills()->attach($skill['digital_skill_id'], ['level' => $skill['level']]);
+            }
+        }
+
+        foreach ($this->drivingLicenses ?? [] as $drivingLicens) {
+            if (!empty($drivingLicens['driving_license_id'])) {
+                $cv->drivingLicenses()->attach($drivingLicens['driving_license_id']);
+            }
+        }
+
+        $cv->save();
+
+        $this->reset([
+            'title',
+            'first_name', 'last_name', 'birth_date', 'city', 'country', 'about_me',
+            'emails', 'addresses', 'workPermits', 'nationalities', 'image',
+            'identity_documents', 'phones', 'socialMedia',
+            'workExperiences', 'educations', 'languages', 'skills', 'drivingLicenses'
         ]);
 
         $this->mount();

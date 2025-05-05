@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\CvCreateRequest;
+use App\Http\Requests\CvUpdateRequest;
 use App\Models\DigitalSkill;
 use App\Models\DrivingLicense;
 use App\Models\Education;
@@ -22,7 +24,6 @@ class CvManager extends Component
 
     public $title;
 
-    // Datos Personales
     public $first_name;
     public $last_name;
     public $image;
@@ -32,41 +33,33 @@ class CvManager extends Component
     public $country;
     public $gender_id;
 
-    // Arrays de relaciones
     public $workPermits = [];
     public $nationalities = [];
     public $emails = [];
     public $addresses = [];
 
-    // Documentos de identidad
     public $identity_documents = [];
 
-    // Teléfonos
     public $phones = [];
 
-    // Redes sociales
     public $socialMedia = [];
 
-    // Experiencia laboral
     public $workExperiences = [];
 
-    // Educación
     public $educations = [];
 
-    // Idiomas
     public $languages = [];
 
-    // Habilidades
     public $skills = [];
 
     public $drivingLicenses = [];
 
     public $cvs, $selectedCv;
 
-    public $genders = []; // Lista de géneros desde DB
-    public $identityTypes = []; // Lista de tipos de documento desde DB
-    public $phoneTypes = []; // Lista de tipos de teléfono desde DB
-    public $socialMediaTypes = []; // Lista de redes sociales desde DB
+    public $genders = [];
+    public $identityTypes = [];
+    public $phoneTypes = [];
+    public $socialMediaTypes = [];
 
     public $languages_options = [];
 
@@ -202,72 +195,7 @@ class CvManager extends Component
 
     public function store()
     {
-        $this->validate([
-            'title' => 'required|string|max:255',
-
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
-            'about_me' => 'required|string',
-            'workPermits' => 'nullable|array',
-            'workPermits.*' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
-            'city' => 'nullable|string',
-            'country' => 'nullable|string',
-            'nationalities' => 'nullable|array',
-            'nationalities.*' => 'nullable|string|max:255',
-            'emails' => 'nullable|array',
-            'emails.*' => 'nullable|email',
-            'addresses' => 'nullable|array',
-            'addresses.*' => 'nullable|string|max:255',
-
-            'gender_id' => 'nullable|exists:genders,id',
-
-            'identity_documents' => 'nullable|array',
-            'identity_documents.*.identity_id' => 'nullable|exists:identities,id',
-            'identity_documents.*.number' => 'nullable|string|max:100',
-
-            'phones' => 'nullable|array',
-            'phones.*.phone_id' => 'nullable|exists:phones,id',
-            'phones.*.number' => 'nullable|string|max:20',
-
-            'socialMedia' => 'nullable|array',
-            'socialMedia.*.social_media_id' => 'nullable|exists:social_media,id',
-            'socialMedia.*.user_name' => 'nullable|string|min:3|max:255',
-            'socialMedia.*.url' => 'nullable|url|max:255',
-
-            // Experiencia Laboral
-            'workExperiences' => 'nullable|array',
-            'workExperiences.*.company' => 'nullable|string|max:255',
-            'workExperiences.*.position' => 'nullable|string|max:255',
-            'workExperiences.*.start' => 'nullable|date',
-            'workExperiences.*.end' => 'nullable|date|after_or_equal:workExperiences.*.start',
-            'workExperiences.*.description' => 'nullable|string',
-
-            // Educación
-            'educations' => 'nullable|array',
-            'educations.*.school' => 'nullable|string|max:255',
-            'educations.*.degree' => 'nullable|string|max:255',
-            'educations.*.city' => 'nullable|string|max:255',
-            'educations.*.country' => 'nullable|string|max:255',
-            'educations.*.start' => 'nullable|date',
-            'educations.*.end' => 'nullable|date|after_or_equal:educations.*.start',
-            'educations.*.description' => 'nullable|string',
-
-            // Idiomas
-            'languages' => 'nullable|array',
-            'languages.*.language_id' => 'nullable|exists:languages,id',
-            'languages.*.level' => 'nullable|string|max:50',
-
-            // Habilidades
-            'skills' => 'nullable|array',
-            'skills.*.digital_skill_id' => 'nullable|exists:digital_skills,id',
-            'skills.*.level' => 'nullable|string|max:50',
-
-            // Permisos de conducir
-            'drivingLicenses' => 'nullable|array',
-            'drivingLicenses.*.driving_license_id' => 'nullable|exists:driving_licenses,id',
-        ]);
+        $this->validate((new CvCreateRequest())->rules());
 
         $cv = CV::create(['title' => $this->title, 'user_id' => auth()->id()]);
 
@@ -520,72 +448,7 @@ class CvManager extends Component
 
     public function update()
     {
-        $this->validate([
-            'title' => 'required|string|max:255',
-
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'new_image' => 'nullable|image|max:2048',
-            'about_me' => 'required|string',
-            'workPermits' => 'nullable|array',
-            'workPermits.*' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
-            'city' => 'nullable|string',
-            'country' => 'nullable|string',
-            'nationalities' => 'nullable|array',
-            'nationalities.*' => 'nullable|string|max:255',
-            'emails' => 'nullable|array',
-            'emails.*' => 'nullable|email',
-            'addresses' => 'nullable|array',
-            'addresses.*' => 'nullable|string|max:255',
-
-            'gender_id' => 'nullable|exists:genders,id',
-
-            'identity_documents' => 'nullable|array',
-            'identity_documents.*.identity_id' => 'nullable|exists:identities,id',
-            'identity_documents.*.number' => 'nullable|string|max:100',
-
-            'phones' => 'nullable|array',
-            'phones.*.phone_id' => 'nullable|exists:phones,id',
-            'phones.*.number' => 'nullable|string|max:20',
-
-            'socialMedia' => 'nullable|array',
-            'socialMedia.*.social_media_id' => 'nullable|exists:social_media,id',
-            'socialMedia.*.user_name' => 'nullable|string|min:3|max:255',
-            'socialMedia.*.url' => 'nullable|url|max:255',
-
-            // Experiencia Laboral
-            'workExperiences' => 'nullable|array',
-            'workExperiences.*.company' => 'nullable|string|max:255',
-            'workExperiences.*.position' => 'nullable|string|max:255',
-            'workExperiences.*.start' => 'nullable|date',
-            'workExperiences.*.end' => 'nullable|date|after_or_equal:workExperiences.*.start',
-            'workExperiences.*.description' => 'nullable|string',
-
-            // Educación
-            'educations' => 'nullable|array',
-            'educations.*.school' => 'nullable|string|max:255',
-            'educations.*.degree' => 'nullable|string|max:255',
-            'educations.*.city' => 'nullable|string|max:255',
-            'educations.*.country' => 'nullable|string|max:255',
-            'educations.*.start' => 'nullable|date',
-            'educations.*.end' => 'nullable|date|after_or_equal:educations.*.start',
-            'educations.*.description' => 'nullable|string',
-
-            // Idiomas
-            'languages' => 'nullable|array',
-            'languages.*.language_id' => 'nullable|exists:languages,id',
-            'languages.*.level' => 'nullable|string|max:50',
-
-            // Habilidades
-            'skills' => 'nullable|array',
-            'skills.*.digital_skill_id' => 'nullable|exists:digital_skills,id',
-            'skills.*.level' => 'nullable|string|max:50',
-
-            // Permisos de conducir
-            'drivingLicenses' => 'nullable|array',
-            'drivingLicenses.*.driving_license_id' => 'nullable|exists:driving_licenses,id',
-        ]);
+        $this->validate((new CvUpdateRequest())->rules());
 
         $cv = $this->selectedCv;
         $cv->update(['title' => $this->title]);

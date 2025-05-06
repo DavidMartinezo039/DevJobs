@@ -17,7 +17,7 @@ class PersonalDataFactory extends Factory
             'cv_id' => Cv::factory(),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'image' => $this->faker->imageUrl(),
+            'image' => 'default/default.png',
             'about_me' => $this->faker->paragraph,
             'workPermits' => [$this->faker->country],
             'birth_date' => $this->faker->date(),

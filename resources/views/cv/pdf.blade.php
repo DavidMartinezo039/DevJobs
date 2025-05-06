@@ -43,8 +43,11 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
+            object-position: center;
             border: 2px solid #444;
+            display: block;
         }
+
 
         .info {
             text-align: right;

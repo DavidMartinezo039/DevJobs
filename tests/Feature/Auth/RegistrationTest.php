@@ -25,5 +25,5 @@ test('new users can register', function () {
     $this->actingAs($user);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('vacancies.index', absolute: false));
+    $response->assertRedirect(route('vacancies.manager', absolute: false));
 });

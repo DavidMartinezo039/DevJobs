@@ -9,37 +9,10 @@ use Illuminate\Support\Facades\Gate;
 class VacancyController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        Gate::authorize('viewAny', Vacancy::class);
-        return view('vacancies.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        Gate::authorize('create', Vacancy::class);
-        return view('vacancies.create');
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Vacancy $vacancy)
     {
         return view('vacancies.show', compact('vacancy'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Vacancy $vacancy)
-    {
-        Gate::authorize('update', $vacancy);
-        return view('vacancies.edit', compact('vacancy'));
     }
 }

@@ -7,14 +7,13 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use App\Livewire\CvManager;
+use App\Livewire\VacanciesManager;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/vacancies', [VacancyController::class, 'index'])->name('vacancies.index');
-    Route::get('/vacancies/create', [VacancyController::class, 'create'])->name('vacancies.create');
-    Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit'])->name('vacancies.edit');
+    Route::get('/vacancies', VacanciesManager::class)->name('vacancies.manager');
 
     Route::get('/candidates/{vacancy}', [CandidateController::class, 'index'])->name('candidates.index');
 

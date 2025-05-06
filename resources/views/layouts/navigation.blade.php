@@ -14,13 +14,9 @@
                     @can('create', \App\Models\Vacancy::class)
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('vacancies.index')"
-                                        :active="request()->routeIs('vacancies.index')">
+                            <x-nav-link :href="route('vacancies.manager')"
+                                        :active="request()->routeIs('vacancies.manager')">
                                 {{ __('My Vacancies') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('vacancies.create')"
-                                        :active="request()->routeIs('vacancies.create')">
-                                {{ __('Create Vacancy') }}
                             </x-nav-link>
                         </div>
                     @endcan
@@ -112,12 +108,8 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         @auth
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('vacancies.index')" :active="request()->routeIs('vacancies.index')">
+                <x-responsive-nav-link :href="route('vacancies.manager')" :active="request()->routeIs('vacancies.manager')">
                     {{ __('My Vacancies') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('vacancies.create')"
-                                       :active="request()->routeIs('vacancies.create')">
-                    {{ __('Create Vacancy') }}
                 </x-responsive-nav-link>
 
                 @if(auth()->user()->hasRole('recruiter'))

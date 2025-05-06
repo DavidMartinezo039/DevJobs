@@ -19,13 +19,13 @@ class PersonalDataFactory extends Factory
             'last_name' => $this->faker->lastName,
             'image' => $this->faker->imageUrl(),
             'about_me' => $this->faker->paragraph,
-            'workPermits' => json_encode([$this->faker->country]),
+            'workPermits' => [$this->faker->country],
             'birth_date' => $this->faker->date(),
             'city' => $this->faker->city,
             'country' => $this->faker->country,
-            'nationality' => json_encode([$this->faker->country]),
-            'email' => json_encode([$this->faker->safeEmail]),
-            'address' => json_encode([$this->faker->address]),
+            'nationality' => [$this->faker->country],
+            'email' => [$this->faker->safeEmail],
+            'address' => [$this->faker->address],
             'gender_id' => Gender::inRandomOrder()->first()->id ?? Gender::factory(),
         ];
     }

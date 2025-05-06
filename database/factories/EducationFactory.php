@@ -18,8 +18,8 @@ class EducationFactory extends Factory
             'city' => $this->faker->city,
             'country' => $this->faker->country,
             'title' => $this->faker->word,
-            'start_date' => $this->faker->date(),
-            'end_date' => $this->faker->date(),
+            'start_date' => $this->faker->dateTimeBetween('-10 years', '-5 years'),
+            'end_date' => $this->faker->dateTimeBetween('-4 years', 'now'),
         ];
     }
 }

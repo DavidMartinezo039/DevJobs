@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\CvPdfController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
@@ -24,6 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/cvs', CvManager::class)->name('cv.manager');
+    Route::get('/cvs/{cv}/download', [CvPdfController::class, 'download'])->name('cv.download');
+
 });
 
 Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show'])->name('vacancies.show');

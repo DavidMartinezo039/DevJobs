@@ -209,10 +209,10 @@ class CvManager extends Component
             'city' => $this->city,
             'country' => $this->country,
             'about_me' => $this->about_me,
-            'email' => json_encode($this->emails),
-            'address' => json_encode($this->addresses),
-            'workPermits' => json_encode($this->workPermits),
-            'nationality' => json_encode($this->nationalities),
+            'email' => $this->emails,
+            'address' => $this->addresses,
+            'workPermits' => $this->workPermits,
+            'nationality' => $this->nationalities,
             'image' => $imagePath,
             'gender_id' => $this->gender_id,
         ]);
@@ -354,10 +354,10 @@ class CvManager extends Component
         $this->city = $personalData->city;
         $this->country = $personalData->country;
         $this->about_me = $personalData->about_me;
-        $this->emails = $personalData ? json_decode($personalData->email, true) ?? [''] : [''];
-        $this->addresses = $personalData ? json_decode($personalData->address, true) ?? [''] : [''];
-        $this->workPermits = $personalData ? json_decode($personalData->workPermits, true) ?? [''] : [''];
-        $this->nationalities = $personalData ? json_decode($personalData->nationality, true) ?? [''] : [''];
+        $this->emails = $personalData?->email ?? [''];
+        $this->addresses = $personalData?->address ?? [''];
+        $this->workPermits = $personalData?->workPermits ?? [''];
+        $this->nationalities = $personalData?->nationality ?? [''];
         $this->gender_id = $personalData->gender_id;
 
         $this->identity_documents = $personalData->identities->map(function ($identity) {
@@ -463,10 +463,10 @@ class CvManager extends Component
             'city' => $this->city,
             'country' => $this->country,
             'about_me' => $this->about_me,
-            'email' => json_encode($this->emails),
-            'address' => json_encode($this->addresses),
-            'workPermits' => json_encode($this->workPermits),
-            'nationality' => json_encode($this->nationalities),
+            'email' => $this->emails,
+            'address' => $this->addresses,
+            'workPermits' => $this->workPermits,
+            'nationality' => $this->nationalities,
             'image' => $imagePath,
             'gender_id' => $this->gender_id,
         ]);

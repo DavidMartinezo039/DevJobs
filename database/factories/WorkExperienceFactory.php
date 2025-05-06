@@ -16,8 +16,8 @@ class WorkExperienceFactory extends Factory
             'cv_id' => CV::factory(),
             'company_name' => $this->faker->company,
             'position' => $this->faker->jobTitle,
-            'start_date' => $this->faker->date,
-            'end_date' => $this->faker->optional()->date,
+            'start_date' => $this->faker->dateTimeBetween('-10 years', '-5 years'),
+            'end_date' => $this->faker->optional()->dateTimeBetween('-4 years', 'now'),
             'description' => $this->faker->paragraph,
         ];
     }

@@ -13,7 +13,7 @@ class VacancyPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view vacancies');
+        return $user->hasRole('god') || $user->hasPermissionTo('view vacancies');
     }
 
     /**
@@ -21,7 +21,15 @@ class VacancyPolicy
      */
     public function view(User $user, Vacancy $vacancy): bool
     {
-        return false;
+        if ($user->hasRole('god')) {
+            return true;
+        }
+
+        if ($user->hasRole('recruiter') && $vacancy->user_id === $user->id) {
+            return true;
+        }
+
+        return $user->hasRole('moderator') && ($vacancy->user_id === $user->id || $vacancy->user->hasRole('recruiter'));
     }
 
     /**
@@ -37,7 +45,7 @@ class VacancyPolicy
      */
     public function update(User $user, Vacancy $vacancy): bool
     {
-        return $user->id === $vacancy->user_id;
+        return $user->id === $vacancy->user_id || ($user->hasRole('moderator') && $vacancy->user->hasRole('recruiter')) || $user->hasRole('god');
     }
 
     /**
@@ -45,22 +53,6 @@ class VacancyPolicy
      */
     public function delete(User $user, Vacancy $vacancy): bool
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Vacancy $vacancy): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Vacancy $vacancy): bool
-    {
-        return false;
+        return $user->id === $vacancy->user_id || ($user->hasRole('moderator') && $vacancy->user->hasRole('recruiter')) || $user->hasRole('god');
     }
 }

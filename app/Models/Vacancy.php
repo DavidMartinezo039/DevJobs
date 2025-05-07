@@ -27,6 +27,19 @@ class Vacancy extends Model
         'image',
     ];
 
+    public function scopeVisibleByRole($query)
+    {
+        if (auth()->user()->hasRole('god')) {
+            return $query;
+        } elseif (auth()->user()->hasRole('moderator')) {
+            $recruiterIds = User::role('recruiter')->pluck('id');
+            return $query->whereIn('user_id', [auth()->id(), ...$recruiterIds]);
+        } else {
+            return $query->where('user_id', auth()->id());
+        }
+    }
+
+
     public function salary(): BelongsTo
     {
         return $this->belongsTo(Salary::class);
@@ -40,6 +53,11 @@ class Vacancy extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'candidates')->withPivot('cv')->withTimestamps()->orderByPivot('created_at', 'DESC');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function recruiter(): BelongsTo

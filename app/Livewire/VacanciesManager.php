@@ -79,6 +79,7 @@ class VacanciesManager extends Component
 
     public function show(Vacancy $vacancy)
     {
+        Gate::authorize('view', $vacancy);
         $this->vacancy = $vacancy;
         $this->view = 'show';
     }
@@ -90,6 +91,7 @@ class VacanciesManager extends Component
 
     public function deleteVacancy(Vacancy $vacancy)
     {
+        Gate::authorize('delete', $vacancy);
         $vacancy->delete();
     }
 
@@ -145,7 +147,7 @@ class VacanciesManager extends Component
 
     public function render()
     {
-        $vacancies = Vacancy::where('user_id', auth()->id())->paginate(10);
+        $vacancies = Vacancy::VisibleByRole()->paginate(10);
         return view('livewire.vacancies-manager', [
             'vacancies' => $vacancies
         ])->layout('layouts.app');

@@ -27,7 +27,7 @@ class Vacancy extends Model
         'image',
     ];
 
-    public function scopeVisibleByRole($query)
+    public function scopeVacanciesByRol($query)
     {
         if (auth()->user()->hasRole('god')) {
             return $query;

@@ -14,6 +14,7 @@ use App\Models\PersonalData;
 use App\Models\Phone;
 use App\Models\SocialMedia;
 use App\Models\WorkExperience;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\CV;
@@ -162,7 +163,9 @@ class CvManager extends Component
 
     public function mount()
     {
-        $this->cvs = CV::where('user_id', auth()->id())->get();
+        Gate::authorize('viewAny', CV::class);
+
+        $this->cvs = CV::CvByRol()->get();
         $this->genders = Gender::all();
         $this->identityTypes = Identity::all();
         $this->phoneTypes = Phone::all();
@@ -188,6 +191,8 @@ class CvManager extends Component
 
     public function create()
     {
+        Gate::authorize('create', CV::class);
+
         $this->resetErrorBag();
         $this->resetValidation();
         $this->view = 'create';
@@ -343,6 +348,8 @@ class CvManager extends Component
     public
     function edit(CV $cv)
     {
+        Gate::authorize('update', $cv);
+
         $this->selectedCv = $cv;
         $this->title = $cv->title;
 
@@ -557,6 +564,7 @@ class CvManager extends Component
     public
     function delete(CV $cv)
     {
+        Gate::authorize('delete', $cv);
         $cv->delete();
         $this->mount();
     }
@@ -564,6 +572,8 @@ class CvManager extends Component
     public
     function show(CV $cv)
     {
+        Gate::authorize('view', $cv);
+
         $this->selectedCv = $cv;
         $this->personalData = $cv->personalData;
         $this->view = 'show';

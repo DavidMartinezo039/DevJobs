@@ -147,7 +147,7 @@ class VacanciesManager extends Component
 
     public function render()
     {
-        $vacancies = Vacancy::VisibleByRole()->paginate(10);
+        $vacancies = Vacancy::VacanciesByRol()->paginate(10);
         return view('livewire.vacancies-manager', [
             'vacancies' => $vacancies
         ])->layout('layouts.app');

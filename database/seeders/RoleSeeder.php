@@ -16,8 +16,8 @@ class RoleSeeder extends Seeder
     {
         Permission::create(['name' => 'view vacancies']);
         Permission::create(['name' => 'create vacancies']);
-        Permission::create(['name' => 'edit vacancies']);
-        Permission::create(['name' => 'delete vacancies']);
+        Permission::create(['name' => 'view cvs']);
+        Permission::create(['name' => 'create cvs']);
 
         Permission::create(['name' => 'manage users']);
         Permission::create(['name' => 'change roles']);
@@ -28,25 +28,24 @@ class RoleSeeder extends Seeder
         $admin = Role::create(['name' => 'admin']);
         $god = Role::create(['name' => 'god']);
 
+        $developer->givePermissionTo([
+            'view cvs',
+            'create cvs',
+        ]);
+
         $recruiter->givePermissionTo([
             'view vacancies',
             'create vacancies',
-            'edit vacancies',
-            'delete vacancies'
         ]);
 
         $moderator->givePermissionTo([
             'view vacancies',
             'create vacancies',
-            'edit vacancies',
-            'delete vacancies'
+            'view cvs',
+            'create cvs',
         ]);
 
         $admin->givePermissionTo([
-            'view vacancies',
-            'create vacancies',
-            'edit vacancies',
-            'delete vacancies',
             'manage users',
             'change roles'
         ]);
@@ -54,8 +53,8 @@ class RoleSeeder extends Seeder
         $god->givePermissionTo([
             'view vacancies',
             'create vacancies',
-            'edit vacancies',
-            'delete vacancies',
+            'view cvs',
+            'create cvs',
             'manage users',
             'change roles'
         ]);

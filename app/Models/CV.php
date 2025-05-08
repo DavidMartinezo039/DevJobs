@@ -17,6 +17,18 @@ class CV extends Model
 
     protected $fillable = ['title', 'user_id'];
 
+    public function scopeCvByRol($query)
+    {
+        if (auth()->user()->hasRole('god')) {
+            return $query;
+        } elseif (auth()->user()->hasRole('moderator')) {
+            $recruiterIds = User::role('developer')->pluck('id');
+            return $query->whereIn('user_id', [auth()->id(), ...$recruiterIds]);
+        } else {
+            return $query->where('user_id', auth()->id());
+        }
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

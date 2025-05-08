@@ -11,7 +11,7 @@ class CVSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = User::whereIn('id', [1, 2])->get();
+        $users = User::whereIn('id', [1, 3])->get();
 
         foreach ($users as $user) {
             CV::factory(3)->create(['user_id' => $user->id])->each(function ($cv) {

@@ -28,6 +28,14 @@
                             </x-nav-link>
                         </div>
                     @endcan
+                        @unless(auth()->user()->hasRole('recruiter'))
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <x-nav-link :href="route('candidates.applied-jobs')"
+                                            :active="request()->routeIs('candidates.applied-jobs')">
+                                    {{ __('My Applications') }}
+                                </x-nav-link>
+                            </div>
+                        @endunless
                 @endauth
             </div>
 

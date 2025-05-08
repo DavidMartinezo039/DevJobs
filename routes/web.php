@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
+use App\Livewire\AppliedJobs;
 use App\Livewire\CvManager;
 use App\Livewire\VacanciesManager;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/vacancies', VacanciesManager::class)->name('vacancies.manager');
 
     Route::get('/candidates/{vacancy}', [CandidateController::class, 'index'])->name('candidates.index');
+    Route::get('/my-applications', AppliedJobs::class)->name('candidates.applied-jobs');
 
     Route::get('/notifications', NotificationController::class)->middleware('rol.recruiter')->name('notifications.index');
 

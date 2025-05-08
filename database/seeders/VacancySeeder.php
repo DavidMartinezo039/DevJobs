@@ -1,0 +1,46 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Category;
+use App\Models\Salary;
+use App\Models\User;
+use App\Models\Vacancy;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class VacancySeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $user2 = User::find(2);
+        $user3 = User::find(3);
+        $candidate = User::find(1);
+
+        $salary = Salary::inRandomOrder()->first();
+        $category = Category::inRandomOrder()->first();
+
+        $vacanciesUser2 = Vacancy::factory()->count(4)->create([
+            'user_id' => $user2->id,
+            'salary_id' => $salary->id,
+            'category_id' => $category->id,
+        ]);
+
+        $vacanciesUser3 = Vacancy::factory()->count(4)->create([
+            'user_id' => $user3->id,
+            'salary_id' => $salary->id,
+            'category_id' => $category->id,
+        ]);
+
+        foreach ($vacanciesUser2->take(2) as $vacancy) {
+            $vacancy->users()->attach($candidate->id, ['cv' => 'fakecv_user1.pdf']);
+        }
+
+        foreach ($vacanciesUser3->take(2) as $vacancy) {
+            $vacancy->users()->attach($candidate->id, ['cv' => 'fakecv_user1.pdf']);
+        }
+    }
+}

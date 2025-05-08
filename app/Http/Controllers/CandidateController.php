@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Candidate;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 

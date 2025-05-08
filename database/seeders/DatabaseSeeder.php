@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             SalarySeeder::class,
             CategorySeeder::class,
+            VacancySeeder::class,
             GenderSeeder::class,
             IdentitySeeder::class,
             PhoneSeeder::class,

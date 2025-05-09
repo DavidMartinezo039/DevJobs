@@ -38,7 +38,7 @@ class GenerateCVPdf
             'drivingLicenses'
         ]);
 
-        $pdf = Pdf::loadView('cv.pdf', ['cv' => $this->cv]);
+        $pdf = Pdf::loadView('pdfs.CvPdf', ['cv' => $this->cv]);
 
         return $pdf->download($this->filename);
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
+use App\Http\Controllers\VacancyPdfController;
 use App\Livewire\AppliedJobs;
 use App\Livewire\CvManager;
 use App\Livewire\VacanciesManager;
@@ -29,7 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cvs/{cv}/download', [CvPdfController::class, 'download'])->name('cv.download');
 
 });
-
+Route::get('/vacancies/{vacancy}/download', [VacancyPdfController::class, 'download'])->name('vacancy.download');
 Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show'])->name('vacancies.show');
 
 require __DIR__.'/auth.php';

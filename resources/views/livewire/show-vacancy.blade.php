@@ -51,4 +51,12 @@
             <livewire:apply-vacancy :vacancy="$vacancy"/>
         @endcannot
     @endauth
+
+    <div class="text-center mt-6">
+        <a href="{{ route('vacancy.download', $vacancy) }}"
+           class="bg-green-600 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase inline-block">
+            {{ __('Download Vacancy') }}
+        </a>
+    </div>
+
 </div>

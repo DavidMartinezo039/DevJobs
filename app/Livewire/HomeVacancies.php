@@ -22,14 +22,11 @@ class HomeVacancies extends Component
 
     public function render()
     {
-        $vacancies = Vacancy::when($this->term, function ($query) {
-            $query->where('title', 'LIKE', '%' . $this->term . '%')
-                ->orWhere('company', 'LIKE', '%' . $this->term . '%');
-        })->when($this->category, function ($query) {
-            $query->where('category_id', $this->category);
-        })->when($this->salary, function ($query) {
-            $query->where('salary_id', $this->salary);
-        })->where('last_day', '>=', today())->get();
+        $vacancies = Vacancy::HomeVacancies([
+            'term' => $this->term,
+            'category' => $this->category,
+            'salary' => $this->salary,
+        ])->get();
 
         return view('livewire.home-vacancies', ['vacancies' => $vacancies]);
     }

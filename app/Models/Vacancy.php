@@ -39,6 +39,24 @@ class Vacancy extends Model
         }
     }
 
+    public function scopeHomeVacancies($query, $filters)
+    {
+        return $query
+            ->when($filters['term'] ?? null, function ($query, $term) {
+                $query->where(function ($q) use ($term) {
+                    $q->where('title', 'LIKE', '%' . $term . '%')
+                        ->orWhere('company', 'LIKE', '%' . $term . '%');
+                });
+            })
+            ->when($filters['category'] ?? null, function ($query, $category) {
+                $query->where('category_id', $category);
+            })
+            ->when($filters['salary'] ?? null, function ($query, $salary) {
+                $query->where('salary_id', $salary);
+            })
+            ->where('last_day', '>=', today());
+    }
+
 
     public function salary(): BelongsTo
     {

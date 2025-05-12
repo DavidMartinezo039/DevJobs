@@ -11,10 +11,25 @@
                                     <a href="{{ route('vacancies.show', $vacancy) }}" class="text-xl font-medium text-gray-800">{{ $vacancy->title }}</a>
                                 </div>
 
+                                <div class="mb-4 md:mb-0">
+                                    @php
+                                        $status = $statuses[$vacancy->id] ?? $vacancy->pivot->status;
+                                        $color = match($status) {
+                                            'pending' => 'bg-yellow-200 text-yellow-800',
+                                            'accepted' => 'bg-green-200 text-green-800',
+                                            'rejected' => 'bg-red-200 text-red-800',
+                                            default => 'bg-gray-200 text-gray-800'
+                                        };
+                                    @endphp
+
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold mr-1 {{ $color }}">
+                                        {{ ucfirst($status) }}
+                                    </span>
+                                </div>
+
                                 <div>
                                     <a
-                                        class="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full
-                                            text-gray-700 bg-white hover:bg-gray-50"
+                                        class="px-3 py-1 text-sm bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
                                         href="{{ asset('storage/cv/' . $vacancy->pivot->cv) }}"
                                         target="_blank"
                                         rel="noreferrer noopen">

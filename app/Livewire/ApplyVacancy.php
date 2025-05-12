@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\VacancyApplied;
 use App\Mail\VacancyApplicationMail;
 use App\Models\Vacancy;
 use App\Notifications\NewCandidate;
@@ -34,9 +35,7 @@ class ApplyVacancy extends Component
 
         $this->vacancy->users()->attach(auth()->id(), ['cv' => $data['cv']]);
 
-        $this->vacancy->recruiter->notify(new NewCandidate($this->vacancy->id, $this->vacancy->title, auth()->id()));
-
-        Mail::to(auth()->user()->email)->send(new VacancyApplicationMail($this->vacancy));
+        event(new VacancyApplied($this->vacancy, auth()->user()));
 
         session()->flash('message', __('Vacancy applied successfully'));
 

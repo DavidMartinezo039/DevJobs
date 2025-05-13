@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Events\VacancyApplied;
+use App\Mail\ConfirmWithdrawMail;
 use App\Mail\VacancyApplicationMail;
 use App\Models\Vacancy;
 use App\Notifications\NewCandidate;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\URL;
 
 class ApplyVacancy extends Component
 {
@@ -45,18 +47,18 @@ class ApplyVacancy extends Component
     public function removeCv()
     {
         $user = auth()->user();
-        $userCv = $user->vacancies()->where('vacancy_id', $this->vacancy->id)->value('cv');
 
-        if ($userCv) {
-            Storage::disk('public')->delete('cv/' . $userCv);
+        $url = URL::temporarySignedRoute(
+            'vacancy.confirmWithdraw',
+            now()->addMinutes(30),
+            ['vacancy' => $this->vacancy->id]
+        );
 
-            $this->vacancy->users()->detach($user->id);
+        Mail::to($user->email)->queue(new ConfirmWithdrawMail($this->vacancy, $url));
 
-            session()->flash('message', __('Your CV has been removed successfully.'));
-        } else {
-            session()->flash('error', __('No CV found to remove.'));
-        }
+        session()->flash('message', __('We have sent an email with a link to confirm the deletion of your CV'));
     }
+
 
     public function render()
     {

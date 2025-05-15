@@ -16,7 +16,7 @@ class CvPdfController extends Controller
             $filePath = 'cv/' . $cv->file_path;
 
             if (Storage::disk('public')->exists($filePath)) {
-                return Storage::disk('public')->download($filePath);
+                return Storage::disk('public')->download($filePath, 'CV_' . $cv->title . '.pdf');
             }
         }
 

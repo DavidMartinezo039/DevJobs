@@ -23,7 +23,7 @@ class GenerateCVPdf  implements ShouldQueue
     public function __construct(CV $cv)
     {
         $this->cv = $cv;
-        $this->filename = 'CV_' . $cv->title . '.pdf';
+        $this->filename = uniqid() . '.pdf';
     }
 
     public function handle(): void

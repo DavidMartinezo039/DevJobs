@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Http\Requests\CvCreateRequest;
 use App\Http\Requests\CvUpdateRequest;
+use App\Jobs\GenerateCVPdf;
 use App\Models\DigitalSkill;
 use App\Models\DrivingLicense;
 use App\Models\Education;
@@ -313,6 +314,7 @@ class CvManager extends Component
         }
 
         $cv->save();
+        GenerateCVPdf::dispatch($cv);
 
         $this->reset([
             'title',
@@ -548,6 +550,7 @@ class CvManager extends Component
         }
 
         $cv->save();
+        GenerateCVPdf::dispatch($cv);
 
         $this->reset([
             'title',

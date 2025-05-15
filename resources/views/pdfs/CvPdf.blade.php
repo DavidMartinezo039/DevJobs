@@ -117,9 +117,13 @@
     {{-- Encabezado con foto e info --}}
     <div class="header">
         <div class="a">
-            @if($cv->personalData->image)
+            @php
+                $imagePath = storage_path('app/public/images/' . $cv->personalData->image);
+            @endphp
+
+            @if($cv->personalData->image && file_exists($imagePath))
                 <img
-                    src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/images/' . $cv->personalData->image))) }}"
+                    src="data:image/png;base64,{{ base64_encode(file_get_contents($imagePath)) }}"
                     class="photo" alt="photo">
             @endif
         </div>

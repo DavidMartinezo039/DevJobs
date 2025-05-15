@@ -9,9 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 
-class GenerateCVPdf
+class GenerateCVPdf  implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -24,7 +26,7 @@ class GenerateCVPdf
         $this->filename = 'CV_' . $cv->title . '.pdf';
     }
 
-    public function handle(): \Illuminate\Http\Response
+    public function handle(): void
     {
         $this->cv->load([
             'personalData.gender',
@@ -40,6 +42,10 @@ class GenerateCVPdf
 
         $pdf = Pdf::loadView('pdfs.CvPdf', ['cv' => $this->cv]);
 
-        return $pdf->download($this->filename);
+
+        Storage::disk('public')->put('cv/' . $this->filename, $pdf->output());
+
+        $this->cv->file_path = $this->filename;
+        $this->cv->save();
     }
 }

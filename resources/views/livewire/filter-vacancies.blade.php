@@ -1,5 +1,5 @@
 <div class="bg-gray-100 py-10">
-    <h2 class="text-2xl md:text-4xl text-gray-600 text-center font-extrabold my-5">Buscar y Filtrar Vacantes</h2>
+    <h2 class="text-2xl md:text-4xl text-gray-600 text-center font-extrabold my-5">{{ __('Search and Filter Vacancies') }}</h2>
 
     <div class="max-w-7xl mx-auto">
         <form wire:submit.prevent="readFormData">
@@ -7,21 +7,21 @@
                 <div class="mb-5">
                     <label
                         class="block mb-1 text-sm text-gray-700 uppercase font-bold "
-                        for="termino">Término de Búsqueda
+                        for="termino">{{ __('Find by term') }}
                     </label>
                     <input
                         id="termino"
                         type="text"
-                        placeholder="Buscar por Término: ej. Laravel"
+                        placeholder="{{__('Search by Term: e.g. Laravel')}}"
                         class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full"
                         wire:model="term"
                     />
                 </div>
 
                 <div class="mb-5">
-                    <label class="block mb-1 text-sm text-gray-700 uppercase font-bold">Categoría</label>
+                    <label class="block mb-1 text-sm text-gray-700 uppercase font-bold">{{ __('Category') }}</label>
                     <select wire:model="category" class="border-gray-300 p-2 w-full">
-                        <option>--Seleccione--</option>
+                        <option>--{{ __('Choose') }}--</option>
 
                         @foreach ($categories as $category )
                             <option value="{{ $category->id }}">{{ $category->category }}</option>
@@ -30,9 +30,9 @@
                 </div>
 
                 <div class="mb-5">
-                    <label class="block mb-1 text-sm text-gray-700 uppercase font-bold">salary Mensual</label>
+                    <label class="block mb-1 text-sm text-gray-700 uppercase font-bold">{{ __('Monthly Salary') }}</label>
                     <select wire:model="salary" class="border-gray-300 p-2 w-full">
-                        <option>-- Seleccione --</option>
+                        <option>--{{ __('Choose') }}--</option>
                         @foreach ($salaries as $salary)
                             <option value="{{ $salary->id }}">{{$salary->salary}}</option>
                         @endforeach
@@ -44,7 +44,7 @@
                 <input
                     type="submit"
                     class="bg-indigo-500 hover:bg-indigo-600 transition-colors text-white text-sm font-bold px-10 py-2 rounded cursor-pointer uppercase w-full md:w-auto"
-                    value="Buscar"
+                    value="{{ __('Search') }}"
                 />
             </div>
         </form>

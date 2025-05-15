@@ -55,6 +55,12 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+            <x-forms.checkbox-input
+                id="wants_marketing"
+                name="wants_marketing"
+                label="I agree to receive emails with job offers and updates."
+            />
+
         <div class="flex justify-between my-5">
             <x-link
                 :href="route('login')"

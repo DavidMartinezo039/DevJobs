@@ -58,7 +58,7 @@
                                 </div>
                             @endforeach
                             <button type="button" wire:click="addNationality"
-                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ Add Nationality
+                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ {{  __('Add Nationality') }}
                             </button>
                         </div>
 
@@ -75,7 +75,7 @@
                                 </div>
                             @endforeach
                             <button type="button" wire:click="addWorkPermit"
-                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ Add Work Permit
+                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ {{  __('Add Work Permit') }}
                             </button>
                         </div>
 
@@ -146,7 +146,7 @@
                                         @endforeach
                                     </select>
                                     <input type="text" wire:model="identity_documents.{{ $index }}.number"
-                                           placeholder="Document Number"
+                                           placeholder="{{  __('Document Number') }}"
                                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full">
                                     <button type="button" wire:click="removeIdentity({{ $index }})"
                                             class="bg-red-500 text-white px-3 py-1 rounded">X
@@ -173,7 +173,7 @@
                                         @endforeach
                                     </select>
                                     <input type="text" wire:model="phones.{{ $index }}.number"
-                                           placeholder="Enter phone number"
+                                           placeholder="{{ __('Phone number') }}"
                                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full">
                                     <button type="button" wire:click="removePhone({{ $index }})"
                                             class="bg-red-500 text-white px-3 py-1 rounded">X
@@ -199,7 +199,7 @@
                                         @endforeach
                                     </select>
                                     <input type="text" wire:model="socialMedia.{{ $index }}.user_name"
-                                           placeholder="Username"
+                                           placeholder="{{ __('Username') }}"
                                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full">
                                     <input type="url" wire:model="socialMedia.{{ $index }}.url"
                                            placeholder="URL"
@@ -234,22 +234,22 @@
                                     </div>
                                     @foreach ($workExperiences as $index => $item)
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-                                            <x-forms.input id="company" name="company" label="{{ __('Company') }}"
+                                            <x-forms.input id="company" name="company" label="Company"
                                                            wireModel="workExperiences.{{ $index }}.company"/>
                                             <x-forms.input id="workstation" name="workstation"
-                                                           label="{{ __('Workstation') }}"
+                                                           label="Workstation"
                                                            wireModel="workExperiences.{{ $index }}.position"/>
 
                                             <x-forms.date-picker id="start-{{ $index }}-experience"
                                                                  name="start-{{ $index }}-experience"
-                                                                 label="{{ __('Start Day') }}"
+                                                                 label="Start Day"
                                                                  wireModel="workExperiences.{{ $index }}.start"/>
                                             <x-forms.date-picker id="end-{{ $index }}-experience"
                                                                  name="end-{{ $index }}-experience"
-                                                                 label="{{ __('End Day') }}"
+                                                                 label="End Day"
                                                                  wireModel="workExperiences.{{ $index }}.end"/>
 
-                                            <textarea wire:model="workExperiences.{{ $index }}.description"
+                                            <textarea wire:model="workExperiences.{{ $index }}.description" placeholder="{{ __('Description') }}"
                                                       class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm md:col-span-2"></textarea>
                                         </div>
                                         <button wire:click="removeEntry('work_experience', {{ $index }})"
@@ -279,24 +279,24 @@
                                     @foreach ($educations as $index => $item)
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                                             <x-forms.input id="educational_center" name="educational_center"
-                                                           label="{{ __('Educational Center') }}"
+                                                           label="Educational Center"
                                                            wireModel="educations.{{ $index }}.school"/>
                                             <x-forms.input id="course" name="course"
-                                                           label="{{ __('Course') }}"
+                                                           label="Course"
                                                            wireModel="educations.{{ $index }}.degree"/>
                                             <x-forms.date-picker id="start-{{ $index }}-education"
                                                                  name="start-{{ $index }}-education"
-                                                                 label="{{ __('Start Day') }}"
+                                                                 label="Start Day"
                                                                  wireModel="educations.{{ $index }}.start"/>
                                             <x-forms.date-picker id="end-{{ $index }}-education"
                                                                  name="end-{{ $index }}-education"
-                                                                 label="{{ __('End Day') }}"
+                                                                 label="End Day"
                                                                  wireModel="educations.{{ $index }}.end"/>
                                             <x-forms.input id="educational_center_city" name="educational_center_city"
-                                                           label="{{ __('City') }}"
+                                                           label="City"
                                                            wireModel="educations.{{ $index }}.city"/>
                                             <x-forms.input id="educational_center_country" name="educational_center_country"
-                                                           label="{{ __('Country') }}"
+                                                           label="Country"
                                                            wireModel="educations.{{ $index }}.country"/>
                                         </div>
                                         <button wire:click="removeEntry('education', {{ $index }})"
@@ -333,7 +333,7 @@
                                             />
 
                                             <x-forms.input id="language_level" name="language_level"
-                                                           label="{{ __('Level') }}"
+                                                           label="Level"
                                                            wireModel="languages.{{ $index }}.level"/>
                                         </div>
                                         <button wire:click="removeEntry('languages', {{ $index }})"
@@ -370,7 +370,7 @@
                                                 selectedValue="skills.{{ $index }}.digital_skill_id"
                                             />
                                             <x-forms.input id="skill_level" name="skill_level"
-                                                           label="{{ __('Level') }}"
+                                                           label="Level"
                                                            wireModel="skills.{{ $index }}.level"/>
                                         </div>
                                         <button wire:click="removeEntry('skills', {{ $index }})"

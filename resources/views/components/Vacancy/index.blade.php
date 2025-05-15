@@ -63,21 +63,21 @@
     <script>
         Livewire.on('DeleteAlert', vacancy => {
             Swal.fire({
-                title: 'Are you sure you want to delete the vacancy?',
-                text: "A deleted vacancy cannot be recovered",
+                title: @json(__('Are you sure you want to delete the vacancy?')),
+                text: @json(__('A deleted vacancy cannot be recovered')),
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: @json(__('Yes, delete it!')),
+                cancelButtonText: @json(__('Cancel'))
             }).then((result) => {
                 if (result.isConfirmed) {
                     Livewire.dispatch('deleteVacancy', vacancy)
 
                     Swal.fire(
-                        'The vacancy was eliminated',
-                        'Successfully Removed',
+                        @json(__('The vacancy was eliminated')),
+                        @json(__('Successfully Removed')),
                         'success'
                     )
                 }

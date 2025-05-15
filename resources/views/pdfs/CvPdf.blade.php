@@ -224,7 +224,7 @@
                             <li>
                                 <span class="label">{{ $exp->position }}</span> en {{ $exp->company_name }}<br>
                                 <span
-                                    class="small-text">{{ $exp->start_date }} - {{ $exp->end_date ?? 'Actualidad' }}</span><br>
+                                    class="small-text">{{ $exp->start_date }} - {{ $exp->end_date ?? __('Actuality') }}</span><br>
                                 <em>{{ $exp->description }}</em>
                             </li><br>
                         @endforeach

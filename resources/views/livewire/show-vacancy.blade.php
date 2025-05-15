@@ -17,7 +17,7 @@
                 <span class="normal-case font-normal">{{ $vacancy->category->category }}</span>
             </p>
 
-            <p class="font-bold text-sm uppercase text-gray-800 my-3">{{ __('Salary') }}:
+            <p class="font-bold text-sm uppercase text-gray-800 my-3">{{ __('Monthly Salary') }}:
                 <span class="normal-case font-normal">{{ $vacancy->salary->salary }}</span>
             </p>
 

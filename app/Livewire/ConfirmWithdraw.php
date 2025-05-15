@@ -33,7 +33,7 @@ class ConfirmWithdraw extends Component
             event(new CandidateWithdrew($this->vacancy, $user));
 
 
-            session()->flash('message', __('Has cancelado tu participación en esta vacante.'));
+            session()->flash('message', __('Has cancelado tu participación en esta vacante'));
         }
 
         return redirect()->route('home');

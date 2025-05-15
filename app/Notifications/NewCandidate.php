@@ -44,10 +44,10 @@ class NewCandidate extends Notification
         $url = url('/notifications');
 
         return (new MailMessage)
-            ->line('You have received a new candidate for your vacancy.')
-            ->line('The vacancy is: ' . $this->name_vacancy)
-            ->action('See notification', $url)
-            ->line('Thank you for using DevJobs');
+            ->line(__('You have received a new candidate for your vacancy.'))
+            ->line(__('The vacancy is: :name', ['name' => $this->name_vacancy]))
+            ->action(__('See notification'), $url)
+            ->line(__('Thank you for using DevJobs.'));
     }
 
     public function toDatabase(object $notifiable): array

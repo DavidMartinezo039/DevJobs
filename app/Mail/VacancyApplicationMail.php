@@ -23,7 +23,7 @@ class VacancyApplicationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Confirmación de postulación: ' . $this->vacancy->title,
+            subject: __('Confirmation of application: ') . $this->vacancy->title,
         );
     }
 

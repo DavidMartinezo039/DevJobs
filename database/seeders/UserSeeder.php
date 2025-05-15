@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
             'name' => 'developer',
             'email' => 'developer@example.com',
             'password' => bcrypt('123'),
+            'wants_marketing' => true,
         ]);
 
         $recruiter = User::factory()->create([

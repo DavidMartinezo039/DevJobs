@@ -51,10 +51,10 @@
 <div style="display: table; width: 100%;">
     <div style="display: table-cell; width: 60%; vertical-align: top;">
         <div class="section">
-            <p><span class="label">Company:</span> {{ $vacancy->company }}</p>
-            <p><span class="label">Category:</span> {{ $vacancy->category->category }}</p>
-            <p><span class="label">Salary:</span> {{ $vacancy->salary->salary }}</p>
-            <p><span class="label">Last Day:</span> {{ $vacancy->last_day->format('d-m-Y') }}</p>
+            <p><span class="label">{{__('Company')}}:</span> {{ $vacancy->company }}</p>
+            <p><span class="label">{{__('Category')}}:</span> {{ $vacancy->category->category }}</p>
+            <p><span class="label">{{__('Monthly Salary')}}:</span> {{ $vacancy->salary->salary }}</p>
+            <p><span class="label">{{__('Last Day to Apply')}}:</span> {{ $vacancy->last_day->format('d-m-Y') }}</p>
         </div>
         <h2 style="font-size: 18px; color: #2c3e50; margin-bottom: 10px;">Job Description</h2>
         <p style="text-align: justify; line-height: 1.5; margin-right: 5%">

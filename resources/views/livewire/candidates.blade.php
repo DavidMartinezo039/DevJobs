@@ -8,7 +8,7 @@
                 @if ($vacancy->users->isNotEmpty())
                     <div class="text-center mt-6">
                         <x-primary-button wire:click="saveStatuses">
-                            {{ __('Confirmar cambios') }}
+                            {{ __('Confirm changes') }}
                         </x-primary-button>
                     </div>
                 @endif
@@ -65,7 +65,7 @@
                                     <a href="{{ asset('storage/cv/' . $candidate->pivot->cv) }}"
                                        target="_blank"
                                        class="px-3 py-1 text-sm bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
-                                        {{ __('See CV') }}
+                                        {{ __('See') }} CV
                                     </a>
                                 </div>
                             </li>

@@ -1,16 +1,16 @@
 @component('mail::message')
-    # ¡Tu postulación ha sido enviada!
+    # {{ __('Your application has been submitted!') }}
 
-    Hola {{ auth()->user()->name }},
+    {{ __('Hello') }} {{ auth()->user()->name }},
 
-    Te confirmamos que te has postulado exitosamente a la vacante "{{ $vacancy->title }}".
+    {{ __('We confirm that you have successfully applied to the position') }} "{{ $vacancy->title }}".
 
     @component('mail::button', ['url' => url('/vacancies/' . $vacancy->id)])
-        Ver Vacante
+        {{ __('View Position') }}
     @endcomponent
 
-    Gracias por confiar en nuestra plataforma.
+    {{ __('Thank you for trusting our platform.') }}
 
-    Saludos,<br>
+    {{ __('Regards,') }}
     {{ config('app.name') }}
 @endcomponent

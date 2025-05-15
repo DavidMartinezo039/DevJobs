@@ -6,7 +6,7 @@
                 <div class="md:flex md:justify-center p-5">
                     <form class="md:w-1/2 space-y-5" wire:submit.prevent="store">
 
-                        <x-forms.input id="title" name="title" label="{{ __('Title Vacancy') }}" wireModel="title"/>
+                        <x-forms.input id="title" name="title" label="Title Vacancy" wireModel="title"/>
 
                         <x-forms.select-input
                             id="salary"
@@ -24,7 +24,7 @@
                             selectedValue="category"
                         />
 
-                        <x-forms.input id="company" name="company" label="{{ __('Company') }}" wireModel="company"/>
+                        <x-forms.input id="company" name="company" label="Company" wireModel="company"/>
 
                         <x-forms.date-picker id="last_day" name="last_day" label="{{ __('Last Day to Apply') }}"
                                              wireModel="last_day"/>

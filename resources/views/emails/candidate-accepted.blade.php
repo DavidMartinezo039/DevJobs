@@ -1,14 +1,14 @@
 @component('mail::message')
-    # ¡Felicidades!
+    # {{ __('Congratulations!') }}
 
-    Has sido **aceptado** para la vacante.
+    {{ __('You have been') }} **{{ __('accepted') }}** {{ __('for the position.') }}
 
-    Gracias por postularte.
+    {{ __('Thank you for applying.') }}
 
     @component('mail::button', ['url' => url('/my-applications')])
-        Ver Vacante
+        {{ __('View Position') }}
     @endcomponent
 
-    Saludos,<br>
+    {{ __('Regards,') }}
     {{ config('app.name') }}
 @endcomponent

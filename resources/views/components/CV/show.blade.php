@@ -61,39 +61,6 @@
 
                         <x-profile-field-bucle label="Skills" :values="$selectedCv->digitalSkills"
                                                :items="['name']" :data-pivot="['level']"/>
-
-                        {{-- Habilidades --}}
-                        @if (in_array('skills', $activeSections))
-                            <div class="border border-gray-200 shadow-md p-6 rounded-2xl bg-gray-100">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="font-bold text-xl flex items-center gap-2">
-                                        {{ __('Skills') }}
-                                    </h3>
-                                    <button wire:click="removeSection('skills')"
-                                            class="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded mt-4 hover:bg-red-200">
-                                        {{ __('Delete Section') }}
-                                    </button>
-                                </div>
-                                @foreach ($skills as $index => $item)
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <x-forms.select-input
-                                            id="skill"
-                                            name="name"
-                                            label="skill"
-                                            :options="$skills_options"
-                                            selectedValue="skills.{{ $index }}.digital_skill_id"
-                                        />
-                                        <x-forms.input id="skill_level" name="skill_level"
-                                                       label="{{ __('Level') }}"
-                                                       wireModel="skills.{{ $index }}.level"/>
-                                    </div>
-                                    <button wire:click="removeEntry('skills', {{ $index }})"
-                                            class="bg-red-500 text-white px-3 py-1 rounded mt-5 mb-5">
-                                        {{ __('Delete Skill') }}
-                                    </button>
-                                @endforeach
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>

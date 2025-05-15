@@ -32,7 +32,7 @@ class CandidateAcceptedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '🎉 You have been selected for an interview!',
+            subject: '🎉 ' . __('You have been selected for an interview!'),
         );
     }
 

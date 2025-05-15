@@ -1,14 +1,14 @@
 @component('mail::message')
-    # Gracias por tu interés
+    # {{ __('Thank you for your interest') }}
 
-    Lamentablemente, tras revisar cuidadosamente tu candidatura, hemos decidido no continuar con el proceso para esta vacante.
+    {{ __('Unfortunately, after carefully reviewing your application, we have decided not to proceed with the process for this position.') }}
 
-    Apreciamos mucho el tiempo que dedicaste y te animamos a postularte a futuras oportunidades.
+    {{ __('We truly appreciate the time you invested and encourage you to apply for future opportunities.') }}
 
     @component('mail::button', ['url' => url('/')])
-        Explorar más vacantes
+        {{ __('Explore more vacancies') }}
     @endcomponent
 
-    Saludos cordiales,<br>
+    {{ __('Kind regards,') }}
     {{ config('app.name') }}
 @endcomponent

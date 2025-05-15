@@ -34,12 +34,14 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'rol' => ['required', 'string', 'in:developer,recruiter'],
+            'wants_marketing' => ['nullable', 'boolean'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'wants_marketing' => $request->boolean('wants_marketing'),
         ]);
 
         $user->assignRole($request->rol);

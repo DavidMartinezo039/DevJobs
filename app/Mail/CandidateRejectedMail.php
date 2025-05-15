@@ -32,7 +32,7 @@ class CandidateRejectedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We appreciate your interest – {{ $vacancy->title }}',
+            subject: __('We appreciate your interest') . ' – {{ $vacancy->title }}',
         );
     }
 

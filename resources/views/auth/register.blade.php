@@ -58,7 +58,7 @@
             <x-forms.checkbox-input
                 id="wants_marketing"
                 name="wants_marketing"
-                label="I agree to receive emails with job offers and updates."
+                label="I agree to receive emails with job offers and updates"
             />
 
         <div class="flex justify-between my-5">

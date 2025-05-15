@@ -16,6 +16,7 @@ use App\Models\Phone;
 use App\Models\SocialMedia;
 use App\Models\WorkExperience;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\CV;
@@ -568,6 +569,15 @@ class CvManager extends Component
     function delete(CV $cv)
     {
         Gate::authorize('delete', $cv);
+        if ($cv->file_path) {
+            Storage::disk('public')->delete('cv/' . $cv->file_path);
+        }
+
+        if ($cv->personalData && $cv->personalData->image
+            && $cv->personalData->image !== 'default/default.png') {
+            Storage::disk('public')->delete('images/' . $cv->personalData->image);
+        }
+
         $cv->delete();
         $this->mount();
     }

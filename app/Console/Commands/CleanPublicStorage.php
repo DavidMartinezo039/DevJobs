@@ -27,7 +27,10 @@ class CleanPublicStorage extends Command
 
             $this->info("Limpiando: $folder");
 
-            $items = File::directories($folder) + File::files($folder);
+            $items = array_merge(
+                File::directories($folder),
+                File::files($folder)
+            );
 
             foreach ($items as $item) {
                 $itemName = basename($item);
@@ -36,10 +39,11 @@ class CleanPublicStorage extends Command
                     continue;
                 }
 
-                File::isDirectory($item)
-                    ? File::deleteDirectory($item)
-                    : File::delete($item);
-
+                if (File::isDirectory($item)) {
+                    File::deleteDirectory($item);
+                } else {
+                    File::delete($item);
+                }
             }
         }
 

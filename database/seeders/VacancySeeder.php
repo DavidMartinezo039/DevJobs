@@ -38,17 +38,25 @@ class VacancySeeder extends Seeder
         ]);
 
         foreach ($vacanciesUser2->take(2) as $vacancy) {
-            $newFileName = 'cv_' . Str::random(10) . '.pdf';
-            Storage::disk('public')->copy('cv/fakecv_user1.pdf', 'cv/' . $newFileName);
-
-            $vacancy->users()->attach($candidate->id, ['cv' => $newFileName]);
+            $this->assignCandidateAndImage($vacancy, $candidate);
         }
 
         foreach ($vacanciesUser3->take(2) as $vacancy) {
-            $newFileName = 'cv_' . Str::random(10) . '.pdf';
-            Storage::disk('public')->copy('cv/fakecv_user1.pdf', 'cv/' . $newFileName);
-
-            $vacancy->users()->attach($candidate->id, ['cv' => $newFileName]);
+            $this->assignCandidateAndImage($vacancy, $candidate);
         }
     }
+
+    private function assignCandidateAndImage(Vacancy $vacancy, User $candidate)
+    {
+        $newImageName = 'vacancy_' . Str::random(10) . '.png';
+        Storage::disk('public')->copy('vacancies/default/default.png', 'vacancies/' . $newImageName);
+
+        $vacancy->update(['image' => $newImageName]);
+
+        $newFileName = 'cv_' . Str::random(10) . '.pdf';
+        Storage::disk('public')->copy('cv/default/fakecv_user1.pdf', 'cv/' . $newFileName);
+
+        $vacancy->users()->attach($candidate->id, ['cv' => $newFileName]);
+    }
+
 }

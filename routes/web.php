@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\CvPdfController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;

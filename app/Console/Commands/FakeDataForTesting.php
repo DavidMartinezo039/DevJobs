@@ -24,7 +24,7 @@ class FakeDataForTesting extends Command
         $recruiters->each(fn($user) => $user->assignRole('recruiter'));
 
 
-        $this->info('👨‍Creando 100 developers con CV...');
+        $this->info('Creando 100 developers con CV...');
         $developers = User::factory()->count(100)->create();
         $developers->each(fn($user) => $user->assignRole('developer'));
 
@@ -34,13 +34,22 @@ class FakeDataForTesting extends Command
         $vacancies = collect();
 
         foreach ($recruiters as $recruiter) {
-            $vacancies = $vacancies->merge(
-                Vacancy::factory()->count(5)->create([
-                    'user_id' => $recruiter->id,
-                    'salary_id' => Salary::inRandomOrder()->first()->id,
-                    'category_id' => Category::inRandomOrder()->first()->id,
-                ])
-            );
+            $createdVacancies = Vacancy::factory()->count(5)->create([
+                'user_id' => $recruiter->id,
+                'salary_id' => Salary::inRandomOrder()->first()->id,
+                'category_id' => Category::inRandomOrder()->first()->id,
+            ]);
+
+            foreach ($createdVacancies as $vacancy) {
+                $newImageName = 'vacancy_' . Str::random(10) . '.png';
+                Storage::disk('public')->copy('vacancies/default/default.png', 'vacancies/' . $newImageName);
+
+                $vacancy->update([
+                    'image' => $newImageName,
+                ]);
+            }
+
+            $vacancies = $vacancies->merge($createdVacancies);
         }
 
         $this->info('Creando 1000 postulaciones aleatorias con CVs...');

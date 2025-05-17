@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\{
     User, CV, WorkExperience, Language, DigitalSkill, Education, DrivingLicense, PersonalData, Gender, Identity, Phone, SocialMedia
 };
@@ -32,7 +34,13 @@ class CVSeeder extends Seeder
                 $drivingLicense = DrivingLicense::factory()->create();
                 $cv->drivingLicenses()->attach($drivingLicense->id);
 
-                $personalData = PersonalData::factory()->create(['cv_id' => $cv->id]);
+                $newImageName = 'profile_' . Str::random(10) . '.png';
+                Storage::disk('public')->copy('images/default/default.png', 'images/' . $newImageName);
+
+                $personalData = PersonalData::factory()->create([
+                    'cv_id' => $cv->id,
+                    'image' => $newImageName,
+                ]);
 
                 $genderIds = Gender::inRandomOrder()->limit(1)->pluck('id');
                 $personalData->gender_id = $genderIds[0];

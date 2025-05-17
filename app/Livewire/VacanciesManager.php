@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Salary;
 use App\Models\Vacancy;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Gate;
@@ -92,6 +93,11 @@ class VacanciesManager extends Component
     public function deleteVacancy(Vacancy $vacancy)
     {
         Gate::authorize('delete', $vacancy);
+
+        if ($vacancy->image) {
+            Storage::disk('public')->delete('vacancies/' . $vacancy->image);
+        }
+
         $vacancy->delete();
     }
 

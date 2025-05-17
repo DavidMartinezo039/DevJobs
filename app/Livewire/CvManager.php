@@ -566,12 +566,12 @@ class CvManager extends Component
     function delete(CV $cv)
     {
         Gate::authorize('delete', $cv);
+
         if ($cv->file_path) {
             Storage::disk('public')->delete('cv/' . $cv->file_path);
         }
 
-        if ($cv->personalData && $cv->personalData->image
-            && $cv->personalData->image !== 'default/default.png') {
+        if ($cv->personalData && $cv->personalData->image) {
             Storage::disk('public')->delete('images/' . $cv->personalData->image);
         }
 

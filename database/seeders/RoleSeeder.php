@@ -18,19 +18,19 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'create vacancies']);
         Permission::create(['name' => 'view cvs']);
         Permission::create(['name' => 'create cvs']);
-
-        Permission::create(['name' => 'manage users']);
-        Permission::create(['name' => 'change roles']);
+        Permission::create(['name' => 'vacancies applied']);
+        Permission::create(['name' => 'apply for vacancy']);
 
         $developer = Role::create(['name' => 'developer']);
         $recruiter = Role::create(['name' => 'recruiter']);
         $moderator = Role::create(['name' => 'moderator']);
-        $admin = Role::create(['name' => 'admin']);
         $god = Role::create(['name' => 'god']);
 
         $developer->givePermissionTo([
             'view cvs',
             'create cvs',
+            'vacancies applied',
+            'apply for vacancy',
         ]);
 
         $recruiter->givePermissionTo([
@@ -43,11 +43,8 @@ class RoleSeeder extends Seeder
             'create vacancies',
             'view cvs',
             'create cvs',
-        ]);
-
-        $admin->givePermissionTo([
-            'manage users',
-            'change roles'
+            'vacancies applied',
+            'apply for vacancy',
         ]);
 
         $god->givePermissionTo([
@@ -55,8 +52,8 @@ class RoleSeeder extends Seeder
             'create vacancies',
             'view cvs',
             'create cvs',
-            'manage users',
-            'change roles'
+            'vacancies applied',
+            'apply for vacancy',
         ]);
     }
 }

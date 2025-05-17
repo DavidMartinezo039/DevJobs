@@ -57,7 +57,6 @@ class Vacancy extends Model
             ->where('last_day', '>=', today());
     }
 
-
     public function salary(): BelongsTo
     {
         return $this->belongsTo(Salary::class);

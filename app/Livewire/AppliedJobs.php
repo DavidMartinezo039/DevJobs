@@ -2,15 +2,21 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
+use App\Models\Vacancy;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 
 class AppliedJobs extends Component
 {
     public function render()
     {
-        $user = auth()->user();
+        Gate::authorize('viewAnyPivot', Vacancy::class);
+
+        $applications = auth()->user()->getAccessibleApplications();
+        
         return view('livewire.applied-jobs' , [
-        'user' => $user,
+        'applications' => $applications,
     ])->layout('layouts.app');
     }
 }

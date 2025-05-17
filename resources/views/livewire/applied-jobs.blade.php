@@ -5,7 +5,7 @@
                 <h1 class="text-2xl font-bold text-center my-10 uppercase">{{ __('the vacancies I am applying for') }}</h1>
                 <div class="md:flex md:justify-center p-5">
                     <ul class="divide-y divide-gray-200 w-full">
-                        @forelse($user->vacancies as $vacancy)
+                        @forelse($applications as $vacancy)
                             <li class="p-3 flex items-center">
                                 <div class="flex-1">
                                     <a href="{{ route('vacancies.show', $vacancy) }}" class="text-xl font-medium text-gray-800">{{ $vacancy->title }}</a>

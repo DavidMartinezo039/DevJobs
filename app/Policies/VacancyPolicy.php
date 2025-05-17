@@ -55,4 +55,65 @@ class VacancyPolicy
     {
         return $user->id === $vacancy->user_id || ($user->hasRole('moderator') && $vacancy->user->hasRole('recruiter')) || $user->hasRole('god');
     }
+
+
+    //Tabla pivote
+    public function viewAnyPivot(User $user): bool
+    {
+        return $user->hasPermissionTo('vacancies applied');
+    }
+
+    /**
+     * Determine whether the user can view the pivot.
+     */
+    public function viewPivot(User $user, Vacancy $vacancy): bool
+    {
+        if ($user->hasRole('god')) {
+            return true;
+        }
+
+        if ($user->hasRole('developer') && $vacancy->users->contains($user)) {
+            return true;
+        }
+
+        if ($user->hasRole('moderator')) {
+            return $vacancy->users->contains($user) ||
+                $vacancy->users->contains(function ($applicant) {
+                    return $applicant->hasRole('developer');
+                });
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether the user can create pivot.
+     */
+    public function createPivot(User $user): bool
+    {
+        return $user->hasPermissionTo('apply for vacancy');
+    }
+
+    /**
+     * Determine whether the user can delete the pivot.
+     */
+    public function deletePivot(User $user, Vacancy $vacancy): bool
+    {
+        if ($user->hasRole('god')) {
+            return true;
+        }
+
+        if ($user->hasRole('developer') && $vacancy->users->contains($user)) {
+            return true;
+        }
+
+        if ($user->hasRole('moderator')) {
+            return $vacancy->users->contains($user) ||
+                $vacancy->users->contains(function ($applicant) {
+                    return $applicant->hasRole('developer');
+                });
+        }
+
+        return false;
+    }
 }

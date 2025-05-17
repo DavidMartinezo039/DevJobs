@@ -49,6 +49,23 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+
+    public function getAccessibleApplications()
+    {
+        return match (true) {
+            $this->hasRole('god') => self::with('vacancies')->get()->pluck('vacancies')->flatten(),
+
+            $this->hasRole('moderator') => self::whereHas('roles', fn($q) => $q->where('name', 'developer'))
+                ->orWhere('id', $this->id)
+                ->with('vacancies')
+                ->get()
+                ->pluck('vacancies')
+                ->flatten(),
+
+            default => $this->vacancies,
+        };
+    }
+
     public function vacancies(): BelongsToMany
     {
         return $this->belongsToMany(Vacancy::class, 'candidates')->withPivot('cv', 'status')->withTimestamps();

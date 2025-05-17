@@ -32,12 +32,6 @@ class UserSeeder extends Seeder
             'password' => bcrypt('123'),
         ]);
 
-        $admin = User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('123'),
-        ]);
-
         $god = User::factory()->create([
             'name' => 'god',
             'email' => 'god@example.com',
@@ -47,7 +41,6 @@ class UserSeeder extends Seeder
         $developer->assignRole('developer');
         $recruiter->assignRole('recruiter');
         $moderator->assignRole('moderator');
-        $admin->assignRole('admin');
         $god->assignRole('god');
     }
 }

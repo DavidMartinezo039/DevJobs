@@ -22,8 +22,8 @@ class CV extends Model
         if (auth()->user()->hasRole('god')) {
             return $query;
         } elseif (auth()->user()->hasRole('moderator')) {
-            $recruiterIds = User::role('developer')->pluck('id');
-            return $query->whereIn('user_id', [auth()->id(), ...$recruiterIds]);
+            $developersIds = User::role('developer')->pluck('id');
+            return $query->whereIn('user_id', [auth()->id(), ...$developersIds]);
         } else {
             return $query->where('user_id', auth()->id());
         }

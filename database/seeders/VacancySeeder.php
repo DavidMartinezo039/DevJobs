@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class VacancySeeder extends Seeder
 {
@@ -36,11 +38,17 @@ class VacancySeeder extends Seeder
         ]);
 
         foreach ($vacanciesUser2->take(2) as $vacancy) {
-            $vacancy->users()->attach($candidate->id, ['cv' => 'fakecv_user1.pdf']);
+            $newFileName = 'cv_' . Str::random(10) . '.pdf';
+            Storage::disk('public')->copy('cv/fakecv_user1.pdf', 'cv/' . $newFileName);
+
+            $vacancy->users()->attach($candidate->id, ['cv' => $newFileName]);
         }
 
         foreach ($vacanciesUser3->take(2) as $vacancy) {
-            $vacancy->users()->attach($candidate->id, ['cv' => 'fakecv_user1.pdf']);
+            $newFileName = 'cv_' . Str::random(10) . '.pdf';
+            Storage::disk('public')->copy('cv/fakecv_user1.pdf', 'cv/' . $newFileName);
+
+            $vacancy->users()->attach($candidate->id, ['cv' => $newFileName]);
         }
     }
 }

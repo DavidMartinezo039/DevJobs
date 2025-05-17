@@ -176,9 +176,6 @@ class CvManager extends Component
         $this->skills_options = DigitalSkill::all();
         $this->drivingLicenses_options = DrivingLicense::all();
 
-        // Y demás campos...
-
-        // Inicializar arrays dinámicos
         $this->identity_documents = [['identity_id' => '', 'number' => '']];
         $this->phones = [['phone_id' => '', 'number' => '']];
         $this->socialMedia = [['social_media_id' => '', 'user_name' => '', 'url' => '']];

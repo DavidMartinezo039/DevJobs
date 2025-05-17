@@ -7,6 +7,7 @@ use App\Mail\ConfirmWithdrawMail;
 use App\Mail\VacancyApplicationMail;
 use App\Models\Vacancy;
 use App\Notifications\NewCandidate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -30,6 +31,8 @@ class ApplyVacancy extends Component
 
     public function applyVacancy()
     {
+        Gate::authorize('createPivot', Vacancy::class);
+
         $data = $this->validate();
 
         $cv = $this->cv->store('cv', 'public');
@@ -47,6 +50,8 @@ class ApplyVacancy extends Component
     public function removeCv()
     {
         $user = auth()->user();
+
+        $this->authorize('deletePivot', $this->vacancy);
 
         $url = URL::temporarySignedRoute(
             'vacancy.confirmWithdraw',

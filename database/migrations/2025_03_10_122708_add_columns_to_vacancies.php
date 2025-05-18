@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('company');
             $table->date('last_day');
             $table->text('description');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('public')->default(1);
 
         });

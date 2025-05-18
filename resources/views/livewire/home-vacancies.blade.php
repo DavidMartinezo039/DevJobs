@@ -47,6 +47,9 @@
                     <p class="p-3 text-center text-sm text-gray-600">{{ __('There are no vacancies yet') }}</p>
                 @endforelse
             </div>
+            <div class="mt-6">
+                {{ $vacancies->links() }}
+            </div>
         </div>
     </div>
 </div>

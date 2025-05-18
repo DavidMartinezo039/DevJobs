@@ -14,7 +14,7 @@ class AppliedJobs extends Component
         Gate::authorize('viewAnyPivot', Vacancy::class);
 
         $applications = auth()->user()->getAccessibleApplications();
-        
+
         return view('livewire.applied-jobs' , [
         'applications' => $applications,
     ])->layout('layouts.app');

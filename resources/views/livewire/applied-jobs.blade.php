@@ -44,5 +44,8 @@
                 </div>
             </div>
         </div>
+        <div class="mt-6">
+            {{ $applications->links() }}
+        </div>
     </div>
 </div>

@@ -26,7 +26,7 @@ class HomeVacancies extends Component
             'term' => $this->term,
             'category' => $this->category,
             'salary' => $this->salary,
-        ])->get();
+        ])->paginate(10);
 
         return view('livewire.home-vacancies', ['vacancies' => $vacancies]);
     }

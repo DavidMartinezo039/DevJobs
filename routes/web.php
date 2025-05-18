@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\CvPdfController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\VacancyPdfController;
+use App\Livewire\Admin\GendersManager;
 use App\Livewire\AppliedJobs;
 use App\Livewire\Candidates;
 use App\Livewire\ConfirmWithdraw;
@@ -33,6 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/cvs', CvManager::class)->name('cv.manager');
     Route::get('/cvs/{cv}/download', [CvPdfController::class, 'download'])->name('cv.download');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('rol.admin')->name('dashboard');
+    Route::get('/dashboard/genders', GendersManager::class)->middleware('rol.admin')->name('genders.manager');
 
 });
 Route::get('/vacancies/{vacancy}/download', [VacancyPdfController::class, 'download'])->name('vacancy.download');

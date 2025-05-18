@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->group('rol.recruiter', [
             \App\Http\Middleware\UserRol::class,
         ]);
+
+        $middleware->group('rol.admin', [
+            \App\Http\Middleware\CheckGodOrModerator::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

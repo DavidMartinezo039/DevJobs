@@ -79,7 +79,9 @@
                         @json(__('The vacancy was eliminated')),
                         @json(__('Successfully Removed')),
                         'success'
-                    )
+                    ).then(() => {
+                        location.reload();
+                    });
                 }
             })
         })

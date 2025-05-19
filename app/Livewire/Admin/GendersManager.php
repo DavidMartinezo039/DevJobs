@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin;
 
+use App\Jobs\NotifyMarketingUsersOfGenderChange;
+use App\Jobs\NotifyModeratorsOfDefaultGender;
 use App\Models\Gender;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
@@ -10,6 +12,12 @@ class GendersManager extends Component
 {
     public $genders, $type, $gender, $createMode;
     public $isEditMode = false;
+
+    public $pendingChanges = [];
+    protected $listeners = ['deleteGender'];
+
+    public $genderToDelete = null;
+
 
     protected $rules = [
         'type' => 'required|string|unique:genders,type',
@@ -24,15 +32,45 @@ class GendersManager extends Component
         $this->resetValidation();
     }
 
+    public function markForToggle($genderId)
+    {
+        if (isset($this->pendingChanges[$genderId])) {
+            unset($this->pendingChanges[$genderId]);
+        } else {
+            $this->pendingChanges[$genderId] = true;
+        }
+    }
+
+    public function saveChanges()
+    {
+        foreach ($this->pendingChanges as $genderId => $value) {
+            $gender = Gender::find($genderId);
+
+            if ($gender && auth()->user()->can('toggleDefault', $gender)) {
+                $gender->is_default = !$gender->is_default;
+                $gender->save();
+            }
+        }
+
+        NotifyModeratorsOfDefaultGender::dispatch($gender);
+
+        $this->pendingChanges = [];
+        session()->flash('message', __('Changes saved successfully'));
+    }
+
+
     public function store()
     {
         $this->validate();
 
-        Gender::create([
+        $gender = Gender::create([
             'type' => $this->type,
         ]);
+        $this->pendingChanges[$gender->id] = true;
 
-        session()->flash('message', 'Gender created successfully.');
+        NotifyMarketingUsersOfGenderChange::dispatch($gender, 'created');
+
+        session()->flash('message', __('Gender created successfully'));
 
         $this->resetInput();
     }
@@ -55,26 +93,33 @@ class GendersManager extends Component
             $this->gender->update([
                 'type' => $this->type,
             ]);
-            session()->flash('message', 'Gender updated successfully.');
+
+        NotifyMarketingUsersOfGenderChange::dispatch($this->gender, 'updated');
+
+        session()->flash('message', __('Gender updated successfully'));
             $this->resetInput();
     }
 
-    public function delete(Gender $gender)
+    public function confirmDelete($gender)
+    {
+        $this->dispatch('DeleteAlert', $gender);
+    }
+
+    public function deleteGender(Gender $gender)
     {
         Gate::authorize('delete', $gender);
 
+        if (isset($this->pendingChanges[$gender->id])) {
+            unset($this->pendingChanges[$gender->id]);
+        }
+
+        NotifyMarketingUsersOfGenderChange::dispatch($gender, 'deleted');
+
         $gender->delete();
-        session()->flash('message', 'Gender deleted successfully.');
-    }
 
-    public function toggleDefault(Gender $gender)
-    {
-        Gate::authorize('toggleDefault', Gender::class);
+        $this->resetInput();
 
-        $gender->is_default = !$gender->is_default;
-        $gender->save();
-
-        session()->flash('message', 'Default status updated.');
+        session()->flash('message', __('Gender deleted successfully'));
     }
 
     public function render()

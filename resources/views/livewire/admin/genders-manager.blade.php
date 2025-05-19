@@ -65,19 +65,33 @@
                         <p class="text-xl font-medium text-gray-800">{{ $gender->type }}</p>
 
                         <div class="flex items-center gap-2">
+                            @if($gender->is_default)
+                                <span class="text-xs bg-gray-300 text-gray-800 px-2 py-1 rounded">Default</span>
+                            @endif
+                            @hasrole('god')
                             <button
-                                wire:click="edit({{ $gender->id }})"
-                                class="bg-blue-800 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
+                                wire:click="toggleDefault({{ $gender->id }})"
+                                class="{{ $gender->is_default ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-gray-500 hover:bg-gray-600' }} py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
                             >
-                                {{ __('Edit') }}
+                                {{ $gender->is_default ? __('Unset Default') : __('Set as Default') }}
                             </button>
+                            @endhasrole
 
-                            <button
-                                wire:click="delete({{ $gender->id }})"
-                                class="bg-red-600 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
-                            >
-                                {{ __('Delete') }}
-                            </button>
+                            @if(!$gender->is_default || !auth()->user()->hasRole('moderator'))
+                                <button
+                                    wire:click="edit({{ $gender->id }})"
+                                    class="bg-blue-800 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
+                                >
+                                    {{ __('Edit') }}
+                                </button>
+
+                                <button
+                                    wire:click="delete({{ $gender->id }})"
+                                    class="bg-red-600 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
+                                >
+                                    {{ __('Delete') }}
+                                </button>
+                            @endif
                         </div>
                     </li>
                 @empty

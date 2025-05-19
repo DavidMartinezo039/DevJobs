@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Gender;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
 class GendersManager extends Component
@@ -23,7 +24,6 @@ class GendersManager extends Component
         $this->resetValidation();
     }
 
-    // Crear género nuevo
     public function store()
     {
         $this->validate();
@@ -39,6 +39,8 @@ class GendersManager extends Component
 
     public function edit(Gender $gender)
     {
+        Gate::authorize('update', $gender);
+
         $this->gender = $gender;
         $this->type = $gender->type;
         $this->isEditMode = true;
@@ -59,8 +61,20 @@ class GendersManager extends Component
 
     public function delete(Gender $gender)
     {
+        Gate::authorize('delete', $gender);
+
         $gender->delete();
         session()->flash('message', 'Gender deleted successfully.');
+    }
+
+    public function toggleDefault(Gender $gender)
+    {
+        Gate::authorize('toggleDefault', Gender::class);
+
+        $gender->is_default = !$gender->is_default;
+        $gender->save();
+
+        session()->flash('message', 'Default status updated.');
     }
 
     public function render()

@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Tabla de documentos de identidad
         Schema::create('identities', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // Documento de identidad, pasaporte, permiso de residencia
+            $table->string('type');
             $table->timestamps();
         });
 
-        // Tabla pivote entre personal_data e identities
         Schema::create('identity_personal_data', function (Blueprint $table) {
             $table->id();
             $table->string('number');
@@ -27,26 +25,23 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Tabla de géneros
         Schema::create('genders', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // Masculino, femenino, otro
+            $table->string('type');
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
 
-        // Modificar personal_data para incluir gender_id
         Schema::table('personal_data', function (Blueprint $table) {
             $table->foreignId('gender_id')->nullable()->constrained('genders')->nullOnDelete();
         });
 
-        // Tabla de tipos de teléfono
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // Domicilio, trabajo, móvil, otro
+            $table->string('type');
             $table->timestamps();
         });
 
-        // Tabla pivote entre personal_data y phones
         Schema::create('personal_data_phones', function (Blueprint $table) {
             $table->id();
             $table->string('number');
@@ -55,14 +50,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Tabla de redes sociales
         Schema::create('social_media', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // X, Facebook, Instagram, etc.
+            $table->string('type');
             $table->timestamps();
         });
 
-        // Tabla pivote entre personal_data y social_media
         Schema::create('personal_data_social_media', function (Blueprint $table) {
             $table->id();
             $table->string('user_name');

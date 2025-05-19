@@ -17,7 +17,8 @@ class GenderSeeder extends Seeder
 
         foreach ($genders as $gender) {
             Gender::factory()->create([
-                'type' => $gender
+                'type' => $gender,
+                'is_default' => true
             ]);
         }
     }

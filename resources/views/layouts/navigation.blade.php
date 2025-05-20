@@ -93,6 +93,23 @@
                     </x-dropdown>
                 @endauth
 
+                    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+                    <div x-data="{ open: false }" class="relative inline-block text-left">
+                        <button @click="open = !open" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            🌐 {{ strtoupper(app()->getLocale()) }}
+                            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                            </svg>
+                        </button>
+
+                        <div x-show="open" @click.away="open = false" x-transition class="origin-top-right absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                            <div class="py-1">
+                                <a href="/locale/en" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ __('English') }}</a>
+                                <a href="/locale/es" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ __('Spanish') }}</a>
+                            </div>
+                        </div>
+                    </div>
                 @guest
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">

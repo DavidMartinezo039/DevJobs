@@ -40,7 +40,7 @@
 
                                     <span
                                         class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ $color }}">
-                                        {{ ucfirst($status) }}
+                                        {{ __(ucfirst($status)) }}
                                     </span>
                                 </div>
 

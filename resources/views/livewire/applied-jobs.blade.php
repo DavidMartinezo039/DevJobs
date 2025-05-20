@@ -23,7 +23,7 @@
                                     @endphp
 
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold mr-1 {{ $color }}">
-                                        {{ ucfirst($status) }}
+                                        {{ __(ucfirst($status)) }}
                                     </span>
                                 </div>
 

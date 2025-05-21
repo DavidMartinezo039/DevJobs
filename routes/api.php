@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\GenderController;
 use App\Http\Controllers\Api\VacancyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/vacancies', [VacancyController::class, 'store']);
     Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update']);
     Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy']);
+
+    Route::apiResource('genders', GenderController::class);
+    Route::post('genders/{gender}/toggle-default', [GenderController::class, 'toggleDefault']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin;
 
+use App\Http\Requests\StoreGenderRequest;
+use App\Http\Requests\UpdateGenderRequest;
 use App\Jobs\NotifyMarketingUsersOfGenderChange;
 use App\Jobs\NotifyModeratorsOfDefaultGender;
 use App\Models\Gender;
@@ -61,7 +63,8 @@ class GendersManager extends Component
 
     public function store()
     {
-        $this->validate();
+        $request = new StoreGenderRequest();
+        $this->validate($request->rules());
 
         $gender = Gender::create([
             'type' => $this->type,
@@ -86,11 +89,10 @@ class GendersManager extends Component
 
     public function update()
     {
-        $this->validate([
-            'type' => 'required|string|unique:genders'
-        ]);
+        $request = new UpdateGenderRequest();
+        $this->validate($request->rules());
 
-            $this->gender->update([
+        $this->gender->update([
                 'type' => $this->type,
             ]);
 

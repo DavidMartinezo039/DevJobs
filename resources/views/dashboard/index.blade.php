@@ -1,12 +1,29 @@
 <x-app-layout>
     <div class="max-w-6xl mx-auto p-6 lg:p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">
-            {{ __('Admin Dashboard') }}
-        </h1>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    {{ __('Admin Dashboard') }}
+                </h1>
+                <p class="text-lg text-gray-600">
+                    {{ __('Welcome') }}, {{ $user->name }} ({{ $user->getRoleNames()->join(', ') }})
+                </p>
+            </div>
 
-        <p class="text-lg text-gray-600 mb-4">
-            {{ __('Welcome') }}, {{ $user->name }} ({{ $user->getRoleNames()->join(', ') }})
-        </p>
+            <form method="POST" action="{{ route('admin.backup') }}" class="mt-4 md:mt-0">
+                @csrf
+                <button type="submit"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
+                    {{ __('Generate Backup') }}
+                </button>
+            </form>
+        </div>
+
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <a href="{{ route('genders.manager') }}"

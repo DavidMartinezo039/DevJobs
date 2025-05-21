@@ -48,6 +48,7 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
         Route::get('/cvs', CvManager::class)->name('cv.manager');
         Route::get('/cvs/{cv}/download', [CvPdfController::class, 'download'])->name('cv.download');
 
+        Route::post('/admin/backup', [DashboardController::class, 'backup'])->middleware('rol.admin')->name('admin.backup');
         Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('rol.admin')->name('dashboard');
         Route::get('/dashboard/genders', GendersManager::class)->middleware('rol.admin')->name('genders.manager');
 

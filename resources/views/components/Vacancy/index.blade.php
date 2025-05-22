@@ -19,7 +19,7 @@
                 @forelse($vacancies as $vacancy)
                     <div class="p-6 text-gray-900 dark:text-gray-100 md:flex md:justify-between md:items-center">
                         <div class="leading-10">
-                            <a wire:click="edit({{ $vacancy }})" class="text-xl font-bold cursor-pointer">
+                            <a wire:click="show({{ $vacancy }})" class="text-xl font-bold cursor-pointer">
                                 {{ $vacancy->title }}
                             </a>
                             <p class="text-sm text-gray-600 font-bold">{{ $vacancy->company }}</p>

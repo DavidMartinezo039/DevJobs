@@ -36,18 +36,47 @@
                             <x-input-error :messages="$errors->get('description')" class="mt-2"/>
                         </div>
 
-                        <div>
-                            <x-input-label for="image" :value="__('Image (Max:2048kb)')"/>
-                            <x-text-input id="image" class="block mt-1 w-full" type="file" wire:model="image"
-                                          accept="image/*"/>
-                            <div class="my-5 w-80">
-                                @if($image)
-                                    {{  __('Image') }}:
-                                    <img src="{{ $image->temporaryUrl() }}" alt="Image">
-                                @endif
-                            </div>
-                            <x-input-error :messages="$errors->get('image')" class="mt-2"/>
+                        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+                        <div
+                            x-data="{ isDragging: false }"
+                            @dragover.prevent="isDragging = true"
+                            @dragleave.prevent="isDragging = false"
+                            @drop.prevent="
+        isDragging = false;
+        $wire.upload('image', $event.dataTransfer.files[0]);
+    "
+                            class="border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition-all duration-200"
+                            :class="isDragging ? 'bg-blue-100 border-blue-400' : 'border-gray-300'"
+                            @click="$refs.fileInput.click()"
+                        >
+                            <x-input-label for="image" :value="__('Image (Max:2048kb)')" />
+
+                            <input
+                                x-ref="fileInput"
+                                id="image"
+                                type="file"
+                                class="hidden"
+                                wire:model="image"
+                                accept="image/*"
+                            />
+
+                            <p class="text-gray-500">
+                                {{ __('Drag and drop an image or click to select') }}
+                            </p>
+
+                            @error('image')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+
+                            @if($image)
+                                <div class="mt-4">
+                                    <p class="font-semibold">{{ __('Image') }}:</p>
+                                    <img src="{{ $image->temporaryUrl() }}" class="mt-2 w-80 mx-auto rounded shadow" alt="{{ __('Image') }}">
+                                </div>
+                            @endif
                         </div>
+
 
                         <x-primary-button>
                             {{ __('Create Vacancy') }}

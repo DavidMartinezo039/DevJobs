@@ -34,32 +34,41 @@
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        <div>
-                            <x-input-label for="image" :value="__('Image')" />
-                            <x-text-input id="image" class="block mt-1 w-full" type="file" wire:model="new_image" accept="image/*"/>
+                        <div
+                            x-data
+                            x-on:dragover.prevent
+                            x-on:drop.prevent="$refs.fileInput.files = $event.dataTransfer.files; $refs.fileInput.dispatchEvent(new Event('change'))"
+                            class="w-full p-6 border-2 border-dashed border-gray-300 rounded-md text-center cursor-pointer hover:border-blue-500 transition"
+                        >
+                            <x-input-label for="new_image" :value="__('Drag and drop an image or click to select')" />
 
-                            <div class="my-5 w-80">
-                                <x-input-label :value="__('Current Image')"/>
-                                <img src="{{ asset('storage/vacancies/' . $image) }}" alt="{{ __('Vacancy Image') . $title }}">
-                            </div>
-                            <div class="my-5 w-80">
-                                @if($new_image) w
-                                <x-input-label :value="__('New Image')"/>
-                                <img src="{{ $new_image->temporaryUrl() }}" alt="Image">
-                                @endif
-                            </div>
+                            <input
+                                id="new_image"
+                                type="file"
+                                wire:model="new_image"
+                                accept="image/*"
+                                class="hidden"
+                                x-ref="fileInput"
+                            >
+
+                            <label for="new_image" class="cursor-pointer text-gray-500">
+                                {{ __('Drop image here or click to upload') }}
+                            </label>
+
                             <x-input-error :messages="$errors->get('new_image')" class="mt-2" />
                         </div>
 
-                        {{--
-
-                        <div>
-                            <x-input-label for="image" :value="__('Image')" />
-                            <x-text-input id="image" class="block mt-1 w-full" type="file" wire:model="image" accept="image/*"/>
-
-                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                        <div class="my-5 w-80">
+                            @if($new_image)
+                                <x-input-label :value="__('New Image')" />
+                                <img src="{{ $new_image->temporaryUrl() }}" alt="{{ __('New Image') }}" class="rounded shadow">
+                            @endif
                         </div>
-                        --}}
+
+                        <div class="my-5 w-80">
+                            <x-input-label :value="__('Current Image')"/>
+                            <img src="{{ asset('storage/vacancies/' . $image) }}" alt="{{ __('Vacancy Image') . ' ' . $title }}" class="rounded shadow">
+                        </div>
 
                         <x-primary-button>
                             {{ __('Save Changes') }}

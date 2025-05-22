@@ -1,0 +1,676 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API DevJobs",
+        "description": "Documentación de la API para la plataforma DevJobs",
+        "contact": {
+            "name": "David",
+            "email": "david@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://devjobs.test",
+            "description": "Servidor principal"
+        }
+    ],
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar nuevo usuario",
+                "operationId": "8e4e3cb7b46126f4696379d3c7eeb4ad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario registrado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Iniciar sesión de usuario",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuario autenticado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Credenciales incorrectas"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Cerrar sesión del usuario autenticado",
+                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Obtener perfil del usuario autenticado",
+                "operationId": "94a5f4c5f5e5755cf43698cf9bc49e9d",
+                "responses": {
+                    "200": {
+                        "description": "Perfil de usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/genders": {
+            "get": {
+                "tags": [
+                    "Genders"
+                ],
+                "summary": "Obtener todos los géneros",
+                "description": "Requiere autenticación mediante token. Accesible solo para roles 'moderator' o 'god'.",
+                "operationId": "7d27450f855b47fe95c650bf9ae8bee1",
+                "responses": {
+                    "200": {
+                        "description": "Lista de géneros obtenida correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Acceso denegado. Se requiere el rol 'moderator' o 'god'."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Genders"
+                ],
+                "summary": "Crear un nuevo género",
+                "operationId": "a91a4df590ea0b9a75f375a3443a031c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "example": "Masculino"
+                                    },
+                                    "is_default": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Género creado exitosamente"
+                    },
+                    "403": {
+                        "description": "No autorizado: solo para roles 'moderator' o 'god'"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/genders/{id}": {
+            "get": {
+                "tags": [
+                    "Genders"
+                ],
+                "summary": "Obtener un género por ID",
+                "operationId": "b8d983ec4a7d75bd6cedbeded6761eac",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del género",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Género encontrado"
+                    },
+                    "404": {
+                        "description": "Género no encontrado"
+                    },
+                    "403": {
+                        "description": "No autorizado: solo para roles 'moderator' o 'god'"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Genders"
+                ],
+                "summary": "Actualizar un género",
+                "operationId": "fb8ceb72fd7d0e21faf597319f74b531",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del género a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "example": "Otro"
+                                    },
+                                    "is_default": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Género actualizado correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado: solo para roles 'moderator' o 'god'"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Genders"
+                ],
+                "summary": "Eliminar un género",
+                "operationId": "22b5f1b4cc6cb46c6c1dd939f3f2672f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del género",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Género eliminado correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado: solo para roles 'moderator' o 'god'"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/genders/{id}/toggle-default": {
+            "post": {
+                "tags": [
+                    "Genders"
+                ],
+                "summary": "Alternar el estado por defecto del género",
+                "operationId": "d5c5e19a9a6ea5f3e4cda48f0178f692",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del género",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estado predeterminado actualizado correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado: solo para rol 'god'"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/vacancies": {
+            "get": {
+                "tags": [
+                    "Vacancies"
+                ],
+                "summary": "Obtener todas las vacantes",
+                "operationId": "11d8fef89bfd552fb528f9f9713acaf8",
+                "responses": {
+                    "200": {
+                        "description": "Lista de vacantes obtenida correctamente"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Vacancies"
+                ],
+                "summary": "Crear una nueva vacante",
+                "operationId": "2e10b81243d3bf0bbf5c707d540ceb96",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "company",
+                                    "last_day",
+                                    "salary_id",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Desarrollador PHP"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Se busca desarrollador con experiencia en Laravel."
+                                    },
+                                    "company": {
+                                        "type": "string",
+                                        "example": "TechCorp"
+                                    },
+                                    "last_day": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-06-30"
+                                    },
+                                    "salary_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Vacante creada correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado para crear vacantes"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/vacancies/{vacancy}": {
+            "get": {
+                "tags": [
+                    "Vacancies"
+                ],
+                "summary": "Obtener una vacante por ID",
+                "operationId": "8dc68cf498e37835a7e1506106524d8b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la vacante",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vacante encontrada"
+                    },
+                    "404": {
+                        "description": "Vacante no encontrada"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Vacancies"
+                ],
+                "summary": "Actualizar una vacante existente",
+                "operationId": "c37238211d46e4bb474aa783a32815dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la vacante a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Frontend Developer"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Experiencia con Vue.js o React."
+                                    },
+                                    "company": {
+                                        "type": "string",
+                                        "example": "WebDev Inc."
+                                    },
+                                    "last_day": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-15"
+                                    },
+                                    "salary_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Vacante actualizada correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado para actualizar esta vacante"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Vacancies"
+                ],
+                "summary": "Eliminar una vacante",
+                "operationId": "d50d735059430308740bce9bd6d03c5d",
+                "parameters": [
+                    {
+                        "name": "vacancy",
+                        "in": "path",
+                        "description": "ID de la vacante",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vacante eliminada correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado para eliminar esta vacante"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Genders",
+            "description": "Genders"
+        },
+        {
+            "name": "Vacancies",
+            "description": "Vacancies"
+        }
+    ]
+}

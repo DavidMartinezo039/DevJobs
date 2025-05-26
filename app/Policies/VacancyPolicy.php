@@ -66,24 +66,9 @@ class VacancyPolicy
     /**
      * Determine whether the user can view the pivot.
      */
-    public function viewPivot(User $user, Vacancy $vacancy): bool
+    public function viewPivot(User $user): bool
     {
-        if ($user->hasRole('god')) {
-            return true;
-        }
-
-        if ($user->hasRole('developer') && $vacancy->users->contains($user)) {
-            return true;
-        }
-
-        if ($user->hasRole('moderator')) {
-            return $vacancy->users->contains($user) ||
-                $vacancy->users->contains(function ($applicant) {
-                    return $applicant->hasRole('developer');
-                });
-        }
-
-        return false;
+        return $user->hasPermissionTo('vacancies applied');
     }
 
     /**
@@ -99,21 +84,12 @@ class VacancyPolicy
      */
     public function deletePivot(User $user, Vacancy $vacancy): bool
     {
-        if ($user->hasRole('god')) {
-            return true;
-        }
-
-        if ($user->hasRole('developer') && $vacancy->users->contains($user)) {
-            return true;
-        }
-
-        if ($user->hasRole('moderator')) {
-            return $vacancy->users->contains($user) ||
-                $vacancy->users->contains(function ($applicant) {
-                    return $applicant->hasRole('developer');
-                });
-        }
-
-        return false;
+        return $user->hasRole('god')
+            || ($user->hasRole('developer') && $vacancy->users->contains($user))
+            || ($user->hasRole('moderator') &&
+                (
+                    $vacancy->users->contains($user)
+                    || $vacancy->users->contains(fn($applicant) => $applicant->hasRole('developer'))
+                ));
     }
 }

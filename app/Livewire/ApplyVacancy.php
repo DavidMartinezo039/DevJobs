@@ -51,7 +51,7 @@ class ApplyVacancy extends Component
     {
         $user = auth()->user();
 
-        $this->authorize('deletePivot', $this->vacancy);
+        Gate::authorize('deletePivot', $this->vacancy);
 
         $url = URL::temporarySignedRoute(
             'vacancy.confirmWithdraw',
@@ -67,6 +67,8 @@ class ApplyVacancy extends Component
 
     public function render()
     {
+        Gate::authorize('viewPivot', $this->vacancy);
+
         $userCv = auth()->user()->vacancies()->where('vacancy_id', $this->vacancy->id)->value('cv');
 
         return view('livewire.apply-vacancy', compact('userCv'));

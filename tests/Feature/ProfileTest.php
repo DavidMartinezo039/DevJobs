@@ -1,9 +1,14 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
+use Spatie\Permission\Models\Permission;
 
 test('profile page is displayed', function () {
+    Permission::firstOrCreate(['name' => 'create cvs', 'guard_name' => 'web']);
     $user = User::factory()->create();
+
+    $user->hasRole('moderator');
 
     $response = $this
         ->actingAs($user)

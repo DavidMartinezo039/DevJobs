@@ -44,51 +44,110 @@ expect()->extend('toBeOne', function () {
 |
 */
 
+use App\Models\{
+    User, CV, WorkExperience, Language, DigitalSkill, Education, DrivingLicense, PersonalData, Gender, Identity, Phone, SocialMedia
+};
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+function createUserWithCompleteCv(string $roleName = 'developer'): User
+{
+    $user = User::factory()->create();
+    $user->assignRole($roleName);
+
+    CV::factory(1)->create(['user_id' => $user->id])->each(function ($cv) {
+
+        WorkExperience::factory(2)->create(['cv_id' => $cv->id]);
+        Education::factory(2)->create(['cv_id' => $cv->id]);
+
+        $languages = Language::factory(3)->create();
+        $languages->each(fn($language) => $cv->languages()->attach($language->id, ['level' => 'Intermediate']));
+
+        $digitalSkills = DigitalSkill::factory(3)->create();
+        $digitalSkills->each(fn($skill) => $cv->digitalSkills()->attach($skill->id, ['level' => 'Intermediate']));
+
+        $drivingLicense = DrivingLicense::factory()->create();
+        $cv->drivingLicenses()->attach($drivingLicense->id);
+
+        $newImageName = 'profile_' . Str::random(10) . '.png';
+        Storage::disk('public')->copy('images/default/default.png', 'images/' . $newImageName);
+
+        $personalData = PersonalData::factory()->create([
+            'cv_id' => $cv->id,
+            'image' => $newImageName,
+        ]);
+
+        $genderId = Gender::inRandomOrder()->value('id');
+        $personalData->gender_id = $genderId;
+        $personalData->save();
+
+        $identityIds = Identity::inRandomOrder()->limit(2)->pluck('id');
+        foreach ($identityIds as $identityId) {
+            $personalData->identities()->attach($identityId, [
+                'number' => 'ID-' . rand(1000, 9999),
+            ]);
+        }
+
+        $phoneIds = Phone::inRandomOrder()->limit(2)->pluck('id');
+        foreach ($phoneIds as $phoneId) {
+            $personalData->phones()->attach($phoneId, [
+                'number' => '555-123-' . rand(1000, 9999),
+            ]);
+        }
+
+        $socialMediaIds = SocialMedia::inRandomOrder()->limit(2)->pluck('id');
+        foreach ($socialMediaIds as $socialMediaId) {
+            $personalData->socialMedia()->attach($socialMediaId, [
+                'user_name' => 'user' . rand(1, 100),
+                'url' => 'https://socialmedia.com/user' . rand(1, 100),
+            ]);
+        }
+    });
+
+    return $user;
+}
+
 pest()->beforeEach(function () {
     Permission::create(['name' => 'view vacancies']);
     Permission::create(['name' => 'create vacancies']);
-    Permission::create(['name' => 'edit vacancies']);
-    Permission::create(['name' => 'delete vacancies']);
-
-    Permission::create(['name' => 'manage users']);
-    Permission::create(['name' => 'change roles']);
+    Permission::create(['name' => 'view cvs']);
+    Permission::create(['name' => 'create cvs']);
+    Permission::create(['name' => 'vacancies applied']);
+    Permission::create(['name' => 'apply for vacancy']);
 
     $developer = Role::create(['name' => 'developer']);
     $recruiter = Role::create(['name' => 'recruiter']);
     $moderator = Role::create(['name' => 'moderator']);
-    $admin = Role::create(['name' => 'admin']);
     $god = Role::create(['name' => 'god']);
+
+    $developer->givePermissionTo([
+        'view cvs',
+        'create cvs',
+        'vacancies applied',
+        'apply for vacancy',
+    ]);
 
     $recruiter->givePermissionTo([
         'view vacancies',
         'create vacancies',
-        'edit vacancies',
-        'delete vacancies'
     ]);
 
     $moderator->givePermissionTo([
         'view vacancies',
         'create vacancies',
-        'edit vacancies',
-        'delete vacancies'
-    ]);
-
-    $admin->givePermissionTo([
-        'view vacancies',
-        'create vacancies',
-        'edit vacancies',
-        'delete vacancies',
-        'manage users',
-        'change roles'
+        'view cvs',
+        'create cvs',
+        'vacancies applied',
+        'apply for vacancy',
     ]);
 
     $god->givePermissionTo([
         'view vacancies',
         'create vacancies',
-        'edit vacancies',
-        'delete vacancies',
-        'manage users',
-        'change roles'
+        'view cvs',
+        'create cvs',
+        'vacancies applied',
+        'apply for vacancy',
     ]);
 });
 

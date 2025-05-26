@@ -45,16 +45,24 @@ class GendersManager extends Component
 
     public function saveChanges()
     {
+        Gate::authorize('toggleDefault', Gender::class);
+
+        $updatedGenders = [];
+
         foreach ($this->pendingChanges as $genderId => $value) {
             $gender = Gender::find($genderId);
 
             if ($gender && auth()->user()->can('toggleDefault', $gender)) {
                 $gender->is_default = !$gender->is_default;
                 $gender->save();
+
+                $updatedGenders[] = $gender;
             }
         }
 
-        NotifyModeratorsOfDefaultGender::dispatch($gender);
+        foreach ($updatedGenders as $gender) {
+            NotifyModeratorsOfDefaultGender::dispatch($gender);
+        }
 
         $this->pendingChanges = [];
         session()->flash('message', __('Changes saved successfully'));

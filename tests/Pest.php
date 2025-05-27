@@ -49,6 +49,7 @@ use App\Models\{
 };
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use function Pest\Laravel\actingAs;
 
 function createUserWithCompleteCv(string $roleName = 'developer'): User
 {
@@ -104,6 +105,13 @@ function createUserWithCompleteCv(string $roleName = 'developer'): User
         }
     });
 
+    return $user;
+}
+
+function loginAs(string $role = 'god'): User {
+    $user = User::factory()->create();
+    $user->assignRole([$role]);
+    actingAs($user, 'sanctum');
     return $user;
 }
 

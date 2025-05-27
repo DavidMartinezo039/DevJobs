@@ -13,6 +13,8 @@ class GenderPolicy
      */
     public function update(User $user, Gender $gender): bool
     {
+        \Log::info("Policy update called for user: {$user->id}, gender id: {$gender->id}, is_default: {$gender->is_default}");
+
         if ($gender->is_default) {
             return $user->hasRole('god');
         }

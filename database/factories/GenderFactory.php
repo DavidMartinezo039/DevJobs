@@ -14,6 +14,7 @@ class GenderFactory extends Factory
     {
         return [
             'type' => $this->faker->unique()->word,
+            'is_default' => 0,
         ];
     }
 }

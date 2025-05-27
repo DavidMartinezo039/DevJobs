@@ -15,8 +15,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update']);
     Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy']);
 
-    Route::apiResource('genders', GenderController::class);
-    Route::post('genders/{gender}/toggle-default', [GenderController::class, 'toggleDefault']);
+    Route::apiResource('genders', GenderController::class)->middleware('rol.admin');
+    Route::post('genders/{gender}/toggle-default', [GenderController::class, 'toggleDefault'])->middleware('rol.admin');
 });
 
 Route::post('/register', [AuthController::class, 'register']);

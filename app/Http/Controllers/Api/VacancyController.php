@@ -101,8 +101,8 @@ class VacancyController extends Controller
 
         $vacancy = Vacancy::create([
             'title' => $validated['title'],
-            'salary_id' => $validated['salary'],
-            'category_id' => $validated['category'],
+            'salary_id' => $validated['salary_id'],
+            'category_id' => $validated['category_id'],
             'user_id' => auth()->id(),
             'company' => $validated['company'],
             'last_day' => $validated['last_day'],

@@ -4,6 +4,10 @@ use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use function Pest\Laravel\actingAs;
 
 test('email verification screen can be rendered', function () {
     $user = User::factory()->unverified()->create();
@@ -43,4 +47,65 @@ test('email is not verified with invalid hash', function () {
     $this->actingAs($user)->get($verificationUrl);
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+test('redirects to vacancies.manager if email already verified', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    actingAs($user);
+
+    $response = $this->post(route('verification.send'));
+
+    $response->assertRedirect(route('vacancies.manager'));
+});
+
+test('sends verification notification if email is not verified', function () {
+    Notification::fake();
+
+    $user = User::factory()->create([
+        'email_verified_at' => null,
+    ]);
+
+    actingAs($user);
+
+    $response = $this->post(route('verification.send'));
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+
+    $response->assertRedirect();
+    $response->assertSessionHas('status', 'verification-link-sent');
+});
+
+test('redirects to vacancies.manager if user has verified email', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    actingAs($user);
+
+    $response = $this->get(route('verification.notice'));
+
+    $response->assertRedirect(route('vacancies.manager'));
+});
+
+test('redirects if email is already verified', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    actingAs($user);
+
+    $mockRequest = $this->mock(EmailVerificationRequest::class, function ($mock) use ($user) {
+        $mock->shouldReceive('user')->andReturn($user);
+    });
+
+    $controller = new \App\Http\Controllers\Auth\VerifyEmailController();
+
+    $response = $controller($mockRequest);
+
+    expect(parse_url($response->getTargetUrl(), PHP_URL_PATH))->toBe('/vacancies')
+        ->and(parse_url($response->getTargetUrl(), PHP_URL_QUERY))->toBe('verified=1');
+
 });

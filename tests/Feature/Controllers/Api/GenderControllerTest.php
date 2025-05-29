@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Gender;
+use App\Notifications\GenderDefaultStatusChangedNotification;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\NotifyMarketingUsersOfGenderChange;
 use App\Jobs\NotifyModeratorsOfDefaultGender;
@@ -136,6 +137,8 @@ test('unauthorized users cannot delete a gender', function () {
 
 test('god can toggle gender default state', function () {
     Queue::fake();
+    $users = User::factory()->count(3)->create();
+    $users->each(fn ($user) => $user->assignRole('moderator'));
     loginAs('god');
 
     $gender = Gender::factory()->create(['is_default' => false]);
@@ -147,6 +150,26 @@ test('god can toggle gender default state', function () {
 
     $this->assertDatabaseHas('genders', ['id' => $gender->id, 'is_default' => true]);
     Queue::assertPushed(NotifyModeratorsOfDefaultGender::class);
+});
+
+test('moderators are notified when gender is set as default', function () {
+    Notification::fake();
+
+    // Creamos los usuarios y asignamos rol
+    $moderators = User::factory()->count(2)->create();
+    $moderators->each(fn ($user) => $user->assignRole('moderator'));
+
+    // Creamos un género
+    $gender = Gender::factory()->create();
+
+    // Ejecutamos el job directamente para test
+    (new \App\Jobs\NotifyModeratorsOfDefaultGender($gender))->handle();
+
+    // Comprobamos que la notificación fue enviada a esos usuarios
+    Notification::assertSentTo(
+        $moderators,
+        GenderDefaultStatusChangedNotification::class
+    );
 });
 
 test('non-god users cannot toggle gender default state', function () {

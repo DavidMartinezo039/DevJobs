@@ -19,7 +19,7 @@ class SendMarketingEmails implements ShouldQueue
         $users = User::where('wants_marketing', true)->get();
 
         foreach ($users as $user) {
-            Mail::to($user->email)->queue(new MarketingNewsletter($user));
+            Mail::to($user->email)->queue(new MarketingNewsletter($user->name));
         }
     }
 }

@@ -63,11 +63,16 @@
     </div>
 
     <div style="display: table-cell; width: 35%; vertical-align: top; padding-right: 20px;">
-        @if($vacancy->image)
+        @php
+            $imagePath = storage_path('app/public/vacancies/' . $vacancy->image);
+        @endphp
+
+        @if($vacancy->image && file_exists($imagePath))
             <img
-                src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/vacancies/' . $vacancy->image))) }}"
+                src="data:image/png;base64,{{ base64_encode(file_get_contents($imagePath)) }}"
                 alt="Vacancy Image"
-                style="max-width: 100%; border: 1px solid #ccc; padding: 5px;">
+                style="max-width: 100%; border: 1px solid #ccc; padding: 5px;"
+            >
         @endif
     </div>
 </div>

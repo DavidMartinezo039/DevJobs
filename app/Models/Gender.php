@@ -14,6 +14,6 @@ class Gender extends Model
 
     public function personalData(): HasMany
     {
-        return $this->hasMany(PersonalData::class)->withTimestamps();
+        return $this->hasMany(PersonalData::class);
     }
 }

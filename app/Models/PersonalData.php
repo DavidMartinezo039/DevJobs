@@ -26,11 +26,6 @@ class PersonalData extends Model
         'address' => 'array',
     ];
 
-    public function cv(): BelongsTo
-    {
-        return $this->belongsTo(Cv::class, 'cv_id');
-    }
-
     public function gender(): BelongsTo
     {
         return $this->belongsTo(Gender::class);

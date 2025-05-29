@@ -3,6 +3,8 @@
 use App\Models\User;
 use App\Models\Gender;
 use App\Notifications\GenderDefaultStatusChangedNotification;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\NotifyMarketingUsersOfGenderChange;
 use App\Jobs\NotifyModeratorsOfDefaultGender;
@@ -67,6 +69,20 @@ test('authorized users can create a gender', function () {
 
     $this->assertDatabaseHas('genders', ['type' => 'No binario']);
     Queue::assertPushed(NotifyMarketingUsersOfGenderChange::class);
+});
+
+it('returns correct mail content for gender default status notification', function () {
+    $notification = new GenderDefaultStatusChangedNotification();
+
+    $notifiable = new AnonymousNotifiable();
+
+    $mail = $notification->toMail($notifiable);
+
+    expect($mail)->toBeInstanceOf(MailMessage::class)
+        ->and($mail->introLines)->toContain(__('notifications.intro'))
+        ->and($mail->actionText)->toBe(__('notifications.action_text'))
+        ->and($mail->actionUrl)->toBe(url('/'))
+        ->and($mail->outroLines)->toContain(__('notifications.thank_you'));
 });
 
 test('unauthorized users cannot create a gender', function () {

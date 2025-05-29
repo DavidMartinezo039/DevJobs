@@ -12,24 +12,22 @@ class NewCandidate extends Notification
 {
     use Queueable;
 
-    private mixed $id_vacancy;
-    private mixed $name_vacancy;
-    private mixed $user_id;
+    public int $vacancyId;
+    public string $vacancyTitle;
+    public int $candidateId;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($id_vacancy, $name_vacancy, $user_id)
+    public function __construct(int $vacancyId, string $vacancyTitle, int $candidateId)
     {
-        $this->id_vacancy = $id_vacancy;
-        $this->name_vacancy = $name_vacancy;
-        $this->user_id = $user_id;
+        $this->vacancyId = $vacancyId;
+        $this->vacancyTitle = $vacancyTitle;
+        $this->candidateId = $candidateId;
     }
 
     /**
      * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
      */
     public function via(object $notifiable): array
     {
@@ -45,17 +43,20 @@ class NewCandidate extends Notification
 
         return (new MailMessage)
             ->line(__('You have received a new candidate for your vacancy.'))
-            ->line(__('The vacancy is: :name', ['name' => $this->name_vacancy]))
+            ->line(__('The vacancy is: :name', ['name' => $this->vacancyTitle]))
             ->action(__('See notification'), $url)
             ->line(__('Thank you for using DevJobs.'));
     }
 
+    /**
+     * Get the array representation of the notification for storage.
+     */
     public function toDatabase(object $notifiable): array
     {
         return [
-            'id_vacancy' => $this->id_vacancy,
-            'name_vacancy' => $this->name_vacancy,
-            'user_id' => $this->user_id,
+            'vacancy_id'   => $this->vacancyId,
+            'vacancy_title'=> $this->vacancyTitle,
+            'candidate_id' => $this->candidateId,
         ];
     }
 }

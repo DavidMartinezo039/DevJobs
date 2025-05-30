@@ -77,7 +77,6 @@ class GendersManager extends Component
         $gender = Gender::create([
             'type' => $this->type,
         ]);
-        $this->pendingChanges[$gender->id] = true;
 
         NotifyMarketingUsersOfGenderChange::dispatch($gender, 'created');
 

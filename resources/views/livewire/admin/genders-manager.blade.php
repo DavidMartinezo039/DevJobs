@@ -75,21 +75,20 @@
                         $isPending = isset($pendingChanges[$gender->id]);
                         $willBeDefault = $isPending ? !$gender->is_default : $gender->is_default;
                     @endphp
-                    <li class="p-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <li wire:key="gender-{{ $gender->id }}" class="p-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <p class="text-xl font-medium text-gray-800">{{ $gender->type }}</p>
 
                         <div class="flex items-center gap-2">
                             @if($gender->is_default)
-                                <span
-                                    class="text-xs bg-gray-300 text-gray-800 px-2 py-1 rounded">{{ __('Default') }}</span>
+                                <span class="text-xs bg-gray-300 text-gray-800 px-2 py-1 rounded">{{ __('Default') }}</span>
                             @endif
                             @hasrole('god')
                             <button
                                 wire:click="markForToggle({{ $gender->id }})"
                                 class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg shadow transition-all duration-300
-           {{ $willBeDefault
-               ? 'bg-green-600 hover:bg-green-700 text-white'
-               : 'bg-yellow-500 hover:bg-yellow-600 text-white' }}"
+                    {{ $willBeDefault
+                        ? 'bg-green-600 hover:bg-green-700 text-white'
+                        : 'bg-yellow-500 hover:bg-yellow-600 text-white' }}"
                             >
                                 @if($willBeDefault)
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
@@ -158,9 +157,7 @@
                         @json(__('The gender was eliminated')),
                         @json(__('Successfully Removed')),
                         'success'
-                    ).then(() => {
-                        location.reload();
-                    });
+                    );
                 }
             })
         })

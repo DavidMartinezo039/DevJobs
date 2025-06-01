@@ -18,7 +18,7 @@ class VacanciesManager extends Component
     use WithFileUploads;
 
     public $view = 'index';
-    protected $listeners = ['deleteVacancy'];
+    protected $listeners = ['delete'];
 
     public $salaries, $categories;
 
@@ -90,7 +90,7 @@ class VacanciesManager extends Component
         $this->dispatch('DeleteAlert', $vacancy);
     }
 
-    public function deleteVacancy(Vacancy $vacancy)
+    public function delete(Vacancy $vacancy)
     {
         Gate::authorize('delete', $vacancy);
 

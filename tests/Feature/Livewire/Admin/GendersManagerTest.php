@@ -49,7 +49,7 @@ test('can delete a gender via GendersManager', function () {
     $gender = Gender::factory()->create();
 
     Livewire::test(\App\Livewire\Admin\GendersManager::class)
-        ->call('deleteGender', $gender);
+        ->call('delete', $gender);
 
     expect(Gender::find($gender->id))->toBeNull();
 });
@@ -80,4 +80,25 @@ test('markForToggle coverage test', function () {
 
     // Inspecciona el estado interno para asegurarte que cambió
     $this->assertArrayNotHasKey($gender->id, $component->instance()->pendingChanges);
+});
+
+test('delete gender pending chance marked', function () {
+    Queue::fake();
+    loginAs('god');
+    $gender = Gender::factory()->create();
+
+    $component = Livewire::test(\App\Livewire\Admin\GendersManager::class);
+
+    $component->call('markForToggle', $gender->id);
+    $this->assertArrayHasKey($gender->id, $component->instance()->pendingChanges);
+
+    $component->call('delete', $gender);
+
+    expect(Gender::find($gender->id))->toBeNull();
+
+    $this->assertArrayNotHasKey($gender->id, $component->instance()->pendingChanges);
+
+    Queue::assertPushed(NotifyMarketingUsersOfGenderChange::class, function ($job) use ($gender) {
+        return $job->action === 'deleted' && $job->gender->id === $gender->id;
+    });
 });

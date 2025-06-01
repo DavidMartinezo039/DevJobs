@@ -8,17 +8,17 @@ use function Pest\Laravel\actingAs;
 
 test('user with CV can access show', function () {
     $user = createUserWithCompleteCv('developer');
-
     actingAs($user);
 
-    $selectedCv = $user->cvs()->first();
+    $cv = $user->cvs()->first();
 
-    $personalData = PersonalData::factory()->create([
-        'cv_id' => $selectedCv->id,
+    PersonalData::factory()->create([
+        'cv_id' => $cv->id,
         'image' => 'default.jpg',
     ]);
 
     Livewire::test(CvManager::class)
-        ->call('show', $selectedCv)
-        ->assertOk();
+        ->set('selectedCv', $cv)
+        ->call('show', $cv)
+        ->assertSet('view', 'show');
 });

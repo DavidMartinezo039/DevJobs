@@ -48,4 +48,9 @@ class PersonalData extends Model
         return $this->belongsToMany(SocialMedia::class, 'personal_data_social_media')
             ->withPivot('user_name', 'url')->withTimestamps();
     }
+
+    public function cv(): BelongsTo // <-- Asegúrate de que el nombre del método sea 'cv' (todo minúscula)
+    {
+        return $this->belongsTo(CV::class);
+    }
 }

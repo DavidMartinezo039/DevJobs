@@ -16,7 +16,7 @@ class GendersManager extends Component
     public $isEditMode = false;
 
     public $pendingChanges = [];
-    protected $listeners = ['deleteGender'];
+    protected $listeners = ['delete'];
 
     public $genderToDelete = null;
 
@@ -114,7 +114,7 @@ class GendersManager extends Component
         $this->dispatch('DeleteAlert', $gender);
     }
 
-    public function deleteGender(Gender $gender)
+    public function delete(Gender $gender)
     {
         Gate::authorize('delete', $gender);
 

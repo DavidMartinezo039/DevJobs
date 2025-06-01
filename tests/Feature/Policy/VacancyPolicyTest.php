@@ -91,7 +91,7 @@ test('delete vacancy', function () {
     actingAs($user);
 
     Livewire::test(VacanciesManager::class)
-        ->call('deleteVacancy', $vacancy)
+        ->call('delete', $vacancy)
         ->assertOk();
 
     $user = User::factory()->create();
@@ -100,7 +100,7 @@ test('delete vacancy', function () {
     actingAs($user);
 
     Livewire::test(VacanciesManager::class)
-        ->call('deleteVacancy', $vacancy2)
+        ->call('delete', $vacancy2)
         ->assertOk();
 
     $user = User::factory()->create();
@@ -109,7 +109,7 @@ test('delete vacancy', function () {
     actingAs($user);
 
     Livewire::test(VacanciesManager::class)
-        ->call('deleteVacancy', $vacancy3)
+        ->call('delete', $vacancy3)
         ->assertOk();
 });
 

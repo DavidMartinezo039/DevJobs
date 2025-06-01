@@ -25,54 +25,16 @@ class CvManager extends Component
 {
     use WithFileUploads;
 
-    public $title;
+    // CV and Personal Data Properties
+    public $title, $first_name, $last_name, $image, $new_image, $about_me, $birth_date, $city, $country, $gender_id;
+    public $workPermits = [], $nationalities = [], $emails = [], $addresses = [];
 
-    public $first_name;
-    public $last_name;
-    public $image;
-    public $about_me;
-    public $birth_date;
-    public $city;
-    public $country;
-    public $gender_id;
+    // Related Model Data (Pivots and HasMany)
+    public $identity_documents = [], $phones = [], $socialMedia = [], $workExperiences = [], $educations = [], $languages = [], $skills = [], $drivingLicenses = [];
 
-    public $workPermits = [];
-    public $nationalities = [];
-    public $emails = [];
-    public $addresses = [];
-
-    public $identity_documents = [];
-
-    public $phones = [];
-
-    public $socialMedia = [];
-
-    public $workExperiences = [];
-
-    public $educations = [];
-
-    public $languages = [];
-
-    public $skills = [];
-
-    public $drivingLicenses = [];
-
-    public $cvs, $selectedCv;
-
-    public $genders = [];
-    public $identityTypes = [];
-    public $phoneTypes = [];
-    public $socialMediaTypes = [];
-
-    public $languages_options = [];
-
-    public $skills_options = [];
-
-    public $drivingLicenses_options = [];
-
-    public $personalData;
-    public $new_image;
-
+    // UI State and Options
+    public $cvs, $selectedCv, $personalData;
+    public $genders = [], $identityTypes = [], $phoneTypes = [], $socialMediaTypes = [], $languages_options = [], $skills_options = [], $drivingLicenses_options = [];
     public $availableSections = [
         'work_experience' => 'Work Experience',
         'education' => 'Education',
@@ -80,40 +42,151 @@ class CvManager extends Component
         'skills' => 'Skills',
         'driving_licenses' => 'Driving Licenses',
     ];
+    public $activeSections = [], $view = 'index';
 
-    public $activeSections = [];
+    protected $listeners = ['delete'];
 
-    public $view = 'index';
+    /**
+     * Mount the component and initialize data.
+     */
+    public function mount()
+    {
+        Gate::authorize('viewAny', CV::class);
+
+        $this->cvs = CV::CvByRol()->get();
+        $this->genders = Gender::all();
+        $this->identityTypes = Identity::all();
+        $this->phoneTypes = Phone::all();
+        $this->socialMediaTypes = SocialMedia::all();
+        $this->languages_options = Language::all();
+        $this->skills_options = DigitalSkill::all();
+        $this->drivingLicenses_options = DrivingLicense::all();
+
+        // Initialize empty arrays for dynamic fields if they are not already populated (e.g., on edit)
+        $this->identity_documents = [['identity_id' => '', 'number' => '']];
+        $this->phones = [['phone_id' => '', 'number' => '']];
+        $this->socialMedia = [['social_media_id' => '', 'user_name' => '', 'url' => '']];
+    }
+
+    /**
+     * Render the component's view.
+     */
+    public function render()
+    {
+        return view('livewire.cv-manager')->layout('layouts.app');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | View Management
+    |--------------------------------------------------------------------------
+    */
+
+    public function index()
+    {
+        $this->resetComponentData(); // Reset form fields when navigating back to index
+        $this->mount(); // Re-fetch CVs for the index view
+        $this->view = 'index';
+    }
+
+    public function create()
+    {
+        Gate::authorize('create', CV::class);
+        $this->resetComponentData(); // Ensure a clean slate for creation
+        $this->view = 'create';
+    }
+
+    public function show(CV $cv)
+    {
+        Gate::authorize('view', $cv);
+
+        $this->selectedCv = $cv;
+        $this->personalData = $cv->personalData;
+        $this->view = 'show';
+    }
+
+    public function edit(CV $cv)
+    {
+        Gate::authorize('update', $cv);
+        $this->resetComponentData(); // Clear previous data before populating
+        $this->selectedCv = $cv;
+        $this->fillCvData($cv);
+        $this->view = 'edit';
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD Operations
+    |--------------------------------------------------------------------------
+    */
+
+    public function store()
+    {
+        $this->validate((new CvCreateRequest())->rules());
+
+
+        $cv = CV::create(['title' => $this->title, 'user_id' => auth()->id()]);
+
+        $this->savePersonalData($cv);
+        $this->saveRelations($cv);
+
+        GenerateCVPdf::dispatch($cv);
+
+        $this->resetComponentData();
+        $this->mount();
+        $this->view = 'index';
+    }
+
+    public function update()
+    {
+        $this->validate((new CvUpdateRequest())->rules());
+
+        $cv = $this->selectedCv;
+        $cv->update(['title' => $this->title]);
+
+        $this->updatePersonalData($cv);
+        $this->syncRelations($cv);
+
+        GenerateCVPdf::dispatch($cv);
+
+        $this->resetComponentData();
+        $this->mount();
+        $this->view = 'index';
+    }
+
+    public function confirmDelete($cv)
+    {
+        $this->dispatch('DeleteAlert', $cv);
+    }
+
+    public function delete(CV $cv)
+    {
+        Gate::authorize('delete', $cv);
+
+        $this->deleteAssociatedFiles($cv);
+
+        $cv->delete();
+        $this->mount(); // Refresh the list of CVs
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dynamic Section Management
+    |--------------------------------------------------------------------------
+    */
 
     public function addSection($section)
     {
         if (!in_array($section, $this->activeSections)) {
             $this->activeSections[] = $section;
-            $this->addEntry($section); // Inicializa con una entrada vacía
+            $this->addEntry($section); // Add an initial entry when a section is added
         }
     }
 
     public function removeSection($section)
     {
         $this->activeSections = array_filter($this->activeSections, fn($s) => $s !== $section);
-
-        switch ($section) {
-            case 'work_experience':
-                $this->workExperiences = [];
-                break;
-            case 'education':
-                $this->educations = [];
-                break;
-            case 'languages':
-                $this->languages = [];
-                break;
-            case 'skills':
-                $this->skills = [];
-                break;
-            case 'driving_licenses':
-                $this->drivingLicenses = [];
-                break;
-        }
+        $this->clearSectionData($section);
     }
 
     public function addEntry($section)
@@ -163,49 +236,126 @@ class CvManager extends Component
         }
     }
 
-    public function mount()
+    /*
+    |--------------------------------------------------------------------------
+    | Dynamic Field Management (e.g., Identities, Phones)
+    |--------------------------------------------------------------------------
+    */
+
+    public function addIdentity()
     {
-        Gate::authorize('viewAny', CV::class);
+        $this->identity_documents[] = ['identity_id' => '', 'number' => ''];
+    }
 
-        $this->cvs = CV::CvByRol()->get();
-        $this->genders = Gender::all();
-        $this->identityTypes = Identity::all();
-        $this->phoneTypes = Phone::all();
-        $this->socialMediaTypes = SocialMedia::all();
-        $this->languages_options = Language::all();
-        $this->skills_options = DigitalSkill::all();
-        $this->drivingLicenses_options = DrivingLicense::all();
+    public function removeIdentity($index)
+    {
+        unset($this->identity_documents[$index]);
+        $this->identity_documents = array_values($this->identity_documents);
+    }
 
+    public function addPhone()
+    {
+        $this->phones[] = ['phone_id' => '', 'number' => ''];
+    }
+
+    public function removePhone($index)
+    {
+        unset($this->phones[$index]);
+        $this->phones = array_values($this->phones);
+    }
+
+    public function addSocialMedia()
+    {
+        $this->socialMedia[] = ['social_media_id' => '', 'user_name' => '', 'url' => ''];
+    }
+
+    public function removeSocialMedia($index)
+    {
+        unset($this->socialMedia[$index]);
+        $this->socialMedia = array_values($this->socialMedia);
+    }
+
+    public function addEmail()
+    {
+        $this->emails[] = '';
+    }
+
+    public function removeEmail($index)
+    {
+        unset($this->emails[$index]);
+        $this->emails = array_values($this->emails);
+    }
+
+    public function addAddress()
+    {
+        $this->addresses[] = '';
+    }
+
+    public function removeAddress($index)
+    {
+        unset($this->addresses[$index]);
+        $this->addresses = array_values($this->addresses);
+    }
+
+    public function addWorkPermit()
+    {
+        $this->workPermits[] = '';
+    }
+
+    public function removeWorkPermit($index)
+    {
+        unset($this->workPermits[$index]);
+        $this->workPermits = array_values($this->workPermits);
+    }
+
+    public function addNationality()
+    {
+        $this->nationalities[] = '';
+    }
+
+    public function removeNationality($index)
+    {
+        unset($this->nationalities[$index]);
+        $this->nationalities = array_values($this->nationalities);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Private Helper Methods
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Resets all component properties to their initial state.
+     */
+    private function resetComponentData()
+    {
+        $this->reset([
+            'title', 'first_name', 'last_name', 'birth_date', 'city', 'country', 'about_me',
+            'emails', 'addresses', 'workPermits', 'nationalities', 'image', 'new_image', 'gender_id',
+            'identity_documents', 'phones', 'socialMedia',
+            'workExperiences', 'educations', 'languages', 'skills', 'drivingLicenses',
+            'selectedCv', 'personalData', 'activeSections',
+        ]);
+
+        // Re-initialize dynamic fields to have at least one empty entry for forms
         $this->identity_documents = [['identity_id' => '', 'number' => '']];
         $this->phones = [['phone_id' => '', 'number' => '']];
         $this->socialMedia = [['social_media_id' => '', 'user_name' => '', 'url' => '']];
-    }
-
-
-    public function index()
-    {
-        $this->mount();
-        $this->view = 'index';
-    }
-
-    public function create()
-    {
-        Gate::authorize('create', CV::class);
 
         $this->resetErrorBag();
         $this->resetValidation();
-        $this->view = 'create';
     }
 
-    public function store()
+    /**
+     * Saves personal data for a new CV.
+     * @param CV $cv
+     */
+    private function savePersonalData(CV $cv)
     {
-        $this->validate((new CvCreateRequest())->rules());
-
-        $cv = CV::create(['title' => $this->title, 'user_id' => auth()->id()]);
-
         $imagePath = $this->image ? basename($this->image->store('images', 'public')) : null;
 
-        $personalData = PersonalData::create([
+        PersonalData::create([
             'cv_id' => $cv->id,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -220,250 +370,28 @@ class CvManager extends Component
             'image' => $imagePath,
             'gender_id' => $this->gender_id,
         ]);
-
-        if (!empty($this->identity_documents)) {
-            foreach ($this->identity_documents as $doc) {
-                if (!empty($doc['identity_id']) && !empty($doc['number'])) {
-                    $personalData->identities()->attach($doc['identity_id'], [
-                        'number' => $doc['number']
-                    ]);
-                }
-            }
-        }
-
-        if (!empty($this->phones)) {
-            foreach ($this->phones as $phone) {
-                if (!empty($phone['phone_id']) && !empty($phone['number'])) {
-                    $personalData->phones()->attach($phone['phone_id'], [
-                        'number' => $phone['number']
-                    ]);
-                }
-            }
-        }
-
-        if (!empty($this->socialMedia)) {
-            foreach ($this->socialMedia as $social) {
-                if (!empty($social['social_media_id']) && !empty($social['user_name'])) {
-                    $personalData->socialMedia()->attach($social['social_media_id'], [
-                        'user_name' => $social['user_name'],
-                        'url' => $social['url'] ?? null,
-                    ]);
-                }
-            }
-        }
-
-        if (!empty($this->workExperiences)) {
-            foreach ($this->workExperiences as $experience) {
-                $experienceModel = WorkExperience::create([
-                    'cv_id' => $cv->id,
-                    'company_name' => $experience['company'],
-                    'position' => $experience['position'],
-                    'start_date' => $experience['start'],
-                    'end_date' => $experience['end'],
-                    'description' => $experience['description'],
-                ]);
-
-                $cv->workExperiences()->save($experienceModel);
-            }
-        }
-
-        if (!empty($this->educations)) {
-            foreach ($this->educations as $education) {
-                $educationModel = Education::create([
-                    'cv_id' => $cv->id,
-                    'institution' => $education['school'],
-                    'title' => $education['degree'],
-                    'start_date' => $education['start'],
-                    'city' => $education['city'],
-                    'country' => $education['country'],
-                    'end_date' => $education['end'],
-                ]);
-
-                $cv->education()->save($educationModel);
-            }
-        }
-
-        if (!empty($this->languages)) {
-            foreach ($this->languages as $language) {
-                if (!empty($language['language_id']) && !empty($language['level'])) {
-                    $cv->languages()->attach($language['language_id'], [
-                        'level' => $language['level']
-                    ]);
-                }
-            }
-        }
-
-        if (!empty($this->skills)) {
-            foreach ($this->skills as $skill) {
-                if (!empty($skill['digital_skill_id']) && !empty($skill['level'])) {
-                    $cv->digitalSkills()->attach($skill['digital_skill_id'], [
-                        'level' => $skill['level']
-                    ]);
-                }
-            }
-        }
-
-        if (!empty($this->drivingLicenses)) {
-            foreach ($this->drivingLicenses as $drivingLicens) {
-                if (!empty($drivingLicens['driving_license_id'])) {
-                    $cv->drivingLicenses()->attach($drivingLicens['driving_license_id']);
-                }
-            }
-        }
-
-        $cv->save();
-        GenerateCVPdf::dispatch($cv);
-
-        $this->reset([
-            'title',
-
-            'first_name',
-            'last_name',
-            'birth_date',
-            'city',
-            'country',
-            'about_me',
-            'emails',
-            'addresses',
-            'workPermits',
-            'nationalities',
-            'image',
-
-            // Pivotes
-            'identity_documents',
-            'phones',
-            'socialMedia',
-
-            // Muchos a muchos
-            'workExperiences',
-            'educations',
-            'languages',
-            'skills',
-        ]);
-
-        $this->mount();
-        $this->view = 'index';
     }
 
-    public
-    function edit(CV $cv)
+    /**
+     * Updates personal data for an existing CV.
+     * @param CV $cv
+     */
+    private function updatePersonalData(CV $cv)
     {
-        Gate::authorize('update', $cv);
+        $oldImageName = $cv->personalData->image; // Esto será solo el nombre del archivo (ej: 'old_image_hash.jpg')
+        $imageNameToStore = $oldImageName; // Inicializa con el nombre actual
 
-        $this->selectedCv = $cv;
-        $this->title = $cv->title;
+        if ($this->new_image) {
+            $fullNewImagePath = $this->new_image->store('images', 'public'); // Guarda y obtiene 'images/new_hash.png'
+            $imageNameToStore = basename($fullNewImagePath); // Obtiene solo 'new_hash.png' para la DB
 
-        $personalData = $cv->personalData;
-        $this->image = $personalData->image ?? null;
-        $this->first_name = $personalData->first_name;
-        $this->last_name = $personalData->last_name;
-        $this->birth_date = $personalData->birth_date;
-        $this->city = $personalData->city;
-        $this->country = $personalData->country;
-        $this->about_me = $personalData->about_me;
-        $this->emails = $personalData?->email ?? [''];
-        $this->addresses = $personalData?->address ?? [''];
-        $this->workPermits = $personalData?->workPermits ?? [''];
-        $this->nationalities = $personalData?->nationality ?? [''];
-        $this->gender_id = $personalData->gender_id;
-
-        $this->identity_documents = $personalData->identities->map(function ($identity) {
-            return [
-                'identity_id' => $identity->id,
-                'number' => $identity->pivot->number,
-            ];
-        })->toArray();
-
-        $this->phones = $personalData->phones->map(function ($phone) {
-            return [
-                'phone_id' => $phone->id,
-                'number' => $phone->pivot->number,
-            ];
-        })->toArray();
-
-        $this->socialMedia = $personalData->socialMedia->map(function ($socialmedia) {
-            return [
-                'social_media_id' => $socialmedia->id,
-                'user_name' => $socialmedia->pivot->user_name,
-                'url' => $socialmedia->pivot->url,
-            ];
-        })->toArray();
-
-        $this->workExperiences = $cv->workExperiences->map(function ($experience) {
-            return [
-                'company' => $experience->company_name,
-                'position' => $experience->position,
-                'start' => $experience->start_date,
-                'end' => $experience->end_date,
-                'description' => $experience->description,
-            ];
-        })->toArray();
-
-        if (count($this->workExperiences) > 0 && !in_array("work_experience", $this->activeSections)) {
-            $this->activeSections[] = "work_experience";
+            // Elimina la imagen antigua si existe y es diferente de la nueva
+            if ($oldImageName && Storage::disk('public')->exists('images/' . $oldImageName)) {
+                Storage::disk('public')->delete('images/' . $oldImageName);
+            }
         }
 
-        $this->educations = $cv->education->map(function ($education) {
-            return [
-                'school' => $education->institution,
-                'city' => $education->city,
-                'country' => $education->country,
-                'degree' => $education->title,
-                'start' => $education->start_date,
-                'end' => $education->end_date,
-            ];
-        })->toArray();
-
-        if (count($this->educations) > 0 && !in_array("education", $this->activeSections)) {
-            $this->activeSections[] = "education";
-        }
-
-        $this->languages = $cv->languages->map(function ($language) {
-            return [
-                'language_id' => $language->id,
-                'level' => $language->pivot->level,
-            ];
-        })->toArray();
-
-        if (count($this->languages) > 0 && !in_array("languages", $this->activeSections)) {
-            $this->activeSections[] = "languages";
-        }
-
-        $this->skills = $cv->digitalSkills->map(function ($skill) {
-            return [
-                'digital_skill_id' => $skill->id,
-                'level' => $skill->pivot->level,
-            ];
-        })->toArray();
-
-        if (count($this->languages) > 0 && !in_array("skills", $this->activeSections)) {
-            $this->activeSections[] = "skills";
-        }
-
-        $this->drivingLicenses = $cv->drivingLicenses->map(function ($drivingLicense) {
-            return [
-                'driving_license_id' => $drivingLicense->id,
-            ];
-        })->toArray();
-
-        if (count($this->drivingLicenses) > 0 && !in_array("driving_licenses", $this->activeSections)) {
-            $this->activeSections[] = "driving_licenses";
-        }
-
-        $this->view = 'edit';
-    }
-
-    public function update()
-    {
-        $this->validate((new CvUpdateRequest())->rules());
-
-        $cv = $this->selectedCv;
-        $cv->update(['title' => $this->title]);
-
-        $imagePath = $this->new_image ? basename($this->new_image->store('images', 'public')) : $cv->personalData->image;
-
-        $personalData = $cv->personalData;
-        $personalData->update([
+        $cv->personalData->update([
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'birth_date' => $this->birth_date,
@@ -474,99 +402,299 @@ class CvManager extends Component
             'address' => $this->addresses,
             'workPermits' => $this->workPermits,
             'nationality' => $this->nationalities,
-            'image' => $imagePath,
+            'image' => $imageNameToStore,
             'gender_id' => $this->gender_id,
         ]);
-
-        $personalData->identities()->detach();
-        $personalData->phones()->detach();
-        $personalData->socialMedia()->detach();
-        $cv->languages()->detach();
-        $cv->digitalSkills()->detach();
-        $cv->drivingLicenses()->detach();
-        $cv->workExperiences()->delete();
-        $cv->education()->delete();
-
-        foreach ($this->identity_documents ?? [] as $doc) {
-            if (!empty($doc['identity_id']) && !empty($doc['number'])) {
-                $personalData->identities()->attach($doc['identity_id'], ['number' => $doc['number']]);
-            }
-        }
-
-        foreach ($this->phones ?? [] as $phone) {
-            if (!empty($phone['phone_id']) && !empty($phone['number'])) {
-                $personalData->phones()->attach($phone['phone_id'], ['number' => $phone['number']]);
-            }
-        }
-
-        foreach ($this->socialMedia ?? [] as $social) {
-            if (!empty($social['social_media_id']) && !empty($social['user_name'])) {
-                $personalData->socialMedia()->attach($social['social_media_id'], [
-                    'user_name' => $social['user_name'],
-                    'url' => $social['url'] ?? null,
-                ]);
-            }
-        }
-
-        foreach ($this->workExperiences ?? [] as $experience) {
-            $cv->workExperiences()->create([
-                'company_name' => $experience['company'],
-                'position' => $experience['position'],
-                'start_date' => $experience['start'],
-                'end_date' => $experience['end'],
-                'description' => $experience['description'],
-            ]);
-        }
-
-        foreach ($this->educations ?? [] as $education) {
-            $cv->education()->create([
-                'institution' => $education['school'],
-                'title' => $education['degree'],
-                'start_date' => $education['start'],
-                'city' => $education['city'],
-                'country' => $education['country'],
-                'end_date' => $education['end'],
-            ]);
-        }
-
-        foreach ($this->languages ?? [] as $language) {
-            if (!empty($language['language_id']) && !empty($language['level'])) {
-                $cv->languages()->attach($language['language_id'], ['level' => $language['level']]);
-            }
-        }
-
-        foreach ($this->skills ?? [] as $skill) {
-            if (!empty($skill['digital_skill_id']) && !empty($skill['level'])) {
-                $cv->digitalSkills()->attach($skill['digital_skill_id'], ['level' => $skill['level']]);
-            }
-        }
-
-        foreach ($this->drivingLicenses ?? [] as $drivingLicens) {
-            if (!empty($drivingLicens['driving_license_id'])) {
-                $cv->drivingLicenses()->attach($drivingLicens['driving_license_id']);
-            }
-        }
-
-        $cv->save();
-        GenerateCVPdf::dispatch($cv);
-
-        $this->reset([
-            'title',
-            'first_name', 'last_name', 'birth_date', 'city', 'country', 'about_me',
-            'emails', 'addresses', 'workPermits', 'nationalities', 'image',
-            'identity_documents', 'phones', 'socialMedia',
-            'workExperiences', 'educations', 'languages', 'skills', 'drivingLicenses'
-        ]);
-
-        $this->mount();
-        $this->view = 'index';
     }
 
-    public
-    function delete(CV $cv)
+    /**
+     * Saves all related data (pivot and hasMany) for a new CV.
+     * @param CV $cv
+     */
+    private function saveRelations(CV $cv)
     {
-        Gate::authorize('delete', $cv);
+        $personalData = $cv->personalData;
 
+        $this->attachPivotData($personalData->identities(), $this->identity_documents, ['identity_id' => 'id', 'number' => 'number']);
+        $this->attachPivotData($personalData->phones(), $this->phones, ['phone_id' => 'id', 'number' => 'number']);
+        $this->attachPivotData($personalData->socialMedia(), $this->socialMedia, ['social_media_id' => 'id', 'user_name' => 'user_name', 'url' => 'url']);
+
+        $this->createHasManyData($cv->workExperiences(), $this->workExperiences, WorkExperience::class, [
+            'company_name' => 'company', 'position' => 'position', 'start_date' => 'start', 'end_date' => 'end', 'description' => 'description'
+        ]);
+        $this->createHasManyData($cv->education(), $this->educations, Education::class, [
+            'institution' => 'school', 'title' => 'degree', 'start_date' => 'start', 'end_date' => 'end', 'city' => 'city', 'country' => 'country'
+        ]);
+
+        $this->attachPivotData($cv->languages(), $this->languages, ['language_id' => 'id', 'level' => 'level']);
+        $this->attachPivotData($cv->digitalSkills(), $this->skills, ['digital_skill_id' => 'id', 'level' => 'level']);
+        $this->attachPivotData($cv->drivingLicenses(), $this->drivingLicenses, ['driving_license_id' => 'id']);
+    }
+
+    /**
+     * Synchronizes all related data (pivot and hasMany) for an existing CV.
+     * @param CV $cv
+     */
+    private function syncRelations(CV $cv)
+    {
+        $personalData = $cv->personalData;
+
+        $this->syncPivotData($personalData->identities(), $this->identity_documents, ['identity_id' => 'id', 'number' => 'number']);
+        $this->syncPivotData($personalData->phones(), $this->phones, ['phone_id' => 'id', 'number' => 'number']);
+        $this->syncPivotData($personalData->socialMedia(), $this->socialMedia, ['social_media_id' => 'id', 'user_name' => 'user_name', 'url' => 'url']);
+
+        $this->syncHasManyData($cv->workExperiences(), $this->workExperiences, [
+            'company_name' => 'company', 'position' => 'position', 'start_date' => 'start', 'end_date' => 'end', 'description' => 'description'
+        ]);
+        $this->syncHasManyData($cv->education(), $this->educations, [
+            'institution' => 'school', 'title' => 'degree', 'start_date' => 'start', 'end_date' => 'end', 'city' => 'city', 'country' => 'country'
+        ]);
+
+        $this->syncPivotData($cv->languages(), $this->languages, ['language_id' => 'id', 'level' => 'level']);
+        $this->syncPivotData($cv->digitalSkills(), $this->skills, ['digital_skill_id' => 'id', 'level' => 'level']);
+        $this->syncPivotData($cv->drivingLicenses(), $this->drivingLicenses, ['driving_license_id' => 'id']);
+    }
+
+
+    /**
+     * Helper to attach pivot data.
+     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
+     * @param array $data
+     * @param array $fieldMap
+     */
+    /**
+     * Helper to attach pivot data.
+     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
+     * @param array $data
+     * @param array $fieldMap
+     */
+    private function attachPivotData($relation, array $data, array $fieldMap)
+    {
+        foreach ($data as $item) {
+            list($idValue, $pivotData) = $this->extractPivotData($item, $fieldMap);
+
+            if (empty($idValue)) {
+                continue;
+            }
+
+            // For cases where there's only an ID (like driving licenses)
+            if (empty($pivotData)) {
+                $relation->attach($idValue);
+            } else {
+                $relation->attach($idValue, $pivotData);
+            }
+        }
+    }
+
+    /**
+     * Helper to sync pivot data.
+     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
+     * @param array $data
+     * @param array $fieldMap
+     */
+    private function syncPivotData($relation, array $data, array $fieldMap)
+    {
+        $syncData = [];
+        foreach ($data as $item) {
+            list($idValue, $pivotData) = $this->extractPivotData($item, $fieldMap);
+
+            if (empty($idValue)) {
+                continue;
+            }
+            $syncData[$idValue] = $pivotData;
+        }
+        $relation->sync($syncData);
+    }
+
+    /**
+     * Extracts the ID and pivot data from a single item based on the field map.
+     *
+     * @param array $item The input item array (e.g., ['identity_id' => 1, 'number' => '123'])
+     * @param array $fieldMap The mapping from DB field names to component property names.
+     * @return array A tuple containing [idValue, pivotDataArray]
+     */
+    private function extractPivotData(array $item, array $fieldMap): array
+    {
+        $idField = array_key_first($fieldMap); // e.g., 'identity_id'
+        $idValue = $item[$idField] ?? null;
+
+        $pivotData = [];
+        foreach ($fieldMap as $dbField => $propField) {
+            if ($dbField !== $idField) { // Don't include the ID field in pivot data
+                $pivotData[$dbField] = $item[$propField] ?? null;
+            }
+        }
+        return [$idValue, $pivotData];
+    }
+
+    /**
+     * Helper to create HasMany data.
+     * @param \Illuminate\Database\Eloquent\Relations\HasMany $relation
+     * @param array $data
+     * @param string $modelClass
+     * @param array $fieldMap
+     */
+    private function createHasManyData($relation, array $data, string $modelClass, array $fieldMap)
+    {
+        foreach ($data as $item) {
+            $modelData = [];
+            foreach ($fieldMap as $dbField => $propField) {
+                $modelData[$dbField] = $item[$propField] ?? null;
+            }
+            $relation->create($modelData);
+        }
+    }
+
+    /**
+     * Helper to sync HasMany data.
+     * @param \Illuminate\Database\Eloquent\Relations\HasMany $relation
+     * @param array $data
+     * @param array $fieldMap
+     */
+    private function syncHasManyData($relation, array $data, array $fieldMap)
+    {
+        $relation->delete(); // Delete existing records
+        foreach ($data as $item) {
+            $modelData = [];
+            foreach ($fieldMap as $dbField => $propField) {
+                $modelData[$dbField] = $item[$propField] ?? null;
+            }
+            $relation->create($modelData); // Recreate them
+        }
+    }
+
+
+    /**
+     * Fills the component's properties with data from an existing CV for editing.
+     * @param CV $cv
+     */
+    private function fillCvData(CV $cv)
+    {
+        $this->title = $cv->title;
+        $personalData = $cv->personalData;
+
+        // Personal Data
+        $this->image = $personalData->image ?? null; // Current image path
+        $this->first_name = $personalData->first_name;
+        $this->last_name = $personalData->last_name;
+        $this->birth_date = $personalData->birth_date;
+        $this->city = $personalData->city;
+        $this->country = $personalData->country;
+        $this->about_me = $personalData->about_me;
+        $this->emails = $personalData->email ?? [''];
+        $this->addresses = $personalData->address ?? [''];
+        $this->workPermits = $personalData->workPermits ?? [''];
+        $this->nationalities = $personalData->nationality ?? [''];
+        $this->gender_id = $personalData->gender_id;
+
+        // Identity Documents
+        $this->identity_documents = $personalData->identities->map(fn($identity) => [
+            'identity_id' => $identity->id,
+            'number' => $identity->pivot->number,
+        ])->toArray();
+        if (empty($this->identity_documents)) $this->identity_documents = [['identity_id' => '', 'number' => '']];
+
+        // Phones
+        $this->phones = $personalData->phones->map(fn($phone) => [
+            'phone_id' => $phone->id,
+            'number' => $phone->pivot->number,
+        ])->toArray();
+        if (empty($this->phones)) $this->phones = [['phone_id' => '', 'number' => '']];
+
+        // Social Media
+        $this->socialMedia = $personalData->socialMedia->map(fn($socialmedia) => [
+            'social_media_id' => $socialmedia->id,
+            'user_name' => $socialmedia->pivot->user_name,
+            'url' => $socialmedia->pivot->url,
+        ])->toArray();
+        if (empty($this->socialMedia)) $this->socialMedia = [['social_media_id' => '', 'user_name' => '', 'url' => '']];
+
+        // Work Experiences
+        $this->workExperiences = $cv->workExperiences->map(fn($experience) => [
+            'company' => $experience->company_name,
+            'position' => $experience->position,
+            'start' => $experience->start_date,
+            'end' => $experience->end_date,
+            'description' => $experience->description,
+        ])->toArray();
+        $this->addSectionIfDataExists('work_experience', $this->workExperiences);
+
+
+        // Educations
+        $this->educations = $cv->education->map(fn($education) => [
+            'school' => $education->institution,
+            'city' => $education->city,
+            'country' => $education->country,
+            'degree' => $education->title,
+            'start' => $education->start_date,
+            'end' => $education->end_date,
+        ])->toArray();
+        $this->addSectionIfDataExists('education', $this->educations);
+
+        // Languages
+        $this->languages = $cv->languages->map(fn($language) => [
+            'language_id' => $language->id,
+            'level' => $language->pivot->level,
+        ])->toArray();
+        $this->addSectionIfDataExists('languages', $this->languages);
+
+        // Skills
+        $this->skills = $cv->digitalSkills->map(fn($skill) => [
+            'digital_skill_id' => $skill->id,
+            'level' => $skill->pivot->level,
+        ])->toArray();
+        $this->addSectionIfDataExists('skills', $this->skills);
+
+        // Driving Licenses
+        $this->drivingLicenses = $cv->drivingLicenses->map(fn($drivingLicense) => [
+            'driving_license_id' => $drivingLicense->id,
+        ])->toArray();
+        $this->addSectionIfDataExists('driving_licenses', $this->drivingLicenses);
+    }
+
+    /**
+     * Adds a section to activeSections if data exists for it.
+     * @param string $sectionName
+     * @param array $data
+     */
+    private function addSectionIfDataExists(string $sectionName, array $data)
+    {
+        if (count($data) > 0 && !in_array($sectionName, $this->activeSections)) {
+            $this->activeSections[] = $sectionName;
+        }
+    }
+
+    /**
+     * Clears the data for a specific section when it's removed.
+     * @param string $section
+     */
+    private function clearSectionData(string $section)
+    {
+        switch ($section) {
+            case 'work_experience':
+                $this->workExperiences = [];
+                break;
+            case 'education':
+                $this->educations = [];
+                break;
+            case 'languages':
+                $this->languages = [];
+                break;
+            case 'skills':
+                $this->skills = [];
+                break;
+            case 'driving_licenses':
+                $this->drivingLicenses = [];
+                break;
+        }
+    }
+
+    /**
+     * Deletes associated files (CV PDF and image) when a CV is deleted.
+     * @param CV $cv
+     */
+    private function deleteAssociatedFiles(CV $cv)
+    {
         if ($cv->file_path) {
             Storage::disk('public')->delete('cv/' . $cv->file_path);
         }
@@ -574,116 +702,5 @@ class CvManager extends Component
         if ($cv->personalData && $cv->personalData->image) {
             Storage::disk('public')->delete('images/' . $cv->personalData->image);
         }
-
-        $cv->delete();
-        $this->mount();
-    }
-
-    public
-    function show(CV $cv)
-    {
-        Gate::authorize('view', $cv);
-
-        $this->selectedCv = $cv;
-        $this->personalData = $cv->personalData;
-        $this->view = 'show';
-    }
-
-    public
-    function addIdentity()
-    {
-        $this->identity_documents[] = ['identity_id' => '', 'number' => ''];
-    }
-
-    public
-    function removeIdentity($index)
-    {
-        unset($this->identity_documents[$index]);
-        $this->identity_documents = array_values($this->identity_documents);
-    }
-
-    public
-    function addPhone()
-    {
-        $this->phones[] = ['phone_id' => '', 'number' => ''];
-    }
-
-    public
-    function removePhone($index)
-    {
-        unset($this->phones[$index]);
-        $this->phones = array_values($this->phones);
-    }
-
-    public
-    function addSocialMedia()
-    {
-        $this->socialMedia[] = ['social_media_id' => '', 'user_name' => '', 'url' => ''];
-    }
-
-    public
-    function removeSocialMedia($index)
-    {
-        unset($this->socialMedia[$index]);
-        $this->socialMedia = array_values($this->socialMedia);
-    }
-
-    public
-    function addEmail()
-    {
-        $this->emails[] = '';
-    }
-
-    public
-    function removeEmail($index)
-    {
-        unset($this->emails[$index]);
-        $this->emails = array_values($this->emails);
-    }
-
-    public
-    function addAddress()
-    {
-        $this->addresses[] = '';
-    }
-
-    public
-    function removeAddress($index)
-    {
-        unset($this->addresses[$index]);
-        $this->addresses = array_values($this->addresses);
-    }
-
-    public
-    function addWorkPermit()
-    {
-        $this->workPermits[] = '';
-    }
-
-    public
-    function removeWorkPermit($index)
-    {
-        unset($this->workPermits[$index]);
-        $this->workPermits = array_values($this->workPermits);
-    }
-
-    public
-    function addNationality()
-    {
-        $this->nationalities[] = '';
-    }
-
-    public
-    function removeNationality($index)
-    {
-        unset($this->nationalities[$index]);
-        $this->nationalities = array_values($this->nationalities);
-    }
-
-    public
-    function render()
-    {
-        return view('livewire.cv-manager')->layout('layouts.app');
     }
 }
-

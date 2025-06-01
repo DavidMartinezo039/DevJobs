@@ -46,7 +46,7 @@ test('delete Gender', function () {
     $gender = Gender::factory()->create();
 
     Livewire::test(GendersManager::class)
-        ->call('deleteGender', $gender)
+        ->call('delete', $gender)
         ->assertOk();
 
     $gender = Gender::factory()->create([
@@ -54,7 +54,7 @@ test('delete Gender', function () {
     ]);
 
     Livewire::test(GendersManager::class)
-        ->call('deleteGender', $gender)
+        ->call('delete', $gender)
         ->assertOk();
 
     $user = User::factory()->create();
@@ -65,7 +65,7 @@ test('delete Gender', function () {
     $gender = Gender::factory()->create();
 
     Livewire::test(GendersManager::class)
-        ->call('deleteGender', $gender)
+        ->call('delete', $gender)
         ->assertOk();
 });
 

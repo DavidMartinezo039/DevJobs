@@ -94,7 +94,7 @@ it('can delete a vacancy', function () {
     Storage::disk('public')->put('vacancies/old.jpg', 'dummy content');
 
     Livewire::test(VacanciesManager::class)
-        ->call('deleteVacancy', $vacancy);
+        ->call('delete', $vacancy);
 
     assertDatabaseMissing('vacancies', [
         'id' => $vacancy->id,

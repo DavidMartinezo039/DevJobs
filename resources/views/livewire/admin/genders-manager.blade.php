@@ -151,7 +151,7 @@
                 cancelButtonText: @json(__('Cancel'))
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.dispatch('deleteGender', gender)
+                    Livewire.dispatch('delete', gender)
 
                     Swal.fire(
                         @json(__('The gender was eliminated')),

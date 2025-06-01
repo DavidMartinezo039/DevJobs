@@ -29,7 +29,13 @@
             <a href="{{ route('genders.manager') }}"
                class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50 transition">
                 <h2 class="text-xl font-semibold text-indigo-600">{{ __('Manage Genders') }}</h2>
-                <p class="text-gray-500 mt-2">{{ __('Create, edit, and delete genres.') }}</p>
+                <p class="text-gray-500 mt-2">{{ __('Create, edit, and delete genders.') }}</p>
+            </a>
+
+            <a href="{{ route('digital-skills.manager') }}"
+               class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50 transition">
+                <h2 class="text-xl font-semibold text-indigo-600">{{ __('Manage Digital Skills') }}</h2>
+                <p class="text-gray-500 mt-2">{{ __('Create, edit, and delete digital skills.') }}</p>
             </a>
         </div>
     </div>

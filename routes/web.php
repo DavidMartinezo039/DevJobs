@@ -9,6 +9,7 @@ use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\VacancyPdfController;
 use App\Http\Middleware\LocaleCookieMiddleware;
 use App\Http\Middleware\LocaleMiddleware;
+use App\Livewire\Admin\DigitalSkillManager;
 use App\Livewire\Admin\GendersManager;
 use App\Livewire\AppliedJobs;
 use App\Livewire\Candidates;
@@ -51,6 +52,7 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
         Route::post('/admin/backup', [DashboardController::class, 'backup'])->middleware('rol.admin')->name('admin.backup');
         Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('rol.admin')->name('dashboard');
         Route::get('/dashboard/genders', GendersManager::class)->middleware('rol.admin')->name('genders.manager');
+        Route::get('/dashboard/digital-skills', DigitalSkillManager::class)->middleware('rol.admin')->name('digital-skills.manager');
 
     });
     Route::get('/vacancies/{vacancy}/download', [VacancyPdfController::class, 'download'])->name('vacancy.download');

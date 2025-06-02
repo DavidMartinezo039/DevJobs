@@ -15,6 +15,7 @@ use App\Livewire\AppliedJobs;
 use App\Livewire\Candidates;
 use App\Livewire\ConfirmWithdraw;
 use App\Livewire\CvManager;
+use App\Livewire\UserPreference;
 use App\Livewire\VacanciesManager;
 use Illuminate\Support\Facades\Route;
 /*
@@ -53,6 +54,8 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('rol.admin')->name('dashboard');
         Route::get('/dashboard/genders', GendersManager::class)->middleware('rol.admin')->name('genders.manager');
         Route::get('/dashboard/digital-skills', DigitalSkillManager::class)->middleware('rol.admin')->name('digital-skills.manager');
+
+        Route::get('/preferences', UserPreference::class)->name('preferences');
 
     });
     Route::get('/vacancies/{vacancy}/download', [VacancyPdfController::class, 'download'])->name('vacancy.download');

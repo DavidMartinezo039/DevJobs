@@ -480,5 +480,18 @@
     "Are you sure you want to delete the digital skill?": "¿Estás seguro de que quieres eliminar la habilidad digital?",
     "A deleted digital skill cannot be recovered": "Una habilidad digital eliminada no se puede recuperar",
     "The digital skill was eliminated": "La habilidad digital fue eliminada",
+    "Words in the Description or Title": "Palabras en la descripción",
+    "Save Preferences": "Guardar Preferencias",
+    "User Preferences": "Preferencias del Usuario",
+    "Preferences updated successfully": "Preferencias actualizadas correctamente",
+    "New vacancy that matches your preferences": "Nueva vacante que coincide con tus preferencias",
+    "Hello :name!": "¡Hola :name!",
+    "We found a new vacancy that matches your preferences:": "Hemos encontrado una nueva vacante que coincide con tus preferencias:",
+    "Title:": "Título:",
+    "Company:": "Empresa:",
+    "Category:": "Categoría:",
+    "Salary:": "Salario:",
+    "View Vacancy": "Ver Vacante",
+    "Thanks for using our platform.": "Gracias por usar nuestra plataforma.",
     "Education": "Educación"
 }

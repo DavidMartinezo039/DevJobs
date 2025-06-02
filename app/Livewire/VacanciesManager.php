@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\NewVacancyCreated;
 use App\Http\Requests\VacancyRequest;
 use App\Http\Requests\VacancyUpdateRequest;
 use App\Models\Category;
@@ -119,7 +120,7 @@ class VacanciesManager extends Component
         $image = $this->image->store('vacancies', 'public');
         $image_name = str_replace('vacancies/', '', $image);
 
-        Vacancy::create([
+        $vacancy = Vacancy::create([
             'title' => $validateDatta['title'],
             'salary_id' => $validateDatta['salary'],
             'category_id' => $validateDatta['category'],
@@ -129,6 +130,8 @@ class VacanciesManager extends Component
             'description' => $validateDatta['description'],
             'image' => $image_name,
         ]);
+
+        event(new NewVacancyCreated($vacancy));
 
         session()->flash('message', __('Vacancy added successfully'));
 

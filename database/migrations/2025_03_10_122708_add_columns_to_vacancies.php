@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('vacancies', function (Blueprint $table) {
             $table->string('title');
-            $table->foreignId('salary_id')->constrained('salaries')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('salary_id')->nullable()->constrained('salaries')->cascadeOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('company');
             $table->date('last_day');

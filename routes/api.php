@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DigitalSkillController;
 use App\Http\Controllers\Api\GenderController;
 use App\Http\Controllers\Api\VacancyController;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('genders', GenderController::class)->middleware('rol.admin');
     Route::post('genders/{gender}/toggle-default', [GenderController::class, 'toggleDefault'])->middleware('rol.admin');
+
+    Route::apiResource('digital-skills', DigitalSkillController::class)->middleware('rol.admin');
 });
 
 Route::post('/register', [AuthController::class, 'register']);

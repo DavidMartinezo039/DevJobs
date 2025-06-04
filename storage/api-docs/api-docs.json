@@ -206,6 +206,193 @@
                 ]
             }
         },
+        "/api/digital-skills": {
+            "get": {
+                "tags": [
+                    "DigitalSkills"
+                ],
+                "summary": "Obtener todas las habilidades digitales",
+                "operationId": "eff4d3aef960d254842aa979d6cdc6fc",
+                "responses": {
+                    "200": {
+                        "description": "Lista de habilidades digitales obtenida correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "DigitalSkills"
+                ],
+                "summary": "Crear una nueva habilidad digital",
+                "operationId": "9be4baa9992bcbb83d725673f277ee4f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Machine Learning"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Habilidad digital creada exitosamente"
+                    },
+                    "422": {
+                        "description": "Datos inválidos"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/digital-skills/{id}": {
+            "get": {
+                "tags": [
+                    "DigitalSkills"
+                ],
+                "summary": "Obtener una habilidad digital por ID",
+                "operationId": "574e017d2eccad4ffbf49e8a56554aa0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habilidad digital",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Habilidad digital encontrada"
+                    },
+                    "404": {
+                        "description": "Habilidad digital no encontrada"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "DigitalSkills"
+                ],
+                "summary": "Actualizar una habilidad digital",
+                "operationId": "97d758bf39e096cea8c7472608270db0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habilidad digital",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ciberseguridad"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Habilidad digital actualizada exitosamente"
+                    },
+                    "403": {
+                        "description": "No autorizado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "DigitalSkills"
+                ],
+                "summary": "Eliminar una habilidad digital",
+                "operationId": "907ed14757fc653906d0b324e5ec45c5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habilidad digital",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Habilidad digital eliminada correctamente"
+                    },
+                    "403": {
+                        "description": "No autorizado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/genders": {
             "get": {
                 "tags": [
@@ -663,6 +850,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "DigitalSkills",
+            "description": "DigitalSkills"
         },
         {
             "name": "Genders",

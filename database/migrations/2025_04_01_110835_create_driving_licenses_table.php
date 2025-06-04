@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('driving_licenses', function (Blueprint $table) {
             $table->id();
-            $table->string('image')->nullable();
             $table->string('category')->unique();
             $table->string('vehicle_type');
             $table->integer('max_speed')->nullable();
@@ -22,6 +21,7 @@ return new class extends Migration
             $table->integer('max_weight')->nullable();
             $table->integer('max_passengers')->nullable();
             $table->integer('min_age');
+            $table->boolean('only_god');
             $table->timestamps();
         });
     }

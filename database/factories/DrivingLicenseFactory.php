@@ -12,7 +12,6 @@ class DrivingLicenseFactory extends Factory
     public function definition(): array
     {
         return [
-            'image' => $this->faker->imageUrl(200, 200, 'transport'),
             'category' => strtoupper($this->faker->unique()->lexify('A?')),
             'vehicle_type' => $this->faker->randomElement(['Car', 'Motorcycle', 'Truck', 'Bus']),
             'max_speed' => $this->faker->optional()->numberBetween(80, 300),
@@ -21,6 +20,7 @@ class DrivingLicenseFactory extends Factory
             'max_weight' => $this->faker->optional()->numberBetween(500, 5000),
             'max_passengers' => $this->faker->optional()->numberBetween(1, 50),
             'min_age' => $this->faker->numberBetween(16, 21),
+            'only_god' => $this->faker->boolean(),
         ];
     }
 }

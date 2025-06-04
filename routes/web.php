@@ -10,6 +10,8 @@ use App\Http\Controllers\VacancyPdfController;
 use App\Http\Middleware\LocaleCookieMiddleware;
 use App\Http\Middleware\LocaleMiddleware;
 use App\Livewire\Admin\DigitalSkillManager;
+use App\Livewire\Admin\DrivingLicenseManager;
+use App\Livewire\Admin\DrivingLicenseRequestsManager;
 use App\Livewire\Admin\GendersManager;
 use App\Livewire\AppliedJobs;
 use App\Livewire\Candidates;
@@ -54,6 +56,8 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('rol.admin')->name('dashboard');
         Route::get('/dashboard/genders', GendersManager::class)->middleware('rol.admin')->name('genders.manager');
         Route::get('/dashboard/digital-skills', DigitalSkillManager::class)->middleware('rol.admin')->name('digital-skills.manager');
+        Route::get('/dashboard/driving-licenses', DrivingLicenseManager::class)->middleware('rol.admin')->name('driving-licenses.manager');
+        Route::get('/dashboard/driving-licenses-requests', DrivingLicenseRequestsManager::class)->name('god.driving-license-requests');
 
         Route::get('/preferences', UserPreference::class)->name('preferences');
 

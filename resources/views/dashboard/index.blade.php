@@ -37,6 +37,12 @@
                 <h2 class="text-xl font-semibold text-indigo-600">{{ __('Manage Digital Skills') }}</h2>
                 <p class="text-gray-500 mt-2">{{ __('Create, edit, and delete digital skills.') }}</p>
             </a>
+
+            <a href="{{ route('driving-licenses.manager') }}"
+               class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50 transition">
+                <h2 class="text-xl font-semibold text-indigo-600">{{ __('Manage Driving Licenses') }}</h2>
+                <p class="text-gray-500 mt-2">{{ __('Create, edit, and delete driving licenses.') }}</p>
+            </a>
         </div>
     </div>
 </x-app-layout>

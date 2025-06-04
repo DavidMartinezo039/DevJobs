@@ -11,7 +11,7 @@ class DrivingLicense extends Model
     use HasFactory;
 
     protected $fillable = [
-        'image',
+        'only_god',
         'category',
         'vehicle_type',
         'max_speed',

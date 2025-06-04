@@ -19,16 +19,7 @@
             </h2>
 
             <form wire:submit.prevent="{{ $isEditMode ? 'update' : 'store' }}">
-                <input
-                    type="text"
-                    wire:model.defer="name"
-                    placeholder="Digital Skill Name"
-                    class="border rounded px-3 py-2 w-full @error('name') border-red-500 @enderror"
-                >
-
-                @error('name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+                <x-forms.input id="name" name="name" label="Digital Skill Name" wireModel="name"/>
 
                 <div class="mt-3 flex gap-2">
                     <button

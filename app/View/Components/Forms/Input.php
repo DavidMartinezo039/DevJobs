@@ -12,13 +12,15 @@ class Input extends Component
     public $name;
     public $label;
     public $wireModel;
+    public $type;
 
-    public function __construct($id, $name, $label, $wireModel = null)
+    public function __construct($id, $name, $label, $wireModel = null, $type = 'text')
     {
         $this->id = $id;
         $this->name = $name;
         $this->label = $label;
         $this->wireModel = $wireModel;
+        $this->type = $type;
     }
 
     /**

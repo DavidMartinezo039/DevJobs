@@ -3,12 +3,8 @@
 namespace App\Livewire;
 
 use App\Events\CandidateWithdrew;
-use App\Mail\CandidateWithdrawMail;
-use App\Mail\CandidateWithdrawnMail;
-use App\Mail\NotifyRecruiterWithdraw;
 use App\Models\Vacancy;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 

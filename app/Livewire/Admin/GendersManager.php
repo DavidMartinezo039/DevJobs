@@ -20,11 +20,6 @@ class GendersManager extends Component
 
     public $genderToDelete = null;
 
-
-    protected $rules = [
-        'type' => 'required|string|unique:genders,type',
-    ];
-
     public function resetInput()
     {
         $this->type = '';

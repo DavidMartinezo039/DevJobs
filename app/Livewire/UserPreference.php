@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\UpdateUserPreferenceRequest;
 use App\Models\Category;
 use App\Models\Salary;
 use Livewire\Component;
@@ -31,12 +32,9 @@ class UserPreference extends Component
 
     public function save()
     {
-        $validatedData = $this->validate([
-            'salary' => 'nullable|exists:salaries,id',
-            'category' => 'nullable|exists:categories,id',
-            'company' => 'nullable|string|max:255',
-            'keyword' => 'nullable|string|max:255',
-        ]);
+        $rules = (new UpdateUserPreferenceRequest())->rules();
+
+        $validatedData = $this->validate($rules);
 
         $mappedData = [
             'salary_id' => $validatedData['salary'] !== '' ? $validatedData['salary'] : null,

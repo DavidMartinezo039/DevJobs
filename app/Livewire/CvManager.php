@@ -25,14 +25,11 @@ class CvManager extends Component
 {
     use WithFileUploads;
 
-    // CV and Personal Data Properties
     public $title, $first_name, $last_name, $image, $new_image, $about_me, $birth_date, $city, $country, $gender_id;
     public $workPermits = [], $nationalities = [], $emails = [], $addresses = [];
 
-    // Related Model Data (Pivots and HasMany)
     public $identity_documents = [], $phones = [], $socialMedia = [], $workExperiences = [], $educations = [], $languages = [], $skills = [], $drivingLicenses = [];
 
-    // UI State and Options
     public $cvs, $selectedCv, $personalData;
     public $genders = [], $identityTypes = [], $phoneTypes = [], $socialMediaTypes = [], $languages_options = [], $skills_options = [], $drivingLicenses_options = [];
     public $availableSections = [
@@ -62,7 +59,6 @@ class CvManager extends Component
         $this->skills_options = DigitalSkill::all();
         $this->drivingLicenses_options = DrivingLicense::all();
 
-        // Initialize empty arrays for dynamic fields if they are not already populated (e.g., on edit)
         $this->identity_documents = [['identity_id' => '', 'number' => '']];
         $this->phones = [['phone_id' => '', 'number' => '']];
         $this->socialMedia = [['social_media_id' => '', 'user_name' => '', 'url' => '']];
@@ -84,15 +80,15 @@ class CvManager extends Component
 
     public function index()
     {
-        $this->resetComponentData(); // Reset form fields when navigating back to index
-        $this->mount(); // Re-fetch CVs for the index view
+        $this->resetComponentData();
+        $this->mount();
         $this->view = 'index';
     }
 
     public function create()
     {
         Gate::authorize('create', CV::class);
-        $this->resetComponentData(); // Ensure a clean slate for creation
+        $this->resetComponentData();
         $this->view = 'create';
     }
 
@@ -108,7 +104,7 @@ class CvManager extends Component
     public function edit(CV $cv)
     {
         Gate::authorize('update', $cv);
-        $this->resetComponentData(); // Clear previous data before populating
+        $this->resetComponentData();
         $this->selectedCv = $cv;
         $this->fillCvData($cv);
         $this->view = 'edit';
@@ -166,7 +162,7 @@ class CvManager extends Component
         $this->deleteAssociatedFiles($cv);
 
         $cv->delete();
-        $this->mount(); // Refresh the list of CVs
+        $this->mount();
     }
 
     /*
@@ -179,7 +175,7 @@ class CvManager extends Component
     {
         if (!in_array($section, $this->activeSections)) {
             $this->activeSections[] = $section;
-            $this->addEntry($section); // Add an initial entry when a section is added
+            $this->addEntry($section);
         }
     }
 
@@ -325,9 +321,6 @@ class CvManager extends Component
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Resets all component properties to their initial state.
-     */
     private function resetComponentData()
     {
         $this->reset([
@@ -347,10 +340,6 @@ class CvManager extends Component
         $this->resetValidation();
     }
 
-    /**
-     * Saves personal data for a new CV.
-     * @param CV $cv
-     */
     private function savePersonalData(CV $cv)
     {
         $imagePath = $this->image ? basename($this->image->store('images', 'public')) : null;
@@ -372,20 +361,15 @@ class CvManager extends Component
         ]);
     }
 
-    /**
-     * Updates personal data for an existing CV.
-     * @param CV $cv
-     */
     private function updatePersonalData(CV $cv)
     {
-        $oldImageName = $cv->personalData->image; // Esto será solo el nombre del archivo (ej: 'old_image_hash.jpg')
-        $imageNameToStore = $oldImageName; // Inicializa con el nombre actual
+        $oldImageName = $cv->personalData->image;
+        $imageNameToStore = $oldImageName;
 
         if ($this->new_image) {
-            $fullNewImagePath = $this->new_image->store('images', 'public'); // Guarda y obtiene 'images/new_hash.png'
-            $imageNameToStore = basename($fullNewImagePath); // Obtiene solo 'new_hash.png' para la DB
+            $fullNewImagePath = $this->new_image->store('images', 'public');
+            $imageNameToStore = basename($fullNewImagePath);
 
-            // Elimina la imagen antigua si existe y es diferente de la nueva
             if ($oldImageName && Storage::disk('public')->exists('images/' . $oldImageName)) {
                 Storage::disk('public')->delete('images/' . $oldImageName);
             }
@@ -407,10 +391,6 @@ class CvManager extends Component
         ]);
     }
 
-    /**
-     * Saves all related data (pivot and hasMany) for a new CV.
-     * @param CV $cv
-     */
     private function saveRelations(CV $cv)
     {
         $personalData = $cv->personalData;
@@ -431,10 +411,6 @@ class CvManager extends Component
         $this->attachPivotData($cv->drivingLicenses(), $this->drivingLicenses, ['driving_license_id' => 'id']);
     }
 
-    /**
-     * Synchronizes all related data (pivot and hasMany) for an existing CV.
-     * @param CV $cv
-     */
     private function syncRelations(CV $cv)
     {
         $personalData = $cv->personalData;
@@ -455,19 +431,6 @@ class CvManager extends Component
         $this->syncPivotData($cv->drivingLicenses(), $this->drivingLicenses, ['driving_license_id' => 'id']);
     }
 
-
-    /**
-     * Helper to attach pivot data.
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
-     * @param array $data
-     * @param array $fieldMap
-     */
-    /**
-     * Helper to attach pivot data.
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
-     * @param array $data
-     * @param array $fieldMap
-     */
     private function attachPivotData($relation, array $data, array $fieldMap)
     {
         foreach ($data as $item) {
@@ -477,7 +440,6 @@ class CvManager extends Component
                 continue;
             }
 
-            // For cases where there's only an ID (like driving licenses)
             if (empty($pivotData)) {
                 $relation->attach($idValue);
             } else {
@@ -486,12 +448,6 @@ class CvManager extends Component
         }
     }
 
-    /**
-     * Helper to sync pivot data.
-     * @param \Illuminate\Database\Eloquent\Relations\BelongsToMany $relation
-     * @param array $data
-     * @param array $fieldMap
-     */
     private function syncPivotData($relation, array $data, array $fieldMap)
     {
         $syncData = [];
@@ -506,13 +462,6 @@ class CvManager extends Component
         $relation->sync($syncData);
     }
 
-    /**
-     * Extracts the ID and pivot data from a single item based on the field map.
-     *
-     * @param array $item The input item array (e.g., ['identity_id' => 1, 'number' => '123'])
-     * @param array $fieldMap The mapping from DB field names to component property names.
-     * @return array A tuple containing [idValue, pivotDataArray]
-     */
     private function extractPivotData(array $item, array $fieldMap): array
     {
         $idField = array_key_first($fieldMap); // e.g., 'identity_id'
@@ -527,13 +476,6 @@ class CvManager extends Component
         return [$idValue, $pivotData];
     }
 
-    /**
-     * Helper to create HasMany data.
-     * @param \Illuminate\Database\Eloquent\Relations\HasMany $relation
-     * @param array $data
-     * @param string $modelClass
-     * @param array $fieldMap
-     */
     private function createHasManyData($relation, array $data, string $modelClass, array $fieldMap)
     {
         foreach ($data as $item) {
@@ -545,12 +487,6 @@ class CvManager extends Component
         }
     }
 
-    /**
-     * Helper to sync HasMany data.
-     * @param \Illuminate\Database\Eloquent\Relations\HasMany $relation
-     * @param array $data
-     * @param array $fieldMap
-     */
     private function syncHasManyData($relation, array $data, array $fieldMap)
     {
         $relation->delete(); // Delete existing records
@@ -563,18 +499,12 @@ class CvManager extends Component
         }
     }
 
-
-    /**
-     * Fills the component's properties with data from an existing CV for editing.
-     * @param CV $cv
-     */
     private function fillCvData(CV $cv)
     {
         $this->title = $cv->title;
         $personalData = $cv->personalData;
 
-        // Personal Data
-        $this->image = $personalData->image ?? null; // Current image path
+        $this->image = $personalData->image ?? null;
         $this->first_name = $personalData->first_name;
         $this->last_name = $personalData->last_name;
         $this->birth_date = $personalData->birth_date;
@@ -587,21 +517,18 @@ class CvManager extends Component
         $this->nationalities = $personalData->nationality ?? [''];
         $this->gender_id = $personalData->gender_id;
 
-        // Identity Documents
         $this->identity_documents = $personalData->identities->map(fn($identity) => [
             'identity_id' => $identity->id,
             'number' => $identity->pivot->number,
         ])->toArray();
         if (empty($this->identity_documents)) $this->identity_documents = [['identity_id' => '', 'number' => '']];
 
-        // Phones
         $this->phones = $personalData->phones->map(fn($phone) => [
             'phone_id' => $phone->id,
             'number' => $phone->pivot->number,
         ])->toArray();
         if (empty($this->phones)) $this->phones = [['phone_id' => '', 'number' => '']];
 
-        // Social Media
         $this->socialMedia = $personalData->socialMedia->map(fn($socialmedia) => [
             'social_media_id' => $socialmedia->id,
             'user_name' => $socialmedia->pivot->user_name,
@@ -609,7 +536,6 @@ class CvManager extends Component
         ])->toArray();
         if (empty($this->socialMedia)) $this->socialMedia = [['social_media_id' => '', 'user_name' => '', 'url' => '']];
 
-        // Work Experiences
         $this->workExperiences = $cv->workExperiences->map(fn($experience) => [
             'company' => $experience->company_name,
             'position' => $experience->position,
@@ -620,7 +546,6 @@ class CvManager extends Component
         $this->addSectionIfDataExists('work_experience', $this->workExperiences);
 
 
-        // Educations
         $this->educations = $cv->education->map(fn($education) => [
             'school' => $education->institution,
             'city' => $education->city,
@@ -631,32 +556,24 @@ class CvManager extends Component
         ])->toArray();
         $this->addSectionIfDataExists('education', $this->educations);
 
-        // Languages
         $this->languages = $cv->languages->map(fn($language) => [
             'language_id' => $language->id,
             'level' => $language->pivot->level,
         ])->toArray();
         $this->addSectionIfDataExists('languages', $this->languages);
 
-        // Skills
         $this->skills = $cv->digitalSkills->map(fn($skill) => [
             'digital_skill_id' => $skill->id,
             'level' => $skill->pivot->level,
         ])->toArray();
         $this->addSectionIfDataExists('skills', $this->skills);
 
-        // Driving Licenses
         $this->drivingLicenses = $cv->drivingLicenses->map(fn($drivingLicense) => [
             'driving_license_id' => $drivingLicense->id,
         ])->toArray();
         $this->addSectionIfDataExists('driving_licenses', $this->drivingLicenses);
     }
 
-    /**
-     * Adds a section to activeSections if data exists for it.
-     * @param string $sectionName
-     * @param array $data
-     */
     private function addSectionIfDataExists(string $sectionName, array $data)
     {
         if (count($data) > 0 && !in_array($sectionName, $this->activeSections)) {
@@ -664,10 +581,6 @@ class CvManager extends Component
         }
     }
 
-    /**
-     * Clears the data for a specific section when it's removed.
-     * @param string $section
-     */
     private function clearSectionData(string $section)
     {
         switch ($section) {
@@ -689,10 +602,6 @@ class CvManager extends Component
         }
     }
 
-    /**
-     * Deletes associated files (CV PDF and image) when a CV is deleted.
-     * @param CV $cv
-     */
     private function deleteAssociatedFiles(CV $cv)
     {
         if ($cv->file_path) {

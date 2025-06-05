@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::job(new SendMarketingEmails)->daily();
+Schedule::command('requests:cleanup')->monthly();

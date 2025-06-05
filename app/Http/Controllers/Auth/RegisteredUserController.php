@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'rol' => ['required', 'string', 'in:developer,recruiter'],
-            'wants_marketing' => ['nullable', 'boolean'],
+            'wants_marketing' => ['nullable'],
         ]);
 
         $user = User::create([
@@ -52,6 +52,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('vacancies.manager', absolute: false));
+        return redirect(route('home'));
     }
 }

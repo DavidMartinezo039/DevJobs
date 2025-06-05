@@ -9,14 +9,20 @@
                     {{ __('Welcome') }}, {{ $user->name }} ({{ $user->getRoleNames()->join(', ') }})
                 </p>
             </div>
+            <div class="flex items-center space-x-4">
+                <form method="POST" action="{{ route('admin.backup') }}" class="mt-4 md:mt-0">
+                    @csrf
+                    <button type="submit"
+                            class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
+                        {{ __('Generate Backup') }}
+                    </button>
+                </form>
 
-            <form method="POST" action="{{ route('admin.backup') }}" class="mt-4 md:mt-0">
-                @csrf
-                <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
-                    {{ __('Generate Backup') }}
-                </button>
-            </form>
+                <a href="{{ route('run.cleanup') }}"
+                   class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
+                    {{ __('Clean Old Things') }}
+                </a>
+            </div>
         </div>
 
         @if (session('success'))

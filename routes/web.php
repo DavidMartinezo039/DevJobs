@@ -61,6 +61,10 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
 
         Route::get('/preferences', UserPreference::class)->name('preferences');
 
+        Route::get('/run-cleanup', function () {
+            Artisan::call('requests:cleanup');
+            return redirect()->back()->with('success', __('Cleaning executed successfully'));
+        })->name('run.cleanup');
     });
     Route::get('/vacancies/{vacancy}/download', [VacancyPdfController::class, 'download'])->name('vacancy.download');
     Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show'])->name('vacancies.show');

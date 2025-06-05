@@ -18,6 +18,6 @@ class DashboardController extends Controller
     public function backup()
     {
         Artisan::call('backup:database');
-        return back()->with('success', 'Backup de base de datos generado.');
+        return back()->with('success', __('Database backup generated'));
     }
 }

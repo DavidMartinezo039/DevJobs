@@ -393,6 +393,224 @@
                 ]
             }
         },
+        "/api/driving-licenses": {
+            "get": {
+                "tags": [
+                    "Driving Licenses"
+                ],
+                "summary": "List driving licenses",
+                "operationId": "056b994aac77bda5a28f254d55c36e74",
+                "responses": {
+                    "200": {
+                        "description": "List of driving licenses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/DrivingLicense"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Driving Licenses"
+                ],
+                "summary": "Create a driving license",
+                "operationId": "24ebafa84ef7a6479bbc96f4c1d3cb6d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DrivingLicenseRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Driving license created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/DrivingLicense"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/driving-licenses/{id}": {
+            "get": {
+                "tags": [
+                    "Driving Licenses"
+                ],
+                "summary": "Get a driving license",
+                "operationId": "f096b80215f933c77c137dbd86ff78b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Driving license ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Driving license data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DrivingLicense"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Driving Licenses"
+                ],
+                "summary": "Update a driving license",
+                "operationId": "2dc7c7cdab242a2c0de8bc70a90252b5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Driving license ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DrivingLicenseRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Driving license updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/DrivingLicense"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Edit request sent"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Driving Licenses"
+                ],
+                "summary": "Delete a driving license",
+                "operationId": "835dd197acc237ee49cdd9ec4d11fdf2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Driving license ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Driving license deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Delete request sent"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/genders": {
             "get": {
                 "tags": [
@@ -838,6 +1056,62 @@
         }
     },
     "components": {
+        "schemas": {
+            "DrivingLicenseRequest": {
+                "title": "Driving License Request",
+                "description": "Request body for creating/updating a driving license",
+                "required": [
+                    "category",
+                    "description"
+                ],
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "example": "B"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Can drive cars"
+                    },
+                    "only_god": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "DrivingLicense": {
+                "title": "Driving License",
+                "description": "Driving license model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category": {
+                        "type": "string",
+                        "example": "B"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Can drive cars"
+                    },
+                    "only_god": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -847,6 +1121,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Driving Licenses",
+            "description": "Endpoints for managing driving licenses"
+        },
         {
             "name": "Auth",
             "description": "Auth"

@@ -6,6 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @OA\Schema(
+ *     schema="DrivingLicense",
+ *     title="Driving License",
+ *     description="Driving license model",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="category", type="string", example="B"),
+ *     @OA\Property(property="description", type="string", example="Can drive cars"),
+ *     @OA\Property(property="only_god", type="boolean", example=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ */
 class DrivingLicense extends Model
 {
     use HasFactory;

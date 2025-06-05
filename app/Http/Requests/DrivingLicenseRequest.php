@@ -4,6 +4,17 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="DrivingLicenseRequest",
+ *     title="Driving License Request",
+ *     description="Request body for creating/updating a driving license",
+ *     required={"category", "description"},
+ *     @OA\Property(property="category", type="string", example="B"),
+ *     @OA\Property(property="description", type="string", example="Can drive cars"),
+ *     @OA\Property(property="only_god", type="boolean", example=true)
+ * )
+ */
 class DrivingLicenseRequest extends FormRequest
 {
     /**

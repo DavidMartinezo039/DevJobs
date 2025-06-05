@@ -24,7 +24,7 @@ test('ejecuta el comando de backup y redirige con mensaje', function () {
     actingAs($user)
         ->post(route('admin.backup'))
         ->assertRedirect()
-        ->assertSessionHas('success', 'Backup de base de datos generado.');
+        ->assertSessionHas('success', 'Database backup generated');
 
     Artisan::shouldHaveReceived('call')->with('backup:database');
 });

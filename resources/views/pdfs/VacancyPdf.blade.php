@@ -8,7 +8,7 @@
             font-family: DejaVu Sans, sans-serif;
             color: #333;
             line-height: 1.5;
-            margin: 40px;
+            margin: 80px 40px;
         }
 
         h1 {
@@ -34,18 +34,59 @@
             margin-bottom: 20px;
         }
 
-        .image {
-            margin-top: 20px;
-        }
-
-        .image img {
+        img {
             max-width: 250px;
             border: 1px solid #ccc;
             padding: 5px;
         }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            text-align: center;
+            line-height: 35px;
+            font-size: 10px;
+            color: #555;
+            border-bottom: 1px solid #eee;
+            padding: 0 40px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            text-align: center;
+            line-height: 35px;
+            font-size: 9px;
+            color: #555;
+            border-top: 1px solid #eee;
+            padding: 0 40px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
+
+        .pagenum:before {
+            content: counter(page);
+        }
     </style>
 </head>
 <body>
+
+<header>
+    <h3>{{ __('Job vacancy') }} - {{ $vacancy->title }}</h3>
+</header>
+
+<footer>
+    {{ __('Generated on') }} {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }} — Page <span class="pagenum"></span>
+</footer>
+
 <h1>{{ $vacancy->title }}</h1>
 
 <div style="display: table; width: 100%;">

@@ -8,6 +8,7 @@ use App\Http\Requests\VacancyUpdateRequest;
 use App\Models\Category;
 use App\Models\Salary;
 use App\Models\Vacancy;
+use App\Traits\LogsActivity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Gate;
 class VacanciesManager extends Component
 {
     use WithFileUploads;
+    use LogsActivity;
 
     public $view = 'index';
     protected $listeners = ['delete'];
@@ -99,6 +101,13 @@ class VacanciesManager extends Component
             Storage::disk('public')->delete('vacancies/' . $vacancy->image);
         }
 
+        $this->logActivity(
+            action: 'deleted_vacancy',
+            targetType: 'App\Models\Vacancy',
+            targetId: $vacancy->id,
+            description: 'Eliminó una vacante'
+        );
+
         $vacancy->delete();
     }
 
@@ -131,6 +140,13 @@ class VacanciesManager extends Component
             'image' => $image_name,
         ]);
 
+        $this->logActivity(
+            action: 'created_vacancy',
+            targetType: 'App\Models\Vacancy',
+            targetId: $vacancy->id,
+            description: 'Creo una vacante'
+        );
+
         event(new NewVacancyCreated($vacancy));
 
         session()->flash('message', __('Vacancy added successfully'));
@@ -148,6 +164,13 @@ class VacanciesManager extends Component
         }
 
         $this->vacancy->update($validateDatta);
+
+        $this->logActivity(
+            action: 'updated_vacancy',
+            targetType: 'App\Models\Vacancy',
+            targetId: $this->vacancy->id,
+            description: 'Actualizó una vacante'
+        );
 
         session()->flash('message', __('Vacancy updated successfully'));
 

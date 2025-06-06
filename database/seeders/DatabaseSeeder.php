@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PhoneSeeder::class,
             SocialMediaSeeder::class,
             CVSeeder::class,
+            ActivityLogSeeder::class,
         ]);
     }
 }

@@ -43,7 +43,7 @@ test('despacha el job para generar PDF si no existe el archivo', function () {
     actingAs($user)
         ->get(route('cv.download', $cv))
         ->assertRedirect()
-        ->assertSessionHas('success', 'El CV se está generando en PDF. Por favor, inténtalo más tarde.');
+        ->assertSessionHas('success', 'Your CV is being generated as a PDF. Please try again later.');
 
     Queue::assertPushed(GenerateCVPdf::class, function ($job) use ($cv) {
         return $job->cv->is($cv);

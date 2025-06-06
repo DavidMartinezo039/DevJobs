@@ -7,6 +7,7 @@ use App\Mail\ConfirmWithdrawMail;
 use App\Mail\VacancyApplicationMail;
 use App\Models\Vacancy;
 use App\Notifications\NewCandidate;
+use App\Traits\LogsActivity;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\URL;
 class ApplyVacancy extends Component
 {
     use WithFileUploads;
+    use LogsActivity;
     public $cv;
     public $vacancy;
 
@@ -39,6 +41,13 @@ class ApplyVacancy extends Component
         $data['cv'] = str_replace('cv/', '', $cv);
 
         $this->vacancy->users()->attach(auth()->id(), ['cv' => $data['cv']]);
+
+        $this->logActivity(
+            action: 'applied_to_vacancy',
+            targetType: 'App\Models\Vacancy',
+            targetId: $this->vacancy->id,
+            description: "User " . auth()->user()->name . " applied to vacancy '{$this->vacancy->title}'"
+        );
 
         event(new VacancyApplied($this->vacancy, auth()->user()));
 

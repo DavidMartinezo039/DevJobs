@@ -22,7 +22,7 @@ class DrivingLicenseController extends Controller
      *     path="/api/driving-licenses",
      *     summary="List driving licenses",
      *     tags={"Driving Licenses"},
-     *     security={{"sanctum": {}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="List of driving licenses",
@@ -46,7 +46,7 @@ class DrivingLicenseController extends Controller
      *     path="/api/driving-licenses/{id}",
      *     summary="Get a driving license",
      *     tags={"Driving Licenses"},
-     *     security={{"sanctum": {}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -71,7 +71,7 @@ class DrivingLicenseController extends Controller
      *     path="/api/driving-licenses",
      *     summary="Create a driving license",
      *     tags={"Driving Licenses"},
-     *     security={{"sanctum": {}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/DrivingLicenseRequest")
@@ -104,7 +104,7 @@ class DrivingLicenseController extends Controller
      *     path="/api/driving-licenses/{id}",
      *     summary="Update a driving license",
      *     tags={"Driving Licenses"},
-     *     security={{"sanctum": {}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -156,7 +156,7 @@ class DrivingLicenseController extends Controller
      *     path="/api/driving-licenses/{id}",
      *     summary="Delete a driving license",
      *     tags={"Driving Licenses"},
-     *     security={{"sanctum": {}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

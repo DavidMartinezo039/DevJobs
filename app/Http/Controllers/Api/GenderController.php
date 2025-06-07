@@ -87,7 +87,7 @@ class GenderController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"type"},
-     *             @OA\Property(property="type", type="string", example="Masculino"),
+     *             @OA\Property(property="type", type="string", example="Binario"),
      *             @OA\Property(property="is_default", type="boolean", example=false)
      *         )
      *     ),
@@ -131,7 +131,7 @@ class GenderController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"type"},
-     *             @OA\Property(property="type", type="string", example="Otro"),
+     *             @OA\Property(property="type", type="string", example="Trinario"),
      *             @OA\Property(property="is_default", type="boolean", example=true)
      *         )
      *     ),

@@ -33,7 +33,7 @@ class VacancyController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/vacancies/{vacancy}",
+     *     path="/api/vacancies/{id}",
      *     summary="Obtener una vacante por ID",
      *     tags={"Vacancies"},
      *     @OA\Parameter(
@@ -63,7 +63,7 @@ class VacancyController extends Controller
      *     path="/api/vacancies",
      *     summary="Crear una nueva vacante",
      *     tags={"Vacancies"},
-     *     security={{"sanctum":{}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -114,10 +114,10 @@ class VacancyController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/vacancies/{vacancy}",
+     *     path="/api/vacancies/{id}",
      *     summary="Actualizar una vacante existente",
      *     tags={"Vacancies"},
-     *     security={{"sanctum":{}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -165,12 +165,12 @@ class VacancyController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/vacancies/{vacancy}",
+     *     path="/api/vacancies/{id}",
      *     summary="Eliminar una vacante",
      *     tags={"Vacancies"},
-     *     security={{"sanctum":{}}},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="vacancy",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID de la vacante",

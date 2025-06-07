@@ -433,7 +433,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -475,7 +475,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -512,7 +512,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -568,7 +568,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -611,7 +611,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -658,7 +658,7 @@
                                 "properties": {
                                     "type": {
                                         "type": "string",
-                                        "example": "Masculino"
+                                        "example": "Binario"
                                     },
                                     "is_default": {
                                         "type": "boolean",
@@ -754,7 +754,7 @@
                                 "properties": {
                                     "type": {
                                         "type": "string",
-                                        "example": "Otro"
+                                        "example": "Trinario"
                                     },
                                     "is_default": {
                                         "type": "boolean",
@@ -928,18 +928,18 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
         },
-        "/api/vacancies/{vacancy}": {
+        "/api/vacancies/{id}": {
             "get": {
                 "tags": [
                     "Vacancies"
                 ],
                 "summary": "Obtener una vacante por ID",
-                "operationId": "8dc68cf498e37835a7e1506106524d8b",
+                "operationId": "d250c09acd5ea6f61d6a254351cfbf43",
                 "parameters": [
                     {
                         "name": "id",
@@ -965,7 +965,7 @@
                     "Vacancies"
                 ],
                 "summary": "Actualizar una vacante existente",
-                "operationId": "c37238211d46e4bb474aa783a32815dc",
+                "operationId": "b4185cfe77fd186b7ce95e2bd430da7b",
                 "parameters": [
                     {
                         "name": "id",
@@ -1023,7 +1023,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -1032,10 +1032,10 @@
                     "Vacancies"
                 ],
                 "summary": "Eliminar una vacante",
-                "operationId": "d50d735059430308740bce9bd6d03c5d",
+                "operationId": "854b113b965ce09b72f929b71a9cb734",
                 "parameters": [
                     {
-                        "name": "vacancy",
+                        "name": "id",
                         "in": "path",
                         "description": "ID de la vacante",
                         "required": true,
@@ -1054,7 +1054,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -1067,20 +1067,58 @@
                 "description": "Request body for creating/updating a driving license",
                 "required": [
                     "category",
-                    "description"
+                    "vehicle_type",
+                    "min_age"
                 ],
                 "properties": {
                     "category": {
+                        "description": "Category of the driving license (e.g., A, B, C)",
                         "type": "string",
-                        "example": "B"
+                        "example": "H"
                     },
-                    "description": {
+                    "vehicle_type": {
+                        "description": "Type of vehicle allowed by the license",
                         "type": "string",
-                        "example": "Can drive cars"
+                        "example": "Automobile"
                     },
-                    "only_god": {
-                        "type": "boolean",
-                        "example": true
+                    "max_speed": {
+                        "description": "Maximum speed allowed for vehicles (optional)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 200.5,
+                        "nullable": true
+                    },
+                    "max_power": {
+                        "description": "Maximum power allowed for vehicles (optional)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 150,
+                        "nullable": true
+                    },
+                    "power_to_weight": {
+                        "description": "Maximum power to weight ratio (optional)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.2,
+                        "nullable": true
+                    },
+                    "max_weight": {
+                        "description": "Maximum weight allowed for vehicles (optional)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 3500,
+                        "nullable": true
+                    },
+                    "max_passengers": {
+                        "description": "Maximum number of passengers allowed (optional)",
+                        "type": "integer",
+                        "example": 8,
+                        "nullable": true
+                    },
+                    "min_age": {
+                        "description": "Minimum age required for this license",
+                        "type": "integer",
+                        "example": 18
                     }
                 },
                 "type": "object"

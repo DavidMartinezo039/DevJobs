@@ -15,6 +15,7 @@ use App\Models\PersonalData;
 use App\Models\Phone;
 use App\Models\SocialMedia;
 use App\Models\WorkExperience;
+use App\Traits\LogsActivity;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -24,6 +25,8 @@ use App\Models\CV;
 class CvManager extends Component
 {
     use WithFileUploads;
+    use LogsActivity;
+
 
     public $title, $first_name, $last_name, $image, $new_image, $about_me, $birth_date, $city, $country, $gender_id;
     public $workPermits = [], $nationalities = [], $emails = [], $addresses = [];
@@ -126,6 +129,13 @@ class CvManager extends Component
         $this->savePersonalData($cv);
         $this->saveRelations($cv);
 
+        $this->logActivity(
+            action: 'created_cv',
+            targetType: 'App\Models\CV',
+            targetId: $cv->id,
+            description: 'Creo un cv'
+        );
+
         GenerateCVPdf::dispatch($cv);
 
         $this->resetComponentData();
@@ -142,6 +152,13 @@ class CvManager extends Component
 
         $this->updatePersonalData($cv);
         $this->syncRelations($cv);
+
+        $this->logActivity(
+            action: 'updated_cv',
+            targetType: 'App\Models\CV',
+            targetId: $cv->id,
+            description: 'Actualizó un cv'
+        );
 
         GenerateCVPdf::dispatch($cv);
 
@@ -160,6 +177,13 @@ class CvManager extends Component
         Gate::authorize('delete', $cv);
 
         $this->deleteAssociatedFiles($cv);
+
+        $this->logActivity(
+            action: 'deleted_cv',
+            targetType: 'App\Models\CV',
+            targetId: $cv->id,
+            description: 'Eliminó un cv'
+        );
 
         $cv->delete();
         $this->mount();

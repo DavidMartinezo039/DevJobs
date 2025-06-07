@@ -5,10 +5,13 @@ namespace App\Livewire;
 use App\Jobs\SendCandidateStatusEmailJob;
 use App\Models\User;
 use App\Models\Vacancy;
+use App\Traits\LogsActivity;
 use Livewire\Component;
 
 class Candidates extends Component
 {
+    use LogsActivity;
+
     public Vacancy $vacancy;
     public array $statuses = [];
 
@@ -41,6 +44,13 @@ class Candidates extends Component
                 ]);
 
                 $user = User::find($userId);
+
+                $this->logActivity(
+                    action: $newStatus === 'accepted' ? 'accepted_candidate' : 'rejected_candidate',
+                    targetType: 'App\Models\Vacancy',
+                    targetId: $this->vacancy->id,
+                    description: "Vacancy status updated to '{$newStatus}' for user {$user->name}"
+                );
 
                 if (in_array($newStatus, ['accepted', 'rejected'])) {
                     SendCandidateStatusEmailJob::dispatch($this->vacancy, $user, $newStatus);

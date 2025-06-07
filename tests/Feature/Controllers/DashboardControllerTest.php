@@ -1,30 +1,29 @@
 <?php
 
+use App\Livewire\Dashboard;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
 use Illuminate\Support\Facades\Artisan;
 
-test('usuario con rol admin puede ver el dashboard', function () {
+test('usuario con rol god puede ver el dashboard (Livewire)', function () {
     $user = User::factory()->create();
     $user->assignRole('god');
 
     actingAs($user)
         ->get(route('dashboard'))
         ->assertOk()
-        ->assertViewIs('dashboard.index')
-        ->assertViewHas('user', $user);
+        ->assertSeeLivewire('dashboard');
 });
 
-test('ejecuta el comando de backup y redirige con mensaje', function () {
+test('usuario con rol god puede ejecutar el backup desde el componente livewire', function () {
     $user = User::factory()->create();
     $user->assignRole('god');
 
     Artisan::spy();
 
-    actingAs($user)
-        ->post(route('admin.backup'))
-        ->assertRedirect()
-        ->assertSessionHas('success', 'Database backup generated');
+    Livewire::actingAs($user)
+        ->test(Dashboard::class)
+        ->call('backup');
 
     Artisan::shouldHaveReceived('call')->with('backup:database');
 });

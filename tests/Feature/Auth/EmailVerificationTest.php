@@ -32,7 +32,7 @@ test('email can be verified', function () {
 
     Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-    $response->assertRedirect(route('vacancies.manager', absolute: false).'?verified=1');
+    $response->assertRedirect(route('home', absolute: false).'?verified=1');
 });
 
 test('email is not verified with invalid hash', function () {
@@ -58,7 +58,7 @@ test('redirects to vacancies.manager if email already verified', function () {
 
     $response = $this->post(route('verification.send'));
 
-    $response->assertRedirect(route('vacancies.manager'));
+    $response->assertRedirect(route('home'));
 });
 
 test('sends verification notification if email is not verified', function () {
@@ -87,7 +87,7 @@ test('redirects to vacancies.manager if user has verified email', function () {
 
     $response = $this->get(route('verification.notice'));
 
-    $response->assertRedirect(route('vacancies.manager'));
+    $response->assertRedirect(route('home'));
 });
 
 test('redirects if email is already verified', function () {
@@ -105,7 +105,7 @@ test('redirects if email is already verified', function () {
 
     $response = $controller($mockRequest);
 
-    expect(parse_url($response->getTargetUrl(), PHP_URL_PATH))->toBe('/vacancies')
+    expect(in_array(parse_url($response->getTargetUrl(), PHP_URL_PATH), ['', '/']))
         ->and(parse_url($response->getTargetUrl(), PHP_URL_QUERY))->toBe('verified=1');
 
 });

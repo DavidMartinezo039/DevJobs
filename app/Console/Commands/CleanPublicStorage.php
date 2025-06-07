@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use function Livewire\store;
 
 class CleanPublicStorage extends Command
 {
@@ -17,6 +18,7 @@ class CleanPublicStorage extends Command
             storage_path('app/public/images'),
             storage_path('app/public/vacancies'),
             storage_path('app/public/VacanciesPdfs'),
+            storage_path('app/public/reports'),
         ];
 
         foreach ($folders as $folder) {

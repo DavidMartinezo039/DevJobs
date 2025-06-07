@@ -53,6 +53,11 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "password123"
+                                    },
+                                    "role": {
+                                        "description": "Rol que se asignará al usuario (opcional)",
+                                        "type": "string",
+                                        "example": "god"
                                     }
                                 },
                                 "type": "object"
@@ -102,12 +107,12 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
+                                        "example": "god@example.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password123"
+                                        "example": "123"
                                     }
                                 },
                                 "type": "object"

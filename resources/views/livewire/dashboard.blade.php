@@ -9,19 +9,15 @@
             </p>
         </div>
         <div class="flex items-center space-x-4">
-                <button type="submit" wire:click="backup"
-                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
-                    {{ __('Generate Backup') }}
-                </button>
-
-            <a href="{{ route('run.cleanup') }}"
-               class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
+            <button type="submit" wire:click="cleanup"
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
                 {{ __('Clean Old Things') }}
-            </a>
+            </button>
 
             <form action="{{ route('user.history.generate') }}" method="POST">
                 @csrf
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
+                <button type="submit"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition">
                     {{ __('Generate History') }}
                 </button>
             </form>

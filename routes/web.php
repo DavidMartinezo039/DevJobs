@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\CvPdfController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +51,8 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('profile/token', [ProfileController::class, 'showTokenFromCommand'])->name('profile.token');
+
 
         Route::get('/cvs', CvManager::class)->name('cv.manager');
         Route::get('/cvs/{cv}/download', [CvPdfController::class, 'download'])->name('cv.download');
@@ -66,11 +67,6 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
 
 
         Route::get('/preferences', UserPreference::class)->name('preferences');
-
-        Route::get('/admin/run-cleanup', function () {
-            Artisan::call('requests:cleanup');
-            return redirect()->back()->with('success', __('Cleaning executed successfully'));
-        })->middleware('rol.admin')->name('run.cleanup');
     });
 
     require __DIR__.'/auth.php';

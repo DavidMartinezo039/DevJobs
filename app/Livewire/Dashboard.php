@@ -15,10 +15,10 @@ class Dashboard extends Component
         $this->user = Auth::user();
     }
 
-    public function backup()
+    public function cleanup()
     {
-        Artisan::call('backup:database');
-        session()->flash('success', __('Database backup generated'));
+        Artisan::call('requests:cleanup');
+        session()->flash('success', __('Cleaning executed successfully'));
     }
 
     public function render()

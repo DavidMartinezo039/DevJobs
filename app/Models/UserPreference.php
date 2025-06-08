@@ -44,7 +44,16 @@ class UserPreference extends Model
                             ->orWhereRaw('? LIKE \'%\' || keyword || \'%\'', [$vacancy->description]);
                     });
             })->orWhereNull('keyword')->orWhere('keyword', '');
-        });
+        })
+            ->where(function ($query) {
+                $query->whereNotNull('salary_id')
+                    ->orWhereNotNull('category_id')
+                    ->orWhereNotNull('company')
+                    ->orWhere(function ($q) {
+                        $q->whereNotNull('keyword')
+                            ->where('keyword', '!=', '');
+                    });
+            });
     }
 
     public function user(): BelongsTo

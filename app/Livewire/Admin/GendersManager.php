@@ -128,7 +128,7 @@ class GendersManager extends Component
 
     public function render()
     {
-        $this->genders = Gender::orderBy('type')->get();
+        $this->genders = Gender::orderedByType()->get();
         return view('livewire.admin.genders-manager')->layout('layouts.app');
     }
 }

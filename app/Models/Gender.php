@@ -12,6 +12,11 @@ class Gender extends Model
 
     protected $fillable = ['type'];
 
+    public function scopeOrderedByType($query)
+    {
+        return $query->orderBy('type');
+    }
+
     public function personalData(): HasMany
     {
         return $this->hasMany(PersonalData::class);

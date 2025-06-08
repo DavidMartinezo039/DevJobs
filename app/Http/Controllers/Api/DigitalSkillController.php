@@ -29,7 +29,7 @@ class DigitalSkillController extends Controller
      */
     public function index()
     {
-        $digitalSkills = DigitalSkill::orderBy('name')->get();
+        $digitalSkills = DigitalSkill::orderedByName()->get();
         return response()->json($digitalSkills);
     }
 

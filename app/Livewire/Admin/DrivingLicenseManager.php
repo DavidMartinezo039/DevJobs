@@ -127,7 +127,7 @@ class DrivingLicenseManager extends Component
     public function render()
     {
         return view('livewire.admin.driving-license-manager', [
-            'drivingLicenses' => DrivingLicense::orderBy('category')->paginate(10),
+            'drivingLicenses' => DrivingLicense::orderedByCategory()->paginate(10),
         ])->layout('layouts.app');
     }
 }

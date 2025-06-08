@@ -35,6 +35,11 @@ class DrivingLicense extends Model
         'min_age',
     ];
 
+    public function scopeOrderedByCategory($query)
+    {
+        return $query->orderBy('category');
+    }
+
     public function cvs(): BelongsToMany
     {
         return $this->belongsToMany(CV::class, 'cvs_driving_licenses', 'driving_license_id', 'cv_id')->withTimestamps();

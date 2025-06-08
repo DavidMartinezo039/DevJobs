@@ -38,7 +38,7 @@ class GenderController extends Controller
      */
     public function index()
     {
-        return Gender::orderBy('type')->get();
+        return Gender::orderedByType()->get();
     }
 
     /**

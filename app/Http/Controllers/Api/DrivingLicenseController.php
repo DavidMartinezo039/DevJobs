@@ -36,7 +36,7 @@ class DrivingLicenseController extends Controller
      */
     public function index()
     {
-        $drivingLicenses = DrivingLicense::orderBy('category')->paginate(10);
+        $drivingLicenses = DrivingLicense::orderedByCategory()->paginate(10);
 
         return response()->json($drivingLicenses);
     }

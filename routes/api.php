@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
-    Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/vacancies', [VacancyController::class, 'store']);
     Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update']);
     Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy']);
+    Route::get('/my-vacancies', [VacancyController::class, 'myVacancies']);
 
     Route::apiResource('genders', GenderController::class)->middleware('rol.admin');
     Route::post('genders/{gender}/toggle-default', [GenderController::class, 'toggleDefault'])->middleware('rol.admin');

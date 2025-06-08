@@ -8,9 +8,26 @@ use App\Models\Vacancy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * @OA\Schema(
+ *     schema="Vacancy",
+ *     type="object",
+ *     title="Vacancy",
+ *     required={"id", "title", "description", "company", "last_day", "salary_id", "category_id", "user_id"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="title", type="string", example="Desarrollador Laravel"),
+ *     @OA\Property(property="description", type="string", example="Se busca programador con experiencia en Laravel."),
+ *     @OA\Property(property="company", type="string", example="Tech Solutions"),
+ *     @OA\Property(property="last_day", type="string", format="date", example="2025-07-01"),
+ *     @OA\Property(property="salary_id", type="integer", example=3),
+ *     @OA\Property(property="category_id", type="integer", example=5),
+ *     @OA\Property(property="user_id", type="integer", example=2),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2025-06-06T12:00:00Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-06-06T12:00:00Z")
+ * )
+ */
 class VacancyController extends Controller
 {
-
     /**
      * @OA\Get(
      *     path="/api/vacancies",
@@ -18,7 +35,11 @@ class VacancyController extends Controller
      *     tags={"Vacancies"},
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de vacantes obtenida correctamente"
+     *         description="Lista de vacantes obtenida correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Vacancy"))
+     *         )
      *     )
      * )
      */
@@ -45,7 +66,11 @@ class VacancyController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Vacante encontrada"
+     *         description="Vacante encontrada",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Vacancy")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -78,7 +103,11 @@ class VacancyController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Vacante creada correctamente"
+     *         description="Vacante creada correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Vacancy")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=403,
@@ -137,7 +166,11 @@ class VacancyController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Vacante actualizada correctamente"
+     *         description="Vacante actualizada correctamente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Vacancy")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=403,
@@ -178,7 +211,10 @@ class VacancyController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Vacante eliminada correctamente"
+     *         description="Vacante eliminada correctamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Vacancy deleted successfully")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=403,
@@ -193,5 +229,35 @@ class VacancyController extends Controller
         $vacancy->delete();
 
         return response()->json(['message' => 'Vacancy deleted successfully']);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/my-vacancies",
+     *     summary="Obtener las vacantes propias según el rol",
+     *     tags={"Vacancies"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de vacantes filtradas por el rol del usuario",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="current_page", type="integer", example=1),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Vacancy")),
+     *             @OA\Property(property="total", type="integer", example=15)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No autorizado para ver vacantes"
+     *     )
+     * )
+     */
+    public function myVacancies(): JsonResponse
+    {
+        Gate::authorize('viewAny', Vacancy::class);
+
+        $vacancies = Vacancy::VacanciesByRol()->paginate(10);
+
+        return response()->json($vacancies);
     }
 }

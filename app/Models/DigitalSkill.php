@@ -12,6 +12,11 @@ class DigitalSkill extends Model
 
     protected $fillable = ['name'];
 
+    public function scopeOrderedByName($query)
+    {
+        return $query->orderBy('name');
+    }
+
     public function cvs(): BelongsToMany
     {
         return $this->belongsToMany(CV::class, 'cvs_digital_skills', 'digital_skill_id', 'cv_id')->withTimestamps();

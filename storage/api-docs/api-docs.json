@@ -145,38 +145,6 @@
                 }
             }
         },
-        "/api/logout": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Cerrar sesión del usuario autenticado",
-                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
-                "responses": {
-                    "200": {
-                        "description": "Sesión cerrada correctamente",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Logged out"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/profile": {
             "get": {
                 "tags": [
@@ -863,7 +831,22 @@
                 "operationId": "11d8fef89bfd552fb528f9f9713acaf8",
                 "responses": {
                     "200": {
-                        "description": "Lista de vacantes obtenida correctamente"
+                        "description": "Lista de vacantes obtenida correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Vacancy"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -920,7 +903,19 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Vacante creada correctamente"
+                        "description": "Vacante creada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Vacancy"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "403": {
                         "description": "No autorizado para crear vacantes"
@@ -953,7 +948,19 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Vacante encontrada"
+                        "description": "Vacante encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Vacancy"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Vacante no encontrada"
@@ -1015,7 +1022,19 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Vacante actualizada correctamente"
+                        "description": "Vacante actualizada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Vacancy"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "403": {
                         "description": "No autorizado para actualizar esta vacante"
@@ -1046,10 +1065,68 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Vacante eliminada correctamente"
+                        "description": "Vacante eliminada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vacancy deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "403": {
                         "description": "No autorizado para eliminar esta vacante"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/my-vacancies": {
+            "get": {
+                "tags": [
+                    "Vacancies"
+                ],
+                "summary": "Obtener las vacantes propias según el rol",
+                "operationId": "0e3eba73230009e5e2e83f35731ec29e",
+                "responses": {
+                    "200": {
+                        "description": "Lista de vacantes filtradas por el rol del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Vacancy"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 15
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "No autorizado para ver vacantes"
                     }
                 },
                 "security": [
@@ -1062,6 +1139,65 @@
     },
     "components": {
         "schemas": {
+            "Vacancy": {
+                "title": "Vacancy",
+                "required": [
+                    "id",
+                    "title",
+                    "description",
+                    "company",
+                    "last_day",
+                    "salary_id",
+                    "category_id",
+                    "user_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Desarrollador Laravel"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Se busca programador con experiencia en Laravel."
+                    },
+                    "company": {
+                        "type": "string",
+                        "example": "Tech Solutions"
+                    },
+                    "last_day": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-07-01"
+                    },
+                    "salary_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-06T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-06T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
             "DrivingLicenseRequest": {
                 "title": "Driving License Request",
                 "description": "Request body for creating/updating a driving license",

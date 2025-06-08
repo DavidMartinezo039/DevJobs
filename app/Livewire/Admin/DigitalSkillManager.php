@@ -84,7 +84,7 @@ class DigitalSkillManager extends Component
     {
 
         return view('livewire.admin.digital-skill-manager', [
-            'digitalSkills' => DigitalSkill::orderBy('name')->paginate(10)
+            'digitalSkills' => DigitalSkill::orderedByName()->paginate(10)
         ])->layout('layouts.app');
     }
 }

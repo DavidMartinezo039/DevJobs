@@ -12,7 +12,7 @@ class DrivingLicenseRequestsManager extends Component
         $request->approved = true;
         $request->save();
 
-        session()->flash('message', 'Request approved. The moderator can now proceed.');
+        session()->flash('message', __('Request approved. The moderator can now proceed.'));
     }
 
     public function reject($request)
@@ -20,7 +20,7 @@ class DrivingLicenseRequestsManager extends Component
         $request->approved = false;
         $request->save();
 
-        session()->flash('message', 'Request rejected.');
+        session()->flash('message', __('Request rejected.'));
     }
 
     public function render()

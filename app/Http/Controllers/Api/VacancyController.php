@@ -138,7 +138,7 @@ class VacancyController extends Controller
             'description' => $validated['description'],
         ]);
 
-        return response()->json(['data' => $vacancy], 201);
+        return response()->json(['message' => __('Vacancy added successfully'), 'data' => $vacancy], 201);
     }
 
     /**
@@ -193,7 +193,7 @@ class VacancyController extends Controller
 
         $vacancy->update($validated);
 
-        return response()->json(['data' => $vacancy]);
+        return response()->json(['message' => __('Vacancy updated successfully'), 'data' => $vacancy]);
     }
 
     /**
@@ -228,7 +228,7 @@ class VacancyController extends Controller
 
         $vacancy->delete();
 
-        return response()->json(['message' => 'Vacancy deleted successfully']);
+        return response()->json(['message' => __('Vacancy deleted successfully')]);
     }
 
     /**

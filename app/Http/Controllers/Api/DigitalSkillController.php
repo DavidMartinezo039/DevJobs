@@ -71,7 +71,7 @@ class DigitalSkillController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Digital skill created successfully',
+            'message' => __('Digital skill created successfully'),
             'data' => $skill,
         ], 201);
     }
@@ -159,7 +159,7 @@ class DigitalSkillController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Digital skill updated successfully',
+            'message' => __('Digital skill updated successfully'),
             'data' => $digitalSkill,
         ]);
     }
@@ -198,7 +198,7 @@ class DigitalSkillController extends Controller
         $digitalSkill->delete();
 
         return response()->json([
-            'message' => 'Digital skill deleted successfully',
+            'message' => __('Digital skill deleted successfully'),
         ]);
     }
 }

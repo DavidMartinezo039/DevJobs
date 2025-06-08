@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CV de {{ $cv->personalData->first_name }} {{ $cv->personalData->last_name }}</title>
+    <title>CV {{ __('of') }} {{ $cv->personalData->first_name }} {{ $cv->personalData->last_name }}</title>
     <style>
         * {
             box-sizing: border-box;
@@ -114,7 +114,6 @@
 <body>
 <div class="container">
 
-    {{-- Encabezado con foto e info --}}
     <div class="header">
         <div class="a">
             @php
@@ -135,13 +134,10 @@
         </div>
     </div>
 
-    {{-- Contenido principal dividido en dos columnas --}}
     <div class="content">
 
-        {{-- Columna izquierda --}}
         <div class="left">
 
-            {{-- Habilidades --}}
             <div class="section">
                 <h3>{{ __('Digital Skills') }}</h3>
                 <ul>
@@ -151,7 +147,6 @@
                 </ul>
             </div>
 
-            {{-- Idiomas --}}
             <div class="section">
                 <h3>{{ __('Languages') }}</h3>
                 <ul>
@@ -170,7 +165,6 @@
                 </ul>
             </div>
 
-            {{-- Redes sociales --}}
             @if($cv->personalData->socialMedia->count())
                 <div class="section">
                     <h3>{{ __('Social Media') }}</h3>
@@ -185,10 +179,7 @@
 
         </div>
 
-        {{-- Columna derecha --}}
         <div class="right">
-
-            {{-- Perfil personal --}}
 
             <div class="section">
                 <h3>{{ __('Personal Data') }}</h3>
@@ -219,7 +210,6 @@
                 <p>{{ $cv->personalData->about_me }}</p>
             </div>
 
-            {{-- Experiencia laboral --}}
             @if($cv->workExperiences->count())
                 <div class="section">
                     <h3>{{ __('Work Experiences') }}</h3>
@@ -236,7 +226,6 @@
                 </div>
             @endif
 
-            {{-- Educación --}}
             @if($cv->education->count())
                 <div class="section">
                     <h3>{{ __('Education') }}</h3>

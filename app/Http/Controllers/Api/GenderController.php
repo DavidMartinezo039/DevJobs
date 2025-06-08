@@ -111,7 +111,7 @@ class GenderController extends Controller
 
         NotifyMarketingUsersOfGenderChange::dispatch($gender, 'created');
 
-        return response()->json(['message' => 'Gender created', 'data' => $gender], 201);
+        return response()->json(['message' => __('Gender created successfully'), 'data' => $gender], 201);
     }
 
     /**
@@ -157,7 +157,7 @@ class GenderController extends Controller
 
         NotifyMarketingUsersOfGenderChange::dispatch($gender, 'updated');
 
-        return response()->json(['message' => 'Gender updated', 'data' => $gender]);
+        return response()->json(['message' => __('Gender updated successfully'), 'data' => $gender]);
     }
 
 
@@ -195,7 +195,7 @@ class GenderController extends Controller
         NotifyMarketingUsersOfGenderChange::dispatch($gender, 'deleted');
         $gender->delete();
 
-        return response()->json(['message' => 'Gender deleted']);
+        return response()->json(['message' => __('Gender deleted successfully')]);
     }
 
     /**
@@ -234,6 +234,6 @@ class GenderController extends Controller
 
         NotifyModeratorsOfDefaultGender::dispatch($gender);
 
-        return response()->json(['message' => 'Default status toggled', 'data' => $gender]);
+        return response()->json(['message' => __('Default status toggle'), 'data' => $gender]);
     }
 }

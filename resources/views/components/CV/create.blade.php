@@ -22,7 +22,6 @@
                                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm w-full">
                             <x-input-error :messages="$errors->get('image')" class="mt-2"/>
 
-                            <!-- Mostrar vista previa de la imagen subida -->
                             @if ($image)
                                 <img src="{{ $image->temporaryUrl() }}" class="mt-2 max-h-40">
                             @elseif ($selectedCv && $selectedCv->personalData && $selectedCv->personalData->image)

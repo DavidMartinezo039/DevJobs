@@ -552,5 +552,13 @@
     "Generate Token": "Generar Token",
     "Generated Token": "Token Generado",
     "Copied": "Copiado",
+    "The provided credentials are incorrect.": "Las credenciales son incorrectas",
+    "Default status toggle":"Alternar estado predeterminado",
+    "Vacancy deleted successfully": "Vacante eliminada existosamente",
+    "Request approved. The moderator can now proceed.": "Solicitud aprobada. El moderador ahora puede proceder.",
+    "Request rejected.": "Solicitud rechazada.",
+    "Default Gender Status Has Been Updated": "estado predeterminado de género ha sido actualizado",
+    "We wanted to inform you that a default gender status has been successfully updated": "Queremos informarte que el estado predeterminado de un género ha sido actualizado.",
+    "View the genders": "Ver los géneros",
     "Education": "Educación"
 }

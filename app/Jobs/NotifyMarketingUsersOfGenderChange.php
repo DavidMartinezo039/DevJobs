@@ -18,7 +18,7 @@ class NotifyMarketingUsersOfGenderChange implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public Gender $gender;
-    public string $action; // 'created', 'updated', 'deleted'
+    public string $action;
 
     public function __construct(Gender $gender, string $action)
     {

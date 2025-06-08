@@ -20,7 +20,7 @@ class CandidateWithdrawMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('Has retirado tu candidatura')
+            subject: __('You have withdrawn your candidacy')
         );
     }
 

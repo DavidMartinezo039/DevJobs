@@ -61,7 +61,7 @@
                                 </div>
                             @endforeach
                             <button type="button" wire:click="addNationality"
-                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ Add Nationality
+                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ {{ __('Add Nationality') }}
                             </button>
                         </div>
 
@@ -78,7 +78,7 @@
                                 </div>
                             @endforeach
                             <button type="button" wire:click="addWorkPermit"
-                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ Add Work Permit
+                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">+ {{ __('Add Work Permit') }}
                             </button>
                         </div>
 

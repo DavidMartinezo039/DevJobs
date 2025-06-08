@@ -84,7 +84,7 @@
 </header>
 
 <footer>
-    {{ __('Generated on') }} {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }} — Page <span class="pagenum"></span>
+    {{ __('Generated on') }} {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }} — {{ __('Page') }} <span class="pagenum"></span>
 </footer>
 
 <h1>{{ $vacancy->title }}</h1>
@@ -97,7 +97,7 @@
             <p><span class="label">{{__('Monthly Salary')}}:</span> {{ $vacancy->salary->salary }}</p>
             <p><span class="label">{{__('Last Day to Apply')}}:</span> {{ $vacancy->last_day->format('d-m-Y') }}</p>
         </div>
-        <h2 style="font-size: 18px; color: #2c3e50; margin-bottom: 10px;">Job Description</h2>
+        <h2 style="font-size: 18px; color: #2c3e50; margin-bottom: 10px;">{{ __('Job Description') }}</h2>
         <p style="text-align: justify; line-height: 1.5; margin-right: 5%">
             {{ $vacancy->description }}
         </p>

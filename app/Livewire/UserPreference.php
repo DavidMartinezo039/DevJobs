@@ -45,7 +45,7 @@ class UserPreference extends Component
 
         auth()->user()->preference()->updateOrCreate([], $mappedData);
 
-        session()->flash('success', 'Preferences updated successfully');
+        session()->flash('success', __('Preferences updated successfully'));
     }
 
     public function render()

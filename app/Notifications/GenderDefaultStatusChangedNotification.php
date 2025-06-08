@@ -35,9 +35,10 @@ class GenderDefaultStatusChangedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line(__('notifications.intro'))
-            ->action(__('notifications.action_text'), url('/'))
-            ->line(__('notifications.thank_you'));
+            ->subject(__('Default Gender Status Has Been Updated'))
+            ->line(__('We wanted to inform you that a default gender status has been successfully updated'))
+            ->action(__('View the genders'), url('/dashboard/genders'))
+            ->line(__('Thank you for using our application!'));
     }
 
     /**

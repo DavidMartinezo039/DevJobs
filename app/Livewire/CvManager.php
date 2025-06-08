@@ -488,12 +488,12 @@ class CvManager extends Component
 
     private function extractPivotData(array $item, array $fieldMap): array
     {
-        $idField = array_key_first($fieldMap); // e.g., 'identity_id'
+        $idField = array_key_first($fieldMap);
         $idValue = $item[$idField] ?? null;
 
         $pivotData = [];
         foreach ($fieldMap as $dbField => $propField) {
-            if ($dbField !== $idField) { // Don't include the ID field in pivot data
+            if ($dbField !== $idField) {
                 $pivotData[$dbField] = $item[$propField] ?? null;
             }
         }
@@ -513,13 +513,13 @@ class CvManager extends Component
 
     private function syncHasManyData($relation, array $data, array $fieldMap)
     {
-        $relation->delete(); // Delete existing records
+        $relation->delete();
         foreach ($data as $item) {
             $modelData = [];
             foreach ($fieldMap as $dbField => $propField) {
                 $modelData[$dbField] = $item[$propField] ?? null;
             }
-            $relation->create($modelData); // Recreate them
+            $relation->create($modelData);
         }
     }
 

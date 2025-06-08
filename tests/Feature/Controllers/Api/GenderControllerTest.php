@@ -79,10 +79,10 @@ it('returns correct mail content for gender default status notification', functi
     $mail = $notification->toMail($notifiable);
 
     expect($mail)->toBeInstanceOf(MailMessage::class)
-        ->and($mail->introLines)->toContain(__('notifications.intro'))
-        ->and($mail->actionText)->toBe(__('notifications.action_text'))
-        ->and($mail->actionUrl)->toBe(url('/'))
-        ->and($mail->outroLines)->toContain(__('notifications.thank_you'));
+        ->and($mail->introLines)->toContain(__('We wanted to inform you that a default gender status has been successfully updated'))
+        ->and($mail->actionText)->toBe(__('View the genders'))
+        ->and($mail->actionUrl)->toBe(url('/dashboard/genders'))
+        ->and($mail->outroLines)->toContain(__('Thank you for using our application!'));
 });
 
 test('unauthorized users cannot create a gender', function () {
@@ -135,7 +135,7 @@ test('authorized users can delete a gender', function () {
     $response = deleteJson("/api/genders/{$gender->id}");
 
     $response->assertOk()
-        ->assertJson(['message' => 'Gender deleted']);
+        ->assertJson(['message' => 'Gender deleted successfully']);
 
     $this->assertDatabaseMissing('genders', ['id' => $gender->id]);
     Queue::assertPushed(NotifyMarketingUsersOfGenderChange::class);

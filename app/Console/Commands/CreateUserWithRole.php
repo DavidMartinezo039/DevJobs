@@ -47,7 +47,7 @@ class CreateUserWithRole extends Command
 
         if ($validator->fails()) {
             foreach ($validator->errors()->all() as $error) {
-                $this->error("❌ $error");
+                $this->error("$error");
             }
             return;
         }
@@ -60,6 +60,6 @@ class CreateUserWithRole extends Command
 
         $user->assignRole($role);
 
-        $this->info("✅ Usuario '{$user->name}' creado con el rol '{$role}'.");
+        $this->info("Usuario '{$user->name}' creado con el rol '{$role}'.");
     }
 }

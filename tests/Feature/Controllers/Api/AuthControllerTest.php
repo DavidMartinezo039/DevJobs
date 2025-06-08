@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\getJson;
 
@@ -75,7 +76,7 @@ test('can logout an authenticated user', function () {
     $response = postJson('/api/logout');
 
     $response->assertOk()
-        ->assertJson(['message' => 'Logged out']);
+        ->assertJson(['message' => 'Logout']);
 });
 
 test('can get profile of authenticated user', function () {
@@ -98,4 +99,23 @@ test('fails to access profile without token', function () {
     $response = getJson('/api/profile');
 
     $response->assertUnauthorized();
+});
+
+it('calls the artisan command and flashes the token output', function () {
+    $user = User::factory()->create();
+
+    Artisan::shouldReceive('call')
+        ->once()
+        ->with('user:show-token', ['--id' => $user->id]);
+
+    Artisan::shouldReceive('output')
+        ->once()
+        ->andReturn('ThisIsAFakeToken123');
+
+    actingAs($user);
+
+    $response = $this->get(route('profile.token'));
+
+    $response->assertRedirect(route('profile.edit'));
+    $response->assertSessionHas('token', 'ThisIsAFakeToken123');
 });

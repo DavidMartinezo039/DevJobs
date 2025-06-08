@@ -15,7 +15,7 @@ test('usuario con rol god puede ver el dashboard (Livewire)', function () {
         ->assertSeeLivewire('dashboard');
 });
 
-test('usuario con rol god puede ejecutar el backup desde el componente livewire', function () {
+test('usuario con rol god puede ejecutar el cleanup desde el componente livewire', function () {
     $user = User::factory()->create();
     $user->assignRole('god');
 
@@ -23,7 +23,7 @@ test('usuario con rol god puede ejecutar el backup desde el componente livewire'
 
     Livewire::actingAs($user)
         ->test(Dashboard::class)
-        ->call('backup');
+        ->call('cleanup');
 
-    Artisan::shouldHaveReceived('call')->with('backup:database');
+    Artisan::shouldHaveReceived('call')->with('requests:cleanup');
 });

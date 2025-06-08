@@ -11,7 +11,7 @@ it('creates the candidate withdraw mail', function () {
     expect($mail->vacancy->title)->toBe('Frontend Developer');
 
     $envelope = $mail->envelope();
-    expect($envelope->subject)->toBe(__('Has retirado tu candidatura'));
+    expect($envelope->subject)->toBe(__('You have withdrawn your candidacy'));
 
     $content = $mail->content();
     expect($content->markdown)->toBe('emails.candidate-withdraw')

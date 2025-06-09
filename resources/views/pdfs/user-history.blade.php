@@ -184,7 +184,7 @@
         <ul class="activity">
             @foreach ($logs as $log)
                 <li>
-                    <strong>{{ $log->user->name }}</strong> – {{ $log->description }} <br>
+                    <strong>{{ $log->user->name }}</strong> – {{ __($log->description) }} <br>
                     <small>{{ $log->created_at->format('Y-m-d H:i') }}</small>
                 </li>
             @endforeach

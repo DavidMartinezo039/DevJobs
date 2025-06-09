@@ -22,7 +22,7 @@
                 </button>
             </form>
 
-            <div wire:poll.5000ms>
+            <div wire:poll.500ms>
                 @php
                     $latestPdf = collect(Storage::disk('public')->files('reports'))
                         ->filter(fn($file) => Str::contains($file, 'user-history-') && Str::endsWith($file, '.pdf'))
@@ -36,7 +36,7 @@
                         {{ __('Download History') }}
                     </a>
                 @else
-                    <p class="text-muted mt-2">{{ __('History in progress') }}</p>
+                    <p class="text-muted mt-2">{{ __('No history files found') }}</p>
                 @endif
             </div>
 

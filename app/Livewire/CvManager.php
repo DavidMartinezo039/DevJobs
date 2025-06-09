@@ -133,7 +133,7 @@ class CvManager extends Component
             action: 'created_cv',
             targetType: 'App\Models\CV',
             targetId: $cv->id,
-            description: 'Creo un cv'
+            description: 'Create a cv'
         );
 
         GenerateCVPdf::dispatch($cv);
@@ -157,7 +157,7 @@ class CvManager extends Component
             action: 'updated_cv',
             targetType: 'App\Models\CV',
             targetId: $cv->id,
-            description: 'Actualizó un cv'
+            description: 'Update a cv'
         );
 
         GenerateCVPdf::dispatch($cv);
@@ -182,7 +182,7 @@ class CvManager extends Component
             action: 'deleted_cv',
             targetType: 'App\Models\CV',
             targetId: $cv->id,
-            description: 'Eliminó un cv'
+            description: 'Delete a cv'
         );
 
         $cv->delete();

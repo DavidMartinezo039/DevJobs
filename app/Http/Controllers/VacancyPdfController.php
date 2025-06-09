@@ -17,7 +17,7 @@ class VacancyPdfController extends Controller
             action: 'download_vacancy',
             targetType: 'App\Models\Vacancy',
             targetId: $vacancy->id,
-            description: 'Descargo una vacante'
+            description: 'Download a vacancy'
         );
 
         return GenerateVacancyPdf::dispatchSync($vacancy);

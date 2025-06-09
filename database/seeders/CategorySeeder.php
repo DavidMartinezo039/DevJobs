@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,11 @@ class CategorySeeder extends Seeder
     {
         Category::factory()->create([
             'category' => 'Backend Developer'
+        ]);
+
+        $developer = User::factory()->create();
+        $developer->preference()->create([
+            'category_id' => 1,
         ]);
         Category::factory()->create([
             'category' => 'Front end Developer'

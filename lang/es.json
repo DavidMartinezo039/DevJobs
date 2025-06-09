@@ -560,5 +560,13 @@
     "Default Gender Status Has Been Updated": "estado predeterminado de género ha sido actualizado",
     "We wanted to inform you that a default gender status has been successfully updated": "Queremos informarte que el estado predeterminado de un género ha sido actualizado.",
     "View the genders": "Ver los géneros",
+    "Create a cv": "Crear un cv",
+    "Download cv": "Descargo su curriculum",
+    "Delete a vacancy": "Eliminó una vacante",
+    "Download a vacancy": "Descargo una vacante",
+    "Update a cv": "Actualizo un curriculum",
+    "Delete a cv": "Eliminó un curriculum",
+    "Create a vacancy": "Creo una vacante",
+    "Update a vacancy": "Actualizo una vacante",
     "Education": "Educación"
 }

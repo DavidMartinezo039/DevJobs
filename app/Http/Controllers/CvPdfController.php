@@ -23,7 +23,7 @@ class CvPdfController extends Controller
                     action: 'download_cv',
                     targetType: 'App\Models\CV',
                     targetId: $cv->id,
-                    description: 'Descargo su currículum'
+                    description: 'Download cv'
                 );
                 return Storage::disk('public')->download($filePath, 'CV_' . $cv->title . '.pdf');
             }

@@ -105,7 +105,7 @@ class VacanciesManager extends Component
             action: 'deleted_vacancy',
             targetType: 'App\Models\Vacancy',
             targetId: $vacancy->id,
-            description: 'Eliminó una vacante'
+            description: 'Delete a vacancy'
         );
 
         $vacancy->delete();
@@ -144,7 +144,7 @@ class VacanciesManager extends Component
             action: 'created_vacancy',
             targetType: 'App\Models\Vacancy',
             targetId: $vacancy->id,
-            description: 'Creo una vacante'
+            description: 'Create a vacancy'
         );
 
         event(new NewVacancyCreated($vacancy));
@@ -169,7 +169,7 @@ class VacanciesManager extends Component
             action: 'updated_vacancy',
             targetType: 'App\Models\Vacancy',
             targetId: $this->vacancy->id,
-            description: 'Actualizó una vacante'
+            description: 'Update a vacancy'
         );
 
         session()->flash('message', __('Vacancy updated successfully'));

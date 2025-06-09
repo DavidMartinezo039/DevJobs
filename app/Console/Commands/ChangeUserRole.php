@@ -76,7 +76,6 @@ class ChangeUserRole extends Command
 
         $newRole = $roles[$selectedIndex];
 
-        // Quitar roles antiguos y asignar el nuevo
         $user->syncRoles([$newRole]);
 
         $this->info("El rol del usuario '{$user->name}' ha sido cambiado a '{$newRole}'.");

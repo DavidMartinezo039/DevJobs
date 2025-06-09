@@ -41,6 +41,10 @@ class CleanPublicStorage extends Command
                     continue;
                 }
 
+                if (str_contains($item, DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR)) {
+                    continue;
+                }
+
                 if (File::isDirectory($item)) {
                     File::deleteDirectory($item);
                 } else {

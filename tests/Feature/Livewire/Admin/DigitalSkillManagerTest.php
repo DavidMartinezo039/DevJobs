@@ -4,10 +4,21 @@ use App\Livewire\Admin\DigitalSkillManager;
 use App\Models\DigitalSkill;
 use App\Models\User;
 use Livewire\Livewire;
+use function Pest\Laravel\actingAs;
 
 it('renders the digital skill manager component', function () {
     $user = User::factory()->create();
     $user->assignRole('moderator');
+    $this->actingAs($user);
+
+    Livewire::test(DigitalSkillManager::class)
+        ->assertStatus(200)
+        ->assertSee(__('No digital skills yet.'));
+});
+
+it('renders the digital skill manager component as god', function () {
+    $user = User::factory()->create();
+    $user->assignRole('god');
     $this->actingAs($user);
 
     Livewire::test(DigitalSkillManager::class)
@@ -117,4 +128,22 @@ it('dispatches the DeleteAlert event when confirming delete', function () {
     Livewire::test(DigitalSkillManager::class)
         ->call('confirmDelete', $skill->id)
         ->assertDispatched('DeleteAlert', $skill->id);
+});
+
+it('restores a soft deleted digital skill via Livewire', function () {
+    $user = User::factory()->create();
+    $user->assignRole('god');
+
+    $digitalSkill = DigitalSkill::factory()->create();
+    $digitalSkill->delete();
+
+    Gate::define('restore', fn($authUser, $skill) => true);
+
+    actingAs($user);
+
+    Livewire::test(DigitalSkillManager::class)
+        ->call('restore', $digitalSkill->id);
+
+    expect(DigitalSkill::find($digitalSkill->id))->not->toBeNull()
+        ->and(DigitalSkill::onlyTrashed()->find($digitalSkill->id))->toBeNull();
 });

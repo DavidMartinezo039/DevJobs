@@ -5,12 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DigitalSkill extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name'];
+
+    public function scopeVisibleFor($query, $user)
+    {
+        if ($user->hasRole('god')) {
+            return $query->withTrashed();
+        }
+
+        return $query;
+    }
 
     public function scopeOrderedByName($query)
     {

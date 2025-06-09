@@ -50,3 +50,10 @@ it('denies regular users from deleting digital skills', function () {
 
     expect($this->policy->delete($user, $this->digitalSkill))->toBeFalse();
 });
+
+it('allows gods to restore a deleted digital skill', function () {
+    $god = User::factory()->create();
+    $god->assignRole('god');
+
+    expect($this->policy->restore($god, $this->digitalSkill))->toBeTrue();
+});

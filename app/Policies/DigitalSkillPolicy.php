@@ -22,4 +22,9 @@ class DigitalSkillPolicy
     {
         return $user->hasRole('moderator') || $user->hasRole('god');
     }
+
+    public function restore(User $user, DigitalSkill $digitalSkill): bool
+    {
+        return $user->hasRole('god');
+    }
 }

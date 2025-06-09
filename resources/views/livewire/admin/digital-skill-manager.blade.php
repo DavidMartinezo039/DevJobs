@@ -56,19 +56,28 @@
                         <p class="text-xl font-medium text-gray-800">{{ $skill->name }}</p>
 
                         <div class="flex items-center gap-2">
-                            <button
-                                wire:click="edit({{ $skill }})"
-                                class="bg-blue-800 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
-                            >
-                                {{ __('Edit') }}
-                            </button>
+                            @if(is_null($skill->deleted_at))
+                                <button
+                                    wire:click="edit({{ $skill->id }})"
+                                    class="bg-blue-800 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
+                                >
+                                    {{ __('Edit') }}
+                                </button>
 
-                            <button
-                                wire:click="confirmDelete({{ $skill }})"
-                                class="bg-red-600 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
-                            >
-                                {{ __('Delete') }}
-                            </button>
+                                <button
+                                    wire:click="confirmDelete({{ $skill->id }})"
+                                    class="bg-red-600 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
+                                >
+                                    {{ __('Delete') }}
+                                </button>
+                            @elseif(auth()->user()->hasRole('god'))
+                                <button
+                                    wire:click="restore({{ $skill->id }})"
+                                    class="bg-green-600 py-2 px-4 rounded-lg text-white text-xs font-bold uppercase"
+                                >
+                                    {{ __('Restore') }}
+                                </button>
+                            @endif
                         </div>
                     </li>
                 @empty

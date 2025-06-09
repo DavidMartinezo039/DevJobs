@@ -36,14 +36,15 @@ it('creates a new digital skill', function () {
 it('shows a digital skill', function () {
     $digitalSkill = DigitalSkill::factory()->create();
 
-    getJson(route('digital-skills.show', $digitalSkill))
-        ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-        $json->where('id', $digitalSkill->id)
-            ->where('name', $digitalSkill->name)
-            ->has('created_at')
-            ->has('updated_at')
-        );
+    $response = getJson(route('digital-skills.show', $digitalSkill));
+
+    $response->assertOk()->assertJson(fn (AssertableJson $json) =>
+    $json->where('id', $digitalSkill->id)
+        ->where('name', $digitalSkill->name)
+        ->has('created_at')
+        ->has('updated_at')
+        ->etc()
+    );
 });
 
 it('updates an existing digital skill', function () {
@@ -69,7 +70,7 @@ it('deletes a digital skill', function () {
         $json->where('message', 'Digital skill deleted successfully')
         );
 
-    $this->assertDatabaseMissing('digital_skills', ['id' => $digitalSkill->id]);
+    $this->assertSoftDeleted('digital_skills', ['id' => $digitalSkill->id]);
 });
 
 it('prevents unauthorized users from updating or deleting digital skills', function () {

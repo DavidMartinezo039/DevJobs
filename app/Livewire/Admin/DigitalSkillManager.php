@@ -80,11 +80,24 @@ class DigitalSkillManager extends Component
         $this->resetInput();
     }
 
+    public function restore($id)
+    {
+        $skill = DigitalSkill::onlyTrashed()->findOrFail($id);
+        Gate::authorize('restore', $skill);
+
+        $skill->restore();
+
+        session()->flash('message', __('Digital skill restored successfully'));
+    }
+
     public function render()
     {
+        $skills = DigitalSkill::visibleFor(auth()->user())
+            ->orderedByName()
+            ->paginate(10);
 
         return view('livewire.admin.digital-skill-manager', [
-            'digitalSkills' => DigitalSkill::orderedByName()->paginate(10)
+            'digitalSkills' => $skills,
         ])->layout('layouts.app');
     }
 }

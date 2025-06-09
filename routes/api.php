@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\DigitalSkillController;
+use App\Http\Controllers\Api\Admin\DrivingLicenseController;
+use App\Http\Controllers\Api\Admin\GenderController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DigitalSkillController;
-use App\Http\Controllers\Api\DrivingLicenseController;
-use App\Http\Controllers\Api\GenderController;
 use App\Http\Controllers\Api\VacancyController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 

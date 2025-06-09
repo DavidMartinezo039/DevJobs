@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGenderRequest;
 use App\Http\Requests\UpdateGenderRequest;
-use App\Models\Gender;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rule;
 use App\Jobs\NotifyMarketingUsersOfGenderChange;
 use App\Jobs\NotifyModeratorsOfDefaultGender;
+use App\Models\Gender;
+use Illuminate\Support\Facades\Gate;
 
 class GenderController extends Controller
 {

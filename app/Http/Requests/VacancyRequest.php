@@ -18,7 +18,7 @@ class VacancyRequest extends FormRequest
             'salary' => 'required|exists:salaries,id',
             'category' => 'required|exists:categories,id',
             'company' => 'required|string',
-            'last_day' => 'required|date',
+            'last_day' => 'required|date|after_or_equal:today',
             'description' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

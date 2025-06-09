@@ -67,7 +67,6 @@ Route::middleware(LocaleCookieMiddleware::class)->group(function () {
             Route::get('/history/download', [UserHistoryController::class, 'download'])->name('download.user.history');
         });
 
-
         Route::get('/preferences', UserPreference::class)->name('preferences');
     });
 

@@ -6,6 +6,8 @@ use App\Models\DigitalSkill;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Exports\DigitalSkillsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DigitalSkillManager extends Component
 {
@@ -88,6 +90,11 @@ class DigitalSkillManager extends Component
         $skill->restore();
 
         session()->flash('message', __('Digital skill restored successfully'));
+    }
+
+    public function export()
+    {
+        return Excel::download(new DigitalSkillsExport, 'digital_skills.xlsx');
     }
 
     public function render()

@@ -39,7 +39,14 @@
                 </div>
             </form>
         @else
-            <div class="flex justify-center">
+            <div class="flex justify-center mb-5 gap-4">
+                <button
+                    wire:click="export"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition duration-200"
+                >
+                    {{ __('Export Digital Skills to Excel') }}
+                </button>
+
                 <button
                     wire:click="$set('createMode', true)"
                     class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition duration-200"
@@ -52,7 +59,8 @@
         <div class="md:flex md:justify-center p-5">
             <ul class="divide-y divide-gray-200 w-full">
                 @forelse($digitalSkills as $skill)
-                    <li wire:key="skill-{{ $skill->id }}" class="p-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <li wire:key="skill-{{ $skill->id }}"
+                        class="p-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <p class="text-xl font-medium text-gray-800">{{ $skill->name }}</p>
 
                         <div class="flex items-center gap-2">

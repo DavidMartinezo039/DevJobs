@@ -19,14 +19,14 @@ it('shows unread notifications and marks them as read for recruiter role', funct
             'type' => 'TestNotification',
             'notifiable_id' => $this->user->id,
             'notifiable_type' => get_class($this->user),
-            'data' => ['name_vacancy' => 'Developer', 'id_vacancy' => 123],
+            'data' => ['vacancy_title' => 'Developer', 'vacancy_id' => 123],
             ]),
         new DatabaseNotification([
             'id' => '2',
             'type' => 'TestNotification',
             'notifiable_id' => $this->user->id,
             'notifiable_type' => get_class($this->user),
-            'data' => ['name_vacancy' => 'Developer', 'id_vacancy' => 123],
+            'data' => ['vacancy_title' => 'Developer', 'vacancy_id' => 123],
             ]),
     ]);
 

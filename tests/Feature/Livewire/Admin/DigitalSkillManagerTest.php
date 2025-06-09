@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\DigitalSkillsExport;
 use App\Livewire\Admin\DigitalSkillManager;
 use App\Models\DigitalSkill;
 use App\Models\User;
@@ -146,4 +147,18 @@ it('restores a soft deleted digital skill via Livewire', function () {
 
     expect(DigitalSkill::find($digitalSkill->id))->not->toBeNull()
         ->and(DigitalSkill::onlyTrashed()->find($digitalSkill->id))->toBeNull();
+});
+
+it('calls export method', function () {
+    Excel::fake();
+
+    $user = User::factory()->create()->assignRole('god');
+    actingAs($user);
+
+    Livewire::test(DigitalSkillManager::class)
+        ->call('export');
+
+    Excel::assertDownloaded('digital_skills.xlsx', function(DigitalSkillsExport $export) {
+        return true;
+    });
 });

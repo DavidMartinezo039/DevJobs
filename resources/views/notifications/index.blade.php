@@ -16,7 +16,7 @@
                         <div class="p-5 lg:flex lg:justify-between lg:items-center">
                             <div>
                                 <p>{{ __('You have a new candidate in') }}:
-                                    <span class="font-bold">{{ $notification->data['name_vacancy'] }}</span>
+                                    <span class="font-bold">{{ $notification->data['vacancy_title'] }}</span>
                                 </p>
 
                                 <p>
@@ -24,7 +24,7 @@
                                 </p>
                             </div>
                             <div class="mt-5 lg:mt-0">
-                                <a href="{{ route('candidates.index', $notification->data['id_vacancy']) }}" class="bg-indigo-500 p-3 text-sm uppercase font-bold text-white rounded-lg">
+                                <a href="{{ route('candidates.index', $notification->data['vacancy_id']) }}" class="bg-indigo-500 p-3 text-sm uppercase font-bold text-white rounded-lg">
                                     {{ __('See Candidates') }}
                                 </a>
                             </div>
